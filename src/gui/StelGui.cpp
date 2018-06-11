@@ -462,8 +462,14 @@ void StelGui::setStelStyle(const QString& section)
 		// Load the style sheets
 		currentStelStyle.confSectionName = section;
 
-		QString qtStyleFileName = ":/graphicGui/normalStyle.css";
+		QString qtStyleFileName;
 		QString htmlStyleFileName = ":/graphicGui/normalHtml.css";
+
+		#if defined(Q_OS_ANDROID)
+			qtStyleFileName = ":/graphicGui/largeStyle.css";
+		#else
+			qtStyleFileName = ":/graphicGui/normalStyle.css";
+		#endif
 
 		// Load Qt style sheet
 		QFile styleFile(qtStyleFileName);
