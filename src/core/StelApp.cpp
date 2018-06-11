@@ -447,6 +447,11 @@ void StelApp::init(QSettings* conf)
 	// Stel Object Data Base manager
 	stelObjectMgr = new StelObjectMgr();
 	stelObjectMgr->init();
+	
+	#if defined(Q_OS_ANDROID)
+		stelObjectMgr->setObjectSearchRadius( 150 );
+	#endif
+
 	getModuleMgr().registerModule(stelObjectMgr);	
 
 	localeMgr->init();

@@ -232,6 +232,11 @@ void StelCore::init()
 	movementMgr = new StelMovementMgr(this);
 	movementMgr->init();
 	currentProjectorParams.fov = movementMgr->getInitFov();
+	
+	#if defined(Q_OS_ANDROID)
+		movementMgr->setDragTriggerDistance(100);
+	#endif
+	
 	StelApp::getInstance().getModuleMgr().registerModule(movementMgr);
 
 	StelPropertyMgr* propMgr = StelApp::getInstance().getStelPropertyManager();
