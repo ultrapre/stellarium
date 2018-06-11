@@ -182,7 +182,7 @@ void ConfigurationDialog::createDialogContent()
 	connect(ui->nutationCheckBox, SIGNAL(toggled(bool)), core, SLOT(setUseNutation(bool)));
 	ui->topocentricCheckBox->setChecked(core->getUseTopocentricCoordinates());
 	connect(ui->topocentricCheckBox, SIGNAL(toggled(bool)), core, SLOT(setUseTopocentricCoordinates(bool)));
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) || defined(Q_OS_ANDROID)
 	//Kinetic scrolling for tablet pc and pc
 	QList<QWidget *> addscroll;
 	addscroll << ui->pluginsListWidget << ui->scriptListWidget;

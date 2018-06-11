@@ -51,6 +51,7 @@
 #include <QFileInfo>
 #include <QIcon>
 #include <QMoveEvent>
+#include <QGestureEvent>
 #include <QPluginLoader>
 #include <QScreen>
 #include <QSettings>
@@ -61,7 +62,7 @@
 #include <QWindow>
 #include <QMessageBox>
 #include <QStandardPaths>
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) || defined(Q_OS_ANDROID)
 	#include <QPinchGesture>
 #endif
 #include <QOpenGLShader>
@@ -327,7 +328,7 @@ public:
 
 		setAcceptHoverEvents(true);
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) || defined(Q_OS_ANDROID)
 		setAcceptTouchEvents(true);
 		grabGesture(Qt::PinchGesture);
 #endif
@@ -443,8 +444,8 @@ protected:
 			mainView->thereWasAnEvent();
 	}
 
-	//*** Gesture and touch support, currently only for Windows
-#ifdef Q_OS_WIN
+	//*** Gesture and touch support, currently only for Windows and Android
+#if defined(Q_OS_WIN) || defined(Q_OS_ANDROID)
 	bool event(QEvent * e) Q_DECL_OVERRIDE
 	{
 		switch (e->type()){
@@ -458,8 +459,12 @@ protected:
 				if (touchPoints.count() == 1)
 					setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton | Qt::MiddleButton);
 
+#if defined(Q_OS_WIN)
 				return true;
 				break;
+#else
+				return QGraphicsObject::event(e);
+#endif
 			}
 
 			case QEvent::Gesture:

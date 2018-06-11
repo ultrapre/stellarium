@@ -292,7 +292,7 @@ void ShortcutsDialog::createDialogContent()
 	ui->shortcutsTreeView->header()->setSectionsMovable(false);
 	ui->shortcutsTreeView->sortByColumn(0, Qt::AscendingOrder);
 	
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) || defined(Q_OS_ANDROID)
 	//Kinetic scrolling for tablet pc and pc
 	QList<QWidget *> addscroll;
 	addscroll << ui->shortcutsTreeView;

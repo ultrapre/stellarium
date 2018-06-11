@@ -164,7 +164,7 @@ protected:
 	//! The name should be set in derived classes' constructors and can be used to store and retrieve the panel locations.
 	QString dialogName;
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) || defined(Q_OS_ANDROID)
 	//! Kinetic scrolling for lists.
 	//! @note This has been temporarily disabled (since 0.13.2) due to a bug in Qt.
 	void installKineticScrolling(QList<QWidget *> addscroll);

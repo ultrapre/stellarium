@@ -36,7 +36,7 @@
 #include <QSpinBox>
 #include <QDoubleSpinBox>
 #include <QLineEdit>
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) || defined(Q_OS_ANDROID)
 	#include <QScroller>
 #endif
 
@@ -271,10 +271,10 @@ void StelDialog::connectBoolProperty(QAbstractButton *checkBox, const QString &p
 	new QAbstractButtonStelPropertyConnectionHelper(prop,checkBox);
 }
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) || defined(Q_OS_ANDROID)
 void StelDialog::installKineticScrolling(QList<QWidget *> addscroll)
 {
-	return; // Temporary disable feature, bug in Qt: https://bugreports.qt-project.org/browse/QTBUG-41299
+	//return; // Temporary disable feature, bug in Qt: https://bugreports.qt-project.org/browse/QTBUG-41299
 
 	if (StelApp::getInstance().getSettings()->value("gui/flag_enable_kinetic_scrolling", true).toBool() == false)
 		return;
