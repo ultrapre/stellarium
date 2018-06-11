@@ -1107,3 +1107,13 @@ bool StelGui::getAstroCalcVisible()
 {
 	return astroCalcDialog && astroCalcDialog->visible();
 }
+
+QPixmap StelGui::ScaledPixmap( const QPixmap& pixmap ){
+	#if defined(Q_OS_ANDROID)
+		if( !pixmap.isNull() ){
+			return pixmap.scaled( pixmap.size() * 2 );
+		}
+	#endif
+	
+	return pixmap;
+}
