@@ -110,7 +110,7 @@ void StelDialog::setVisible(bool v)
 			connect(&StelApp::getInstance(), SIGNAL(visionNightModeChanged(bool)), this, SLOT(updateNightModeProperty()));
 			updateNightModeProperty();
 
-			proxy = new CustomProxy(parent, Qt::Tool);
+			proxy = new CustomProxy(parent, Qt::Tool,this);
 			proxy->setWidget(dialog);
 			QSizeF size = proxy->size();
 
@@ -457,4 +457,64 @@ void QSliderStelPropertyConnectionHelper::onPropertyChanged(const QVariant& val)
 	bool b = slider->blockSignals(true);
 	slider->setValue(iVal);
 	slider->blockSignals(b);
+}
+
+
+CustomProxy::CustomProxy(QGraphicsItem *parent, Qt::WindowFlags wFlags , StelDialog* _dialog ) : QGraphicsProxyWidget(parent, wFlags)
+{
+	setFocusPolicy(Qt::StrongFocus);
+	dialog = _dialog;
+}
+
+
+//! Reimplement this method to add windows decorations. Currently there are invisible 2 px decorations
+void CustomProxy::paintWindowFrame(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
+{
+/*			QStyleOptionTitleBar bar;
+	initStyleOption(&bar);
+	bar.subControls = QStyle::SC_TitleBarCloseButton;
+	qWarning() << style()->subControlRect(QStyle::CC_TitleBar, &bar, QStyle::SC_TitleBarCloseButton);
+	QGraphicsProxyWidget::paintWindowFrame(painter, option, widget);*/
+}
+
+
+bool CustomProxy::event(QEvent* event)
+{
+	if (StelApp::getInstance().getSettings()->value("gui/flag_use_window_transparency", true).toBool())
+	{
+		switch (event->type())
+		{
+			case QEvent::WindowDeactivate:
+				widget()->setWindowOpacity(0.4);
+				break;
+			case QEvent::WindowActivate:
+			case QEvent::GrabMouse:
+				widget()->setWindowOpacity(0.9);
+				break;
+			default:
+				break;
+		}
+	}
+	return QGraphicsProxyWidget::event(event);
+}
+
+
+void CustomProxy::resizeEvent(QGraphicsSceneResizeEvent *event)
+{
+	if (event->newSize() != event->oldSize())
+	{
+		emit sizeChanged(event->newSize());
+	}
+	QGraphicsProxyWidget::resizeEvent(event);
+}
+
+
+void CustomProxy::keyPressEvent(QKeyEvent *event)
+{
+	if( event->key() == Qt::Key_Back )
+	{
+		dialog->close();
+	}
+	
+	QGraphicsProxyWidget::keyPressEvent(event);
 }

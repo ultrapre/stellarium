@@ -175,51 +175,24 @@ private slots:
 };
 
 class CustomProxy : public QGraphicsProxyWidget
-{	private:
-	Q_OBJECT
-	public:
-		CustomProxy(QGraphicsItem *parent = Q_NULLPTR, Qt::WindowFlags wFlags = 0) : QGraphicsProxyWidget(parent, wFlags)
-		{
-			setFocusPolicy(Qt::StrongFocus);
-		}
-		//! Reimplement this method to add windows decorations. Currently there are invisible 2 px decorations
-		void paintWindowFrame(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
-		{
-/*			QStyleOptionTitleBar bar;
-			initStyleOption(&bar);
-			bar.subControls = QStyle::SC_TitleBarCloseButton;
-			qWarning() << style()->subControlRect(QStyle::CC_TitleBar, &bar, QStyle::SC_TitleBarCloseButton);
-			QGraphicsProxyWidget::paintWindowFrame(painter, option, widget);*/
-		}
-	signals: void sizeChanged(QSizeF);
-	protected:
+{
+private:
+Q_OBJECT
+public:
+	CustomProxy(QGraphicsItem *parent , Qt::WindowFlags wFlags , StelDialog* dialog );
 
-		virtual bool event(QEvent* event)
-		{
-			if (StelApp::getInstance().getSettings()->value("gui/flag_use_window_transparency", true).toBool())
-			{
-				switch (event->type())
-				{
-					case QEvent::WindowDeactivate:
-						widget()->setWindowOpacity(0.4);
-						break;
-					case QEvent::WindowActivate:
-					case QEvent::GrabMouse:
-						widget()->setWindowOpacity(0.9);
-						break;
-					default:
-						break;
-				}
-			}
-			return QGraphicsProxyWidget::event(event);
-		}
-		virtual void resizeEvent(QGraphicsSceneResizeEvent *event)
-		{
-			if (event->newSize() != event->oldSize())
-			{
-				emit sizeChanged(event->newSize());
-			}
-			QGraphicsProxyWidget::resizeEvent(event);
-		}
+	//! Reimplement this method to add windows decorations. Currently there are invisible 2 px decorations
+	void paintWindowFrame(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
+
+signals:
+	void sizeChanged(QSizeF);
+	
+protected:
+	bool event(QEvent* event) Q_DECL_OVERRIDE;
+	void resizeEvent(QGraphicsSceneResizeEvent *event) Q_DECL_OVERRIDE;
+	void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
+	
+private:
+	StelDialog* dialog;
 };
 #endif // _STELDIALOG_HPP_
