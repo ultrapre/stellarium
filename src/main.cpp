@@ -163,7 +163,7 @@ int main(int argc, char **argv)
 	QDir appDir(appInfo.absolutePath());
 	appDir.cdUp();
 	QCoreApplication::addLibraryPath(appDir.absoluteFilePath("plugins"));
-	#elif defined(Q_OS_WIN)
+	#elif defined(Q_OS_WIN) || defined(Q_OS_ANDROID)
 	QFileInfo appInfo(QString::fromUtf8(argv[0]));
 	QCoreApplication::addLibraryPath(appInfo.absolutePath());
 	#endif	

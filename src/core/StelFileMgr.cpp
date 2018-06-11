@@ -103,6 +103,9 @@ void StelFileMgr::init()
 		}
 		QFileInfo installLocation(ResourcesDir.absolutePath());
 		QFileInfo checkFile(installLocation.filePath() + QString("/") + QString(CHECK_FILE));
+	#elif defined Q_OS_ANDROID
+		QFileInfo installLocation("assets:");
+		QFileInfo checkFile("assets:/" + QString(CHECK_FILE));
 	#elif defined(Q_OS_WIN)		
 		QFileInfo installLocation(QCoreApplication::applicationDirPath());
 		QFileInfo checkFile(installLocation.filePath() + QDir::separator() + QString(CHECK_FILE));
