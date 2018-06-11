@@ -423,6 +423,13 @@ void AstroCalcDialog::setCelestialPositionsHeaderNames()
 	{
 		ui->celestialPositionsTreeWidget->resizeColumnToContents(i);
 	}
+
+	ui->celestialPositionsTreeWidget->headerItem()->setTextAlignment(CColumnRA, Qt::AlignRight);
+	ui->celestialPositionsTreeWidget->headerItem()->setTextAlignment(CColumnDec, Qt::AlignRight);
+	ui->celestialPositionsTreeWidget->headerItem()->setTextAlignment(CColumnMagnitude, Qt::AlignRight);
+	ui->celestialPositionsTreeWidget->headerItem()->setTextAlignment(CColumnAngularSize, Qt::AlignRight);
+	ui->celestialPositionsTreeWidget->headerItem()->setTextAlignment(CColumnExtra, Qt::AlignRight);
+	ui->celestialPositionsTreeWidget->headerItem()->setTextAlignment(CColumnTransit, Qt::AlignRight);
 }
 
 void AstroCalcDialog::onChangedEphemerisPosition(const QModelIndex& modelIndex)
