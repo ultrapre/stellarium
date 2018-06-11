@@ -206,6 +206,9 @@ protected:
 	virtual void resizeEvent(QResizeEvent* event) Q_DECL_OVERRIDE;
 	//! Wake up mouse cursor (if it was hidden)
 	virtual void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+	//! Handle back key
+	virtual bool event(QEvent *event) Q_DECL_OVERRIDE;
+	
 signals:
 	//! emitted when saveScreenShot is requested with saveScreenShot().
 	//! doScreenshot() does the actual work (it has to do it in the main

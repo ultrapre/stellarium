@@ -33,6 +33,7 @@
 #include "StelOpenGLArray.hpp"
 #include "StelProjector.hpp"
 #include "StelMovementMgr.hpp"
+#include "StelObjectMgr.hpp"
 
 #include <QDebug>
 #include <QDir>
@@ -698,6 +699,24 @@ void StelMainView::mouseMoveEvent(QMouseEvent *event)
 	QGraphicsView::mouseMoveEvent(event);
 }
 
+bool StelMainView::event(QEvent *event){
+	if( event->type() == QEvent::KeyPress )
+	{
+		QKeyEvent* key_event = static_cast<QKeyEvent*>( event );
+		
+		if( key_event->key() == Qt::Key_Back )
+		{
+			if( stelApp->getStelObjectMgr().getWasSelected() )
+			{
+				stelApp->getStelObjectMgr().unSelect();
+				event->accept();
+				return true;
+			}
+		}
+	}
+	
+	return QGraphicsView::event(event);
+}
 
 void StelMainView::focusSky() {
 	//scene()->setActiveWindow(0);
