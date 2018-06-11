@@ -26,6 +26,7 @@
 #include <QDebug>
 #include <QTextEdit>
 #include <QAbstractListModel>
+#include <QIcon>
 
 //! A custom QTextEdit subclass that has an editingFinished() signal like QLineEdit.
 class CustomTextEdit : public QTextEdit

@@ -25,6 +25,7 @@
 #include "StelGuiItems.hpp"
 #include "StelTextureMgr.hpp"
 #include "StelObjectModule.hpp"
+#include "StelLocation.hpp"
 
 #define MS_CATALOG_VERSION 1
 #define MS_CONFIG_PREFIX QString("MeteorShowers")
