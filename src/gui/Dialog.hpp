@@ -45,7 +45,7 @@ Q_OBJECT
 public:
 	QPoint mousePos;
   
-	BarFrame(QWidget* parent) : QFrame(parent), moving(false) {}
+	BarFrame(QWidget* parent);
   
 	virtual void mousePressEvent(QMouseEvent *event);
 	virtual void mouseReleaseEvent(QMouseEvent *event);

@@ -76,6 +76,8 @@ void StelDialog::setVisible(bool v)
 		{
 			dialog->show();
 			StelMainView::getInstance().scene()->setActiveWindow(proxy);
+			
+#if !defined(Q_OS_ANDROID)
 			// If the main window has been resized, it is possible the dialog
 			// will be off screen.  Check for this and move it to a visible
 			// position if necessary
@@ -93,6 +95,7 @@ void StelDialog::setVisible(bool v)
 				newSize.setHeight(maxSize.height());
 			if(newSize != dialog->size())
 				proxy->resize(newSize);
+#endif
 		}
 		else
 		{
@@ -112,9 +115,11 @@ void StelDialog::setVisible(bool v)
 
 			proxy = new CustomProxy(parent, Qt::Tool,this);
 			proxy->setWidget(dialog);
-			QSizeF size = proxy->size();
 
 			connect(proxy, SIGNAL(sizeChanged(QSizeF)), this, SLOT(handleDialogSizeChanged(QSizeF)));
+
+#if !defined(Q_OS_ANDROID)
+			QSizeF size = proxy->size();
 
 			int newX, newY;
 
@@ -176,6 +181,8 @@ void StelDialog::setVisible(bool v)
 			{
 				proxy->resize(maxSize);
 			}
+#endif
+			
 			handleDialogSizeChanged(proxy->size()); // This may trigger internal updates in subclasses. E.g. LocationPanel location arrow.
 
 			// The caching is buggy on all platforms with Qt 4.5.2
@@ -184,6 +191,13 @@ void StelDialog::setVisible(bool v)
 			proxy->setZValue(100);
 			StelMainView::getInstance().scene()->setActiveWindow(proxy);
 		}
+
+#if defined(Q_OS_ANDROID)
+		proxy->setPos(0,0);
+		proxy->resize(screenSize);
+		proxy->setWindowFrameMargins(0,0,0,0);
+#endif
+		
 		proxy->setFocus();
 	}
 	else
@@ -295,16 +309,20 @@ void StelDialog::updateNightModeProperty()
 
 void StelDialog::handleMovedTo(QPoint newPos)
 {
+#if !defined(Q_OS_ANDROID)
 	QSettings *conf=StelApp::getInstance().getSettings();
 	Q_ASSERT(conf);
 	conf->setValue("DialogPositions/" + dialogName, QString("%1,%2").arg(newPos.x()).arg(newPos.y()));
+#endif
 }
 
 void StelDialog::handleDialogSizeChanged(QSizeF size)
 {
+#if !defined(Q_OS_ANDROID)
 	QSettings *conf=StelApp::getInstance().getSettings();
 	Q_ASSERT(conf);
 	conf->setValue("DialogSizes/" + dialogName, QString("%1,%2").arg((int)size.width()).arg((int)size.height()));
+#endif
 }
 
 

@@ -22,6 +22,12 @@
 #include "Dialog.hpp"
 #include "StelMainView.hpp"
 
+BarFrame::BarFrame(QWidget* parent) : QFrame(parent), moving(false) {
+#if defined(Q_OS_ANDROID)
+	setVisible( false );
+#endif
+}
+
 void BarFrame::mousePressEvent(QMouseEvent *event)
 {
 	mousePos = event->pos();
