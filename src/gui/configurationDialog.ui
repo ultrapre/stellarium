@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>664</width>
-    <height>498</height>
+    <width>916</width>
+    <height>606</height>
    </rect>
   </property>
   <layout class="QVBoxLayout">
@@ -146,151 +146,22 @@
        <number>0</number>
       </property>
       <item row="0" column="0">
-       <widget class="QListWidget" name="stackListWidget">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>74</height>
-         </size>
+       <widget class="QTabWidget" name="configurationStackedWidget">
+        <property name="currentIndex">
+         <number>1</number>
         </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>74</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="verticalScrollBarPolicy">
-         <enum>Qt::ScrollBarAlwaysOff</enum>
-        </property>
-        <property name="horizontalScrollBarPolicy">
-         <enum>Qt::ScrollBarAlwaysOff</enum>
-        </property>
-        <property name="selectionMode">
-         <enum>QAbstractItemView::SingleSelection</enum>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>50</width>
-          <height>50</height>
-         </size>
-        </property>
-        <property name="movement">
-         <enum>QListView::Static</enum>
-        </property>
-        <property name="flow">
-         <enum>QListView::LeftToRight</enum>
-        </property>
-        <property name="isWrapping" stdset="0">
-         <bool>false</bool>
-        </property>
-        <property name="resizeMode">
-         <enum>QListView::Adjust</enum>
-        </property>
-        <property name="layoutMode">
-         <enum>QListView::SinglePass</enum>
-        </property>
-        <property name="spacing">
-         <number>0</number>
-        </property>
-        <property name="viewMode">
-         <enum>QListView::IconMode</enum>
-        </property>
-        <property name="uniformItemSizes">
-         <bool>false</bool>
-        </property>
-        <property name="wordWrap">
-         <bool>false</bool>
-        </property>
-        <property name="selectionRectVisible">
-         <bool>false</bool>
-        </property>
-        <item>
-         <property name="text">
-          <string>Main</string>
-         </property>
-         <property name="icon">
+        <widget class="QWidget" name="page_Main">
+         <attribute name="icon">
           <iconset>
            <normalon>:/graphicGui/tabicon-main.png</normalon>
           </iconset>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Information</string>
-         </property>
-         <property name="toolTip">
+         </attribute>
+         <attribute name="title">
+          <string>Main</string>
+         </attribute>
+         <attribute name="toolTip">
           <string>Selected object information</string>
-         </property>
-         <property name="icon">
-          <iconset>
-           <normalon>:/graphicGui/tabicon-info.png</normalon>
-          </iconset>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string comment="Additional settings for Graphical User Interface">Extras</string>
-         </property>
-         <property name="toolTip">
-          <string>Additional settings for Graphical User Interface</string>
-         </property>
-         <property name="icon">
-          <iconset>
-           <normalon>:/graphicGui/tabicon-extras.png</normalon>
-          </iconset>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Time</string>
-         </property>
-         <property name="icon">
-          <iconset>
-           <normalon>:/graphicGui/tabicon-time.png</normalon>
-          </iconset>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Tools</string>
-         </property>
-         <property name="icon">
-          <iconset>
-           <normalon>:/graphicGui/tabicon-tools.png</normalon>
-          </iconset>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Scripts</string>
-         </property>
-         <property name="icon">
-          <iconset>
-           <normalon>:/graphicGui/tabicon-scripts.png</normalon>
-          </iconset>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Plugins</string>
-         </property>
-         <property name="icon">
-          <iconset>
-           <normalon>:/graphicGui/tabicon-plugins.png</normalon>
-          </iconset>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QStackedWidget" name="configurationStackedWidget">
-        <property name="currentIndex">
-         <number>0</number>
-        </property>
-        <widget class="QWidget" name="page_Main">
+         </attribute>
          <layout class="QVBoxLayout" name="verticalLayout_10">
           <property name="spacing">
            <number>0</number>
@@ -325,91 +196,64 @@
              <property name="bottomMargin">
               <number>0</number>
              </property>
+             <item row="1" column="0">
+              <widget class="QLabel" name="skycultureLanguageLabel">
+               <property name="text">
+                <string>Sky Culture Language</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
              <item row="0" column="0">
-              <layout class="QGridLayout" name="languageGridLayout">
-               <item row="0" column="3">
-                <widget class="QComboBox" name="skycultureLanguageComboBox">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>180</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>180</width>
-                   <height>24</height>
-                  </size>
-                 </property>
-                 <property name="editable">
-                  <bool>true</bool>
-                 </property>
-                 <property name="insertPolicy">
-                  <enum>QComboBox::NoInsert</enum>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="programLanguageLabel">
-                 <property name="text">
-                  <string>Program Language</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QComboBox" name="programLanguageComboBox">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>180</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>180</width>
-                   <height>24</height>
-                  </size>
-                 </property>
-                 <property name="editable">
-                  <bool>true</bool>
-                 </property>
-                 <property name="insertPolicy">
-                  <enum>QComboBox::NoInsert</enum>
-                 </property>
-                 <property name="sizeAdjustPolicy">
-                  <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
-                 </property>
-                 <property name="frame">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="2">
-                <widget class="QLabel" name="skycultureLanguageLabel">
-                 <property name="text">
-                  <string>Sky Culture Language</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                 </property>
-                </widget>
-               </item>
-              </layout>
+              <widget class="QLabel" name="programLanguageLabel">
+               <property name="text">
+                <string>Program Language</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <spacer name="horizontalSpacer_6">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="0" column="1">
+              <widget class="QComboBox" name="programLanguageComboBox">
+               <property name="editable">
+                <bool>true</bool>
+               </property>
+               <property name="insertPolicy">
+                <enum>QComboBox::NoInsert</enum>
+               </property>
+               <property name="sizeAdjustPolicy">
+                <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
+               </property>
+               <property name="frame">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QComboBox" name="skycultureLanguageComboBox">
+               <property name="editable">
+                <bool>true</bool>
+               </property>
+               <property name="insertPolicy">
+                <enum>QComboBox::NoInsert</enum>
+               </property>
+              </widget>
              </item>
             </layout>
            </widget>
@@ -451,16 +295,6 @@
                  </property>
                 </widget>
                </item>
-               <item row="1" column="0">
-                <widget class="QCheckBox" name="de431checkBox">
-                 <property name="toolTip">
-                  <string>DE431 provides position data for years -13000...+17000. For special applications only.</string>
-                 </property>
-                 <property name="text">
-                  <string>Use DE431 (long-time data)</string>
-                 </property>
-                </widget>
-               </item>
                <item row="0" column="0">
                 <widget class="QCheckBox" name="de430checkBox">
                  <property name="toolTip">
@@ -471,7 +305,30 @@
                  </property>
                 </widget>
                </item>
-               <item row="2" column="0" colspan="2">
+               <item row="1" column="0">
+                <widget class="QCheckBox" name="de431checkBox">
+                 <property name="toolTip">
+                  <string>DE431 provides position data for years -13000...+17000. For special applications only.</string>
+                 </property>
+                 <property name="text">
+                  <string>Use DE431 (long-time data)</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2">
+                <spacer name="horizontalSpacer_7">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="2" column="0" colspan="3">
                 <widget class="QLabel" name="label_VSOP87used">
                  <property name="toolTip">
                   <string>Using VSOP87 is recommended for years -4000...+8000 only, but delivers useful positions outside this range.</string>
@@ -627,6 +484,17 @@
          </layout>
         </widget>
         <widget class="QWidget" name="page_Info">
+         <attribute name="icon">
+          <iconset>
+           <normalon>:/graphicGui/tabicon-info.png</normalon>
+          </iconset>
+         </attribute>
+         <attribute name="title">
+          <string>Information</string>
+         </attribute>
+         <attribute name="toolTip">
+          <string>Additional settings for Graphical User Interface</string>
+         </attribute>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <property name="spacing">
            <number>0</number>
@@ -986,6 +854,14 @@
          </layout>
         </widget>
         <widget class="QWidget" name="page_Extras">
+         <attribute name="icon">
+          <iconset>
+           <normalon>:/graphicGui/tabicon-extras.png</normalon>
+          </iconset>
+         </attribute>
+         <attribute name="title">
+          <string>Extras</string>
+         </attribute>
          <layout class="QGridLayout" name="gridLayout">
           <property name="leftMargin">
            <number>0</number>
@@ -1275,6 +1151,14 @@
          </layout>
         </widget>
         <widget class="QWidget" name="page_Time">
+         <attribute name="icon">
+          <iconset>
+           <normalon>:/graphicGui/tabicon-time.png</normalon>
+          </iconset>
+         </attribute>
+         <attribute name="title">
+          <string>Time</string>
+         </attribute>
          <layout class="QVBoxLayout" name="verticalLayout_6">
           <property name="spacing">
            <number>0</number>
@@ -1319,112 +1203,17 @@
                </property>
               </widget>
              </item>
-             <item row="0" column="1">
-              <layout class="QHBoxLayout" name="_3">
-               <property name="spacing">
-                <number>6</number>
+             <item row="1" column="0">
+              <widget class="QRadioButton" name="todayRadio">
+               <property name="toolTip">
+                <string>Sets the simulation time to the next instance of this time of day when Stellarium starts</string>
                </property>
-               <item>
-                <widget class="QRadioButton" name="todayRadio">
-                 <property name="toolTip">
-                  <string>Sets the simulation time to the next instance of this time of day when Stellarium starts</string>
-                 </property>
-                 <property name="text">
-                  <string>System date at:</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QTimeEdit" name="todayTimeSpinBox">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>24</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>16777215</width>
-                   <height>24</height>
-                  </size>
-                 </property>
-                 <property name="font">
-                  <font/>
-                 </property>
-                 <property name="frame">
-                  <bool>true</bool>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                 <property name="currentSectionIndex">
-                  <number>0</number>
-                 </property>
-                 <property name="time">
-                  <time>
-                   <hour>21</hour>
-                   <minute>0</minute>
-                   <second>0</second>
-                  </time>
-                 </property>
-                </widget>
-               </item>
-              </layout>
+               <property name="text">
+                <string>System date at:</string>
+               </property>
+              </widget>
              </item>
-             <item row="2" column="0">
-              <layout class="QHBoxLayout" name="_4">
-               <item>
-                <widget class="QRadioButton" name="fixedTimeRadio">
-                 <property name="toolTip">
-                  <string>Use a specific date and time when Stellarium starts up</string>
-                 </property>
-                 <property name="text">
-                  <string>Other:</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QDateTimeEdit" name="fixedDateTimeEdit">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>24</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>16777215</width>
-                   <height>24</height>
-                  </size>
-                 </property>
-                 <property name="date">
-                  <date>
-                   <year>1952</year>
-                   <month>5</month>
-                   <day>11</day>
-                  </date>
-                 </property>
-                 <property name="time">
-                  <time>
-                   <hour>0</hour>
-                   <minute>42</minute>
-                   <second>0</second>
-                  </time>
-                 </property>
-                 <property name="calendarPopup">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item row="2" column="1">
+             <item row="2" column="2">
               <widget class="QPushButton" name="fixedDateTimeCurrentButton">
                <property name="toolTip">
                 <string>Use current local date and time</string>
@@ -1433,6 +1222,103 @@
                 <string>use current</string>
                </property>
               </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QTimeEdit" name="todayTimeSpinBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>24</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>24</height>
+                </size>
+               </property>
+               <property name="font">
+                <font/>
+               </property>
+               <property name="frame">
+                <bool>true</bool>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+               <property name="currentSectionIndex">
+                <number>0</number>
+               </property>
+               <property name="time">
+                <time>
+                 <hour>21</hour>
+                 <minute>0</minute>
+                 <second>0</second>
+                </time>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QDateTimeEdit" name="fixedDateTimeEdit">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>24</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>24</height>
+                </size>
+               </property>
+               <property name="date">
+                <date>
+                 <year>1952</year>
+                 <month>5</month>
+                 <day>11</day>
+                </date>
+               </property>
+               <property name="time">
+                <time>
+                 <hour>0</hour>
+                 <minute>42</minute>
+                 <second>0</second>
+                </time>
+               </property>
+               <property name="calendarPopup">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QRadioButton" name="fixedTimeRadio">
+               <property name="toolTip">
+                <string>Use a specific date and time when Stellarium starts up</string>
+               </property>
+               <property name="text">
+                <string>Other:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="3">
+              <spacer name="horizontalSpacer_3">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
              </item>
             </layout>
            </widget>
@@ -1458,40 +1344,7 @@
              <property name="bottomMargin">
               <number>0</number>
              </property>
-             <item row="0" column="2">
-              <widget class="QLabel" name="dateFormatsLabel">
-               <property name="text">
-                <string>Date:</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="4">
-              <widget class="QLabel" name="timeFormatsLabel">
-               <property name="text">
-                <string>and time:</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="3">
-              <widget class="QComboBox" name="dateFormatsComboBox"/>
-             </item>
-             <item row="0" column="5">
-              <widget class="QComboBox" name="timeFormatsComboBox"/>
-             </item>
-             <item row="0" column="0">
-              <widget class="QRadioButton" name="jdRadioButton">
-               <property name="text">
-                <string notr="true">JD</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
+             <item row="1" column="0">
               <widget class="QRadioButton" name="dtRadioButton">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -1510,6 +1363,52 @@
                </property>
                <property name="checked">
                 <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLabel" name="dateFormatsLabel">
+               <property name="text">
+                <string>Date:</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QComboBox" name="dateFormatsComboBox"/>
+             </item>
+             <item row="1" column="3">
+              <widget class="QLabel" name="timeFormatsLabel">
+               <property name="text">
+                <string>and time:</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="4">
+              <widget class="QComboBox" name="timeFormatsComboBox"/>
+             </item>
+             <item row="1" column="5">
+              <spacer name="horizontalSpacer_4">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="0" column="0" colspan="3">
+              <widget class="QRadioButton" name="jdRadioButton">
+               <property name="text">
+                <string notr="true">JD</string>
                </property>
               </widget>
              </item>
@@ -1664,6 +1563,14 @@
          </layout>
         </widget>
         <widget class="QWidget" name="page_Tools">
+         <attribute name="icon">
+          <iconset>
+           <normalon>:/graphicGui/tabicon-tools.png</normalon>
+          </iconset>
+         </attribute>
+         <attribute name="title">
+          <string>Tools</string>
+         </attribute>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <property name="spacing">
            <number>0</number>
@@ -2072,6 +1979,14 @@
          </layout>
         </widget>
         <widget class="QWidget" name="page_Scripts">
+         <attribute name="icon">
+          <iconset>
+           <normalon>:/graphicGui/tabicon-scripts.png</normalon>
+          </iconset>
+         </attribute>
+         <attribute name="title">
+          <string>Scripts</string>
+         </attribute>
          <layout class="QHBoxLayout" name="horizontalLayout_7">
           <property name="spacing">
            <number>0</number>
@@ -2192,6 +2107,14 @@
          </layout>
         </widget>
         <widget class="QWidget" name="page_Plugins">
+         <attribute name="icon">
+          <iconset>
+           <normalon>:/graphicGui/tabicon-plugins.png</normalon>
+          </iconset>
+         </attribute>
+         <attribute name="title">
+          <string>Plugins</string>
+         </attribute>
          <layout class="QHBoxLayout" name="horizontalLayout_6">
           <property name="spacing">
            <number>0</number>
@@ -2306,11 +2229,6 @@
   <tabstop>checkBoxEclipticCoordsJ2000</tabstop>
   <tabstop>checkBoxEclipticCoordsOfDate</tabstop>
   <tabstop>systemTimeRadio</tabstop>
-  <tabstop>todayRadio</tabstop>
-  <tabstop>todayTimeSpinBox</tabstop>
-  <tabstop>fixedTimeRadio</tabstop>
-  <tabstop>fixedDateTimeEdit</tabstop>
-  <tabstop>fixedDateTimeCurrentButton</tabstop>
   <tabstop>sphericMirrorCheckbox</tabstop>
   <tabstop>scriptInfoBrowser</tabstop>
   <tabstop>closeWindowAtScriptRunCheckbox</tabstop>
@@ -2323,24 +2241,7 @@
  <resources>
   <include location="../../data/gui/guiRes.qrc"/>
  </resources>
- <connections>
-  <connection>
-   <sender>stackListWidget</sender>
-   <signal>currentRowChanged(int)</signal>
-   <receiver>configurationStackedWidget</receiver>
-   <slot>setCurrentIndex(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>237</x>
-     <y>62</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>237</x>
-     <y>281</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
  <buttongroups>
   <buttongroup name="buttonGroupDisplayedFields">
    <property name="exclusive">

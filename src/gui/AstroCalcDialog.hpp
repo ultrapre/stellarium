@@ -182,7 +182,7 @@ private slots:
 
 	void updateAstroCalcData();
 
-	void changePage(QListWidgetItem *current, QListWidgetItem *previous);
+	void currentPageChanged(int);
 
 	void updateSolarSystemData();
 
@@ -260,10 +260,6 @@ private:
 	static float brightLimit;
 	static float minY, maxY, minYme, maxYme, minYsun, maxYsun, minYmoon, maxYmoon, transitX, minY1, maxY1, minY2, maxY2;
 	static QString yAxis1Legend, yAxis2Legend;
-
-	//! Make sure that no tabs icons are outside of the viewport.
-	//! @todo Limit the width to the width of the screen *available to the window*.
-	void updateTabBarListWidgetWidth();
 };
 
 // Reimplements the QTreeWidgetItem class to fix the sorting bug

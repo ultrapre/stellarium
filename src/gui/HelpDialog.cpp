@@ -85,7 +85,6 @@ void HelpDialog::createDialogContent()
 	ui->setupUi(dialog);
 	connect(&StelApp::getInstance(), SIGNAL(languageChanged()), this, SLOT(retranslate()));
 	ui->stackedWidget->setCurrentIndex(0);
-	ui->stackListWidget->setCurrentRow(0);
 	connect(ui->closeStelWindow, SIGNAL(clicked()), this, SLOT(close()));
 	connect(ui->TitleBar, SIGNAL(movedTo(QPoint)), this, SLOT(handleMovedTo(QPoint)));
 
@@ -109,7 +108,6 @@ void HelpDialog::createDialogContent()
 	connect(ui->stackedWidget, SIGNAL(currentChanged(int)), this, SLOT(updateLog(int)));
 	connect(ui->refreshButton, SIGNAL(clicked()), this, SLOT(refreshLog()));
 
-	connect(ui->stackListWidget, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), this, SLOT(changePage(QListWidgetItem *, QListWidgetItem*)));
 
 }
 
@@ -344,9 +342,3 @@ void HelpDialog::updateAboutText(void)
 	ui->aboutBrowser->scrollToAnchor("top");
 }
 
-void HelpDialog::changePage(QListWidgetItem *current, QListWidgetItem *previous)
-{
-	if (!current)
-		current = previous;
-	ui->stackedWidget->setCurrentIndex(ui->stackListWidget->row(current));
-}

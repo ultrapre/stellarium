@@ -87,8 +87,6 @@ private slots:
 	void setSelectedCatalogsFromCheckBoxes();
 	void setSelectedTypesFromCheckBoxes();
 
-	void changePage(QListWidgetItem *current, QListWidgetItem *previous);
-
 	void updateSelectedCatalogsCheckBoxes();
 	void updateSelectedTypesCheckBoxes();
 
@@ -143,9 +141,6 @@ private slots:
 private:
 	void connectGroupBox(class QGroupBox* groupBox, const QString& actionId);
 	void updateSkyCultureText();
-	//! Make sure that no tabs icons are outside of the viewport.
-	//! @todo Limit the width to the width of the screen *available to the window*.
-	void updateTabBarListWidgetWidth();
 
 	void colorButton(QToolButton *toolButton, QString propName);
 
