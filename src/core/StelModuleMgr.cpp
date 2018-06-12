@@ -21,6 +21,7 @@
 #include <QPluginLoader>
 #include <QSettings>
 #include <QDir>
+#include <QCoreApplication>
 
 #include "StelModuleMgr.hpp"
 #include "StelApp.hpp"
@@ -237,6 +238,8 @@ QList<StelModuleMgr::PluginDescriptor> StelModuleMgr::getPluginsList()
 		}
 	}
 
+	QStringList modules;
+
 	// Then list dynamic libraries from the modules/ directory
 	QSet<QString> moduleDirs;
 	moduleDirs = StelFileMgr::listContents("modules",StelFileMgr::Directory);
@@ -253,6 +256,21 @@ QList<StelModuleMgr::PluginDescriptor> StelModuleMgr::getPluginsList()
 		moduleFullPath += ".so";
 #endif
 #endif
+
+		modules += moduleFullPath;
+	}
+	
+	
+#if defined(Q_OS_ANDROID)
+	for( QFileInfo& info : QDir(QCoreApplication::applicationDirPath()).entryInfoList( QStringList() << "libmodule_*.so" , QDir::Files ) )
+	{
+		modules += info.absoluteFilePath();
+	}
+#endif
+	
+	
+	foreach (QString moduleFullPath, modules)
+	{
 		moduleFullPath = StelFileMgr::findFile(moduleFullPath, StelFileMgr::File);
 		if (moduleFullPath.isEmpty())
 			continue;
@@ -261,7 +279,7 @@ QList<StelModuleMgr::PluginDescriptor> StelModuleMgr::getPluginsList()
 		if (!loader.load())
 		{
 			qWarning() << "Couldn't load the dynamic library:" << QDir::toNativeSeparators(moduleFullPath) << ": " << loader.errorString();
-			qWarning() << "Plugin" << dir << "will not be loaded.";
+			qWarning() << "Plugin will not be loaded.";
 			continue;
 		}
 
@@ -269,7 +287,7 @@ QList<StelModuleMgr::PluginDescriptor> StelModuleMgr::getPluginsList()
 		if (!obj)
 		{
 			qWarning() << "Couldn't open the dynamic library:" << QDir::toNativeSeparators(moduleFullPath) << ": " << loader.errorString();
-			qWarning() << "Plugin" << dir << "will not be open.";
+			qWarning() << "Plugin will not be open.";
 			continue;
 		}
 
