@@ -40,7 +40,7 @@ SerialPort::SerialPort(Server &server, const char *serial_device)
 	#endif
 {
 #ifdef Q_OS_WIN
-	handle = CreateFile(serial_device, GENERIC_READ|GENERIC_WRITE, 0, 0, OPEN_EXISTING, 0, 0);
+	handle = CreateFileA(serial_device, GENERIC_READ|GENERIC_WRITE, 0, 0, OPEN_EXISTING, 0, 0);
 	if (handle == INVALID_HANDLE_VALUE)
 	{
 		*log_file << Now() << "SerialPort::SerialPort(" << serial_device << "): "
@@ -71,7 +71,7 @@ SerialPort::SerialPort(Server &server, const char *serial_device)
 				DCB dcb;
 				memset(&dcb, 0, sizeof(dcb));
 				dcb.DCBlength = sizeof(dcb);
-				if (!BuildCommDCB("9600,n,8,1", &dcb))
+				if (!BuildCommDCBA("9600,n,8,1", &dcb))
 				{
 					*log_file << Now() << "SerialPort::SerialPort(" << serial_device << "): "
 						              "BuildCommDCB() failed: " << GetLastError() << endl;
