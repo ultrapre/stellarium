@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>916</width>
-    <height>606</height>
+    <width>830</width>
+    <height>557</height>
    </rect>
   </property>
   <layout class="QVBoxLayout">
@@ -148,7 +148,7 @@
       <item row="0" column="0">
        <widget class="QTabWidget" name="configurationStackedWidget">
         <property name="currentIndex">
-         <number>1</number>
+         <number>6</number>
         </property>
         <widget class="QWidget" name="page_Main">
          <attribute name="icon">
@@ -2115,7 +2115,7 @@
          <attribute name="title">
           <string>Plugins</string>
          </attribute>
-         <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="0,1">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -2133,23 +2133,11 @@
           </property>
           <item>
            <widget class="QListWidget" name="pluginsListWidget">
-            <property name="minimumSize">
-             <size>
-              <width>180</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>180</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="focusPolicy">
-             <enum>Qt::NoFocus</enum>
-            </property>
             <property name="horizontalScrollBarPolicy">
              <enum>Qt::ScrollBarAlwaysOff</enum>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::NoEditTriggers</set>
             </property>
            </widget>
           </item>

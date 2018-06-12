@@ -236,9 +236,14 @@
       <item row="0" column="0">
        <widget class="QTabWidget" name="stackedWidget">
         <property name="currentIndex">
-         <number>6</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="page_sky">
+         <attribute name="icon">
+          <iconset>
+           <normalon>:/graphicGui/tabicon-sky.png</normalon>
+          </iconset>
+         </attribute>
          <attribute name="title">
           <string>Sky</string>
          </attribute>
@@ -1020,8 +1025,16 @@
          </layout>
         </widget>
         <widget class="QWidget" name="page_SS">
+         <attribute name="icon">
+          <iconset>
+           <normalon>:/graphicGui/tabicon-sky.png</normalon>
+          </iconset>
+         </attribute>
          <attribute name="title">
           <string>SSO</string>
+         </attribute>
+         <attribute name="toolTip">
+          <string>Solar system objects</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_22">
           <property name="leftMargin">
@@ -1567,8 +1580,16 @@
          </layout>
         </widget>
         <widget class="QWidget" name="page_DSO">
+         <attribute name="icon">
+          <iconset>
+           <normalon>:/graphicGui/tabicon-deep-sky.png</normalon>
+          </iconset>
+         </attribute>
          <attribute name="title">
           <string>DSO</string>
+         </attribute>
+         <attribute name="toolTip">
+          <string>Deep-Sky Objects</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_11">
           <property name="leftMargin">
@@ -2294,6 +2315,11 @@
          </layout>
         </widget>
         <widget class="QWidget" name="page_markings">
+         <attribute name="icon">
+          <iconset>
+           <normalon>:/graphicGui/tabicon-markings.png</normalon>
+          </iconset>
+         </attribute>
          <attribute name="title">
           <string>Markings</string>
          </attribute>
@@ -3004,6 +3030,11 @@
          </layout>
         </widget>
         <widget class="QWidget" name="page_landscape">
+         <attribute name="icon">
+          <iconset>
+           <normalon>:/graphicGui/tabicon-landscape.png</normalon>
+          </iconset>
+         </attribute>
          <attribute name="title">
           <string>Landscape</string>
          </attribute>
@@ -3233,6 +3264,11 @@
          </layout>
         </widget>
         <widget class="QWidget" name="page_starlore">
+         <attribute name="icon">
+          <iconset>
+           <normalon>:/graphicGui/tabicon-starlore.png</normalon>
+          </iconset>
+         </attribute>
          <attribute name="title">
           <string>Starlore</string>
          </attribute>
@@ -3602,6 +3638,11 @@
          </layout>
         </widget>
         <widget class="QWidget" name="page_surveys">
+         <attribute name="icon">
+          <iconset>
+           <normalon>:/graphicGui/tabicon-surveys.png</normalon>
+          </iconset>
+         </attribute>
          <attribute name="title">
           <string>Surveys</string>
          </attribute>
