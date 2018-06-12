@@ -462,24 +462,15 @@ void StelGui::setStelStyle(const QString& section)
 		// Load the style sheets
 		currentStelStyle.confSectionName = section;
 
-		QString qtStyleFileName;
-		QString htmlStyleFileName = ":/graphicGui/normalHtml.css";
-
-		#if defined(Q_OS_ANDROID)
-			qtStyleFileName = ":/graphicGui/largeStyle.css";
-		#else
-			qtStyleFileName = ":/graphicGui/normalStyle.css";
-		#endif
-
 		// Load Qt style sheet
-		QFile styleFile(qtStyleFileName);
+		QFile styleFile( StelFileMgr::findFile("data/gui/normalStyle.css") );
 		if(styleFile.open(QIODevice::ReadOnly))
 		{
 			currentStelStyle.qtStyleSheet = styleFile.readAll();
 			styleFile.close();
 		}
 
-		QFile htmlStyleFile(htmlStyleFileName);
+		QFile htmlStyleFile( StelFileMgr::findFile("data/gui/normalHtml.css") );
 		if(htmlStyleFile.open(QIODevice::ReadOnly))
 		{
 			currentStelStyle.htmlStyleSheet = htmlStyleFile.readAll();

@@ -1,6 +1,7 @@
 
 ########### install files ###############
 INSTALL(FILES ssystem_major.ini ssystem_minor.ini ssystem_1000comets.ini base_locations.bin.gzip DejaVuSans.ttf default_config.ini DejaVuSansMono.ttf iso639-1.utf8 iso3166.tab countryCodes.dat constellations_boundaries.dat constellations_spans.dat nomenclature.fab DESTINATION share/${PACKAGE}/data)
+INSTALL(FILES gui/normalHtml.css gui/normalStyle.css DESTINATION share/${PACKAGE}/data/gui)
 INSTALL(DIRECTORY shaders/ DESTINATION share/${PACKAGE}/data/shaders FILES_MATCHING 
 	PATTERN "planet*" 
 	)
