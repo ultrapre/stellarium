@@ -525,14 +525,3 @@ void CustomProxy::resizeEvent(QGraphicsSceneResizeEvent *event)
 	}
 	QGraphicsProxyWidget::resizeEvent(event);
 }
-
-
-void CustomProxy::keyPressEvent(QKeyEvent *event)
-{
-	if( event->key() == Qt::Key_Back )
-	{
-		dialog->close();
-	}
-	
-	QGraphicsProxyWidget::keyPressEvent(event);
-}

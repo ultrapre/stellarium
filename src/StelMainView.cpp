@@ -34,6 +34,7 @@
 #include "StelProjector.hpp"
 #include "StelMovementMgr.hpp"
 #include "StelObjectMgr.hpp"
+#include "StelDialog.hpp"
 
 #include <QDebug>
 #include <QDir>
@@ -706,6 +707,18 @@ bool StelMainView::event(QEvent *event){
 		
 		if( key_event->key() == Qt::Key_Back )
 		{
+		
+			for( QObject* child : ((QObject*)getGuiWidget())->children() )
+			{
+				StelDialog* dialog = dynamic_cast<StelDialog*>( child );
+				if( dialog && dialog->visible() )
+				{
+					dialog->setVisible( false );
+					event->accept();
+					return true;
+				}
+			}
+		
 			if( stelApp->getStelObjectMgr().getWasSelected() )
 			{
 				stelApp->getStelObjectMgr().unSelect();
