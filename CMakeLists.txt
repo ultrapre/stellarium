@@ -1,27 +1,18 @@
-
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.12)
+MESSAGE(STATUS "Found CMake ${CMAKE_VERSION}")
 
-IF(NOT ("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" LESS 3.0))
-     CMAKE_POLICY(SET CMP0050 OLD)
-     # silently ignore errors in add_dependency():
-     CMAKE_POLICY(SET CMP0046 OLD)
+IF(POLICY CMP0054)
+# Potential dangerous comparison of variables. Details: https://cmake.org/cmake/help/v3.1/policy/CMP0054.html
+     CMAKE_POLICY(SET CMP0054 NEW)
 ENDIF()
-
-# just avoid a warning mess. 
-IF(NOT ("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION}" LESS 3.0.2))
-     CMAKE_POLICY(SET CMP0043 OLD)
-ENDIF()
-
-IF(NOT ("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION}" LESS 3.1.3))
-     CMAKE_POLICY(SET CMP0054 OLD)
-ENDIF()
-
 IF(POLICY CMP0071)
      CMAKE_POLICY(SET CMP0071 NEW)
 ENDIF()
 
 # warn about deprecated stuff so that we may try fixing it
 SET(CMAKE_WARN_DEPRECATED 1)
+
+SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
 
 ########### Project name ###########
 PROJECT(Stellarium)
@@ -120,17 +111,14 @@ ADD_DEFINITIONS(-D_USE_MATH_DEFINES)
 SET(STEL_GCC_C_FLAGS "-Wall -Wextra -Wno-unused-parameter -Wno-unused-result")
 SET(STEL_GCC_CXX_FLAGS "-Wall -Wextra -Wno-unused-parameter -Wno-unused-result")
 
-SET(STELLARIUM_USE_CPP11 1 CACHE BOOL "Set whether to try using C++11 when compiling. Required for Qt >= 5.7")
-IF(STELLARIUM_USE_CPP11)
-     IF(NOT (CMAKE_VERSION VERSION_LESS 3.1.0))
-        # Let CMake handle setting C++11 (since 3.1)
-        SET(CMAKE_CXX_STANDARD 11)
-        SET(CMAKE_C_STANDARD 11)
-     ELSE()
-        # Add std=c++11 to gcc flags
-        SET(STEL_GCC_CXX_FLAGS "-std=c++11 ${STEL_GCC_CXX_FLAGS}")
-     ENDIF()
-
+# Set whether to try using C++11 when compiling. Required for Qt >= 5.7"
+IF(NOT (CMAKE_VERSION VERSION_LESS 3.1.0))
+     # Let CMake handle setting C++11 (since 3.1)
+     SET(CMAKE_CXX_STANDARD 11)
+     SET(CMAKE_C_STANDARD 11)
+ELSE()
+     # Add std=c++11 to gcc flags
+     SET(STEL_GCC_CXX_FLAGS "-std=c++11 ${STEL_GCC_CXX_FLAGS}")
 ENDIF()
 
 IF(WIN32)
@@ -150,6 +138,15 @@ IF(WIN32)
           # C4351: "new" behaviour, member array default initialization. Required since at least C++98, but funny MSVC throws a warning.
           # C4996: deprecated POSIX names (used in zlib)
           SET(STEL_MSVC_FLAGS "/wd4244 /wd4305 /wd4351 /wd4996")
+          IF(MSVC_VERSION GREATER 1700)
+               SET(STEL_MSVC_FLAGS "${STEL_MSVC_FLAGS} /MP")
+
+               FOREACH(flag_var
+                    CMAKE_EXE_LINKER_FLAGS_DEBUG CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO
+                    CMAKE_SHARED_LINKER_FLAGS_DEBUG CMAKE_SHARED_LINKER_FLAGS_RELWITHDEBINFO)
+                    SET(${flag_var} "${${flag_var}} /DEBUG:FASTLINK")
+               ENDFOREACH()
+          ENDIF()
           SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${STEL_MSVC_FLAGS}")
           SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${STEL_MSVC_FLAGS}")
           # Additional defines:
@@ -350,6 +347,7 @@ ADD_PLUGIN(TelescopeControl 1)
 # Custom target used to manage dependencies of stellarium -> Static plugins
 # It is important that static plugins are compiled before stellarium main executable is linked
 ADD_CUSTOM_TARGET(AllStaticPlugins ALL)
+SET_TARGET_PROPERTIES(AllStaticPlugins PROPERTIES FOLDER "plugins")
 
 ########### Find packages ###########
 FIND_PACKAGE(Qt5Core REQUIRED)
@@ -637,6 +635,7 @@ CONFIGURE_FILE(
 
 ADD_CUSTOM_TARGET(uninstall
      "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
+SET_TARGET_PROPERTIES(uninstall PROPERTIES FOLDER "src")
 
 ########### Packaging info for CPack ###########
 
@@ -706,7 +705,7 @@ IF(WIN32)
                VERBATIM
           )
      ELSE()
-          MESSAGE(WARNING "Inno Setup Compiler not found. You won't be able to build setup files.")
+          MESSAGE(STATUS "Could NOT find Inno Setup Compiler (missing: ${ISS_COMPILER_FILENAME}). You won't be able to build setup files.")
      ENDIF()
 ENDIF()
 

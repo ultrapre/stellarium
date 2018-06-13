@@ -862,7 +862,7 @@
          <attribute name="title">
           <string>Extras</string>
          </attribute>
-         <layout class="QGridLayout" name="gridLayout">
+         <layout class="QGridLayout" name="gridLayoutExtras">
           <property name="leftMargin">
            <number>0</number>
           </property>
