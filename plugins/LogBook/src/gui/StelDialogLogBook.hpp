@@ -47,7 +47,8 @@ protected:
 	
 	//! The main dialog
 	QWidget* dialog;
-	class CustomProxy* proxy;
+	class CustomProxy;
+	CustomProxy* proxy;
 };
 
 #endif // _STELDIALOGLOGBOOK_HPP_

@@ -27,7 +27,7 @@
 #include <QGraphicsProxyWidget>
 #include <QStyleOptionGraphicsItem>
 
-class CustomProxy : public QGraphicsProxyWidget
+class StelDialogLogBook::CustomProxy : public QGraphicsProxyWidget
 {
 	public:
 		CustomProxy(QGraphicsItem *parent = 0, Qt::WindowFlags wFlags = 0) : QGraphicsProxyWidget(parent, wFlags)

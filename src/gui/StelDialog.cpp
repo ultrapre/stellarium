@@ -478,7 +478,7 @@ void QSliderStelPropertyConnectionHelper::onPropertyChanged(const QVariant& val)
 }
 
 
-CustomProxy::CustomProxy(QGraphicsItem *parent, Qt::WindowFlags wFlags , StelDialog* _dialog ) : QGraphicsProxyWidget(parent, wFlags)
+StelDialog::CustomProxy::CustomProxy(QGraphicsItem *parent, Qt::WindowFlags wFlags , StelDialog* _dialog ) : QGraphicsProxyWidget(parent, wFlags)
 {
 	setFocusPolicy(Qt::StrongFocus);
 	dialog = _dialog;
@@ -486,7 +486,7 @@ CustomProxy::CustomProxy(QGraphicsItem *parent, Qt::WindowFlags wFlags , StelDia
 
 
 //! Reimplement this method to add windows decorations. Currently there are invisible 2 px decorations
-void CustomProxy::paintWindowFrame(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
+void StelDialog::CustomProxy::paintWindowFrame(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
 {
 /*			QStyleOptionTitleBar bar;
 	initStyleOption(&bar);
@@ -496,7 +496,7 @@ void CustomProxy::paintWindowFrame(QPainter*, const QStyleOptionGraphicsItem*, Q
 }
 
 
-bool CustomProxy::event(QEvent* event)
+bool StelDialog::CustomProxy::event(QEvent* event)
 {
 	if (StelApp::getInstance().getSettings()->value("gui/flag_use_window_transparency", true).toBool())
 	{
@@ -517,7 +517,7 @@ bool CustomProxy::event(QEvent* event)
 }
 
 
-void CustomProxy::resizeEvent(QGraphicsSceneResizeEvent *event)
+void StelDialog::CustomProxy::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
 	if (event->newSize() != event->oldSize())
 	{
