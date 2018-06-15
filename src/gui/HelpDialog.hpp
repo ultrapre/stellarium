@@ -65,6 +65,8 @@ private slots:
 	//! Sync the displayed log.
 	void refreshLog();
 
+	void changePage(QListWidgetItem *current, QListWidgetItem *previous);
+
 };
 
 #endif /*_HELPDIALOG_HPP_*/

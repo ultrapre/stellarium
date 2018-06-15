@@ -126,6 +126,9 @@ void AstroCalcDialog::retranslate()
 		drawAltVsTimeDiagram();
 		populateTimeIntervalsList();
 		populateWutGroups();
+		// Hack to shrink the tabs to optimal size after language change
+		// by causing the list items to be laid out again.
+		updateTabBarListWidgetWidth();
 	}
 }
 
@@ -152,6 +155,7 @@ void AstroCalcDialog::createDialogContent()
 	// Signals and slots
 	connect(&StelApp::getInstance(), SIGNAL(languageChanged()), this, SLOT(retranslate()));
 	ui->stackedWidget->setCurrentIndex(0);
+	ui->stackListWidget->setCurrentRow(0);
 	connect(ui->closeStelWindow, SIGNAL(clicked()), this, SLOT(close()));
 	connect(ui->TitleBar, SIGNAL(movedTo(QPoint)), this, SLOT(handleMovedTo(QPoint)));
 
@@ -291,7 +295,9 @@ void AstroCalcDialog::createDialogContent()
 	connect(core, SIGNAL(locationChanged(StelLocation)), this, SLOT(updateAstroCalcData()));
 	connect(core, SIGNAL(locationChanged(StelLocation)), this, SLOT(drawAltVsTimeDiagram()));
 	connect(core, SIGNAL(locationChanged(StelLocation)), this, SLOT(drawMonthlyElevationGraph()));
-	connect(ui->stackedWidget, SIGNAL(currentChanged(int)), this, SLOT(currentPageChanged(int)));
+	connect(ui->stackListWidget, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), this, SLOT(changePage(QListWidgetItem*, QListWidgetItem*)));
+
+	updateTabBarListWidgetWidth();
 }
 
 void AstroCalcDialog::updateAstroCalcData()
@@ -3501,15 +3507,19 @@ double AstroCalcDialog::findDistance(double JD, PlanetP object1, StelObjectP obj
 	return obj1.angle(obj2);
 }
 
-void AstroCalcDialog::currentPageChanged( int current )
+void AstroCalcDialog::changePage(QListWidgetItem* current, QListWidgetItem* previous)
 {
+	if (!current)
+		current = previous;
+
+	ui->stackedWidget->setCurrentIndex(ui->stackListWidget->row(current));
 
 	// special case
-	if (current == 0)
+	if (ui->stackListWidget->row(current) == 0)
 		currentCelestialPositions();
 
 	// special case - plot the graph when tab 'Alt. vs Time' is visible
-	if (current == 3)
+	if (ui->stackListWidget->row(current) == 3)
 	{
 		plotAltVsTime = true;
 		drawAltVsTimeDiagram(); // Is object already selected?
@@ -3518,7 +3528,7 @@ void AstroCalcDialog::currentPageChanged( int current )
 		plotAltVsTime = false;
 
 	// special case - plot the graph when tab 'Monthly Elevation' is visible
-	if (current == 4)
+	if (ui->stackListWidget->row(current) == 4)
 	{
 		plotMonthlyElevation = true;
 		drawMonthlyElevationGraph(); // Is object already selected?
@@ -3527,8 +3537,42 @@ void AstroCalcDialog::currentPageChanged( int current )
 		plotMonthlyElevation = false;
 
 	// special case (PCalc)
-	if (current == 7)
+	if (ui->stackListWidget->row(current) == 7)
 		computePlanetaryData();
+}
+
+void AstroCalcDialog::updateTabBarListWidgetWidth()
+{
+	ui->stackListWidget->setWrapping(false);
+
+	// Update list item sizes after translation
+	ui->stackListWidget->adjustSize();
+
+	QAbstractItemModel* model = ui->stackListWidget->model();
+	if (!model)
+	{
+		return;
+	}
+
+	// stackListWidget->font() does not work properly!
+	// It has a incorrect fontSize in the first loading, which produces the bug#995107.
+	QFont font;
+	font.setPixelSize(14);
+	font.setWeight(75);
+	QFontMetrics fontMetrics(font);
+
+	int iconSize = ui->stackListWidget->iconSize().width();
+
+	int width = 0;
+	for (int row = 0; row < model->rowCount(); row++)
+	{
+		int textWidth = fontMetrics.width(ui->stackListWidget->item(row)->text());
+		width += iconSize > textWidth ? iconSize : textWidth; // use the wider one
+		width += 24;										  // margin - 12px left and 12px right
+	}
+
+	// Hack to force the window to be resized...
+	ui->stackListWidget->setMinimumWidth(width);
 }
 
 void AstroCalcDialog::updateSolarSystemData()
