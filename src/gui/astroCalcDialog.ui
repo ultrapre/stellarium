@@ -150,18 +150,6 @@
       </property>
       <item>
        <widget class="QListWidget" name="stackListWidget">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>72</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>72</height>
-         </size>
-        </property>
         <property name="focusPolicy">
          <enum>Qt::NoFocus</enum>
         </property>
@@ -180,6 +168,9 @@
           <height>48</height>
          </size>
         </property>
+        <property name="movement">
+         <enum>QListView::Static</enum>
+        </property>
         <property name="flow">
          <enum>QListView::LeftToRight</enum>
         </property>
@@ -188,9 +179,6 @@
         </property>
         <property name="viewMode">
          <enum>QListView::IconMode</enum>
-        </property>
-        <property name="selectionRectVisible">
-         <bool>false</bool>
         </property>
         <item>
          <property name="text">

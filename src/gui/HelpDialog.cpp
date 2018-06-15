@@ -111,6 +111,8 @@ void HelpDialog::createDialogContent()
 
 	connect(ui->stackListWidget, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), this, SLOT(changePage(QListWidgetItem *, QListWidgetItem*)));
 
+
+	ui->stackListWidget->setFixedHeight( ui->stackListWidget->sizeHintForRow(0) );
 }
 
 void HelpDialog::showShortcutsWindow()

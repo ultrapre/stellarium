@@ -3573,6 +3573,8 @@ void AstroCalcDialog::updateTabBarListWidgetWidth()
 
 	// Hack to force the window to be resized...
 	ui->stackListWidget->setMinimumWidth(width);
+	
+	ui->stackListWidget->setFixedHeight( ui->stackListWidget->sizeHintForRow(0) );
 }
 
 void AstroCalcDialog::updateSolarSystemData()
