@@ -463,15 +463,18 @@ void StelGui::setStelStyle(const QString& section)
 		// Load the style sheets
 		currentStelStyle.confSectionName = section;
 
+		QString qtStyleFileName = ":/graphicGui/normalStyle.css";
+		QString htmlStyleFileName = ":/graphicGui/normalHtml.css";
+
 		// Load Qt style sheet
-		QFile styleFile( StelFileMgr::findFile("data/gui/normalStyle.css") );
+		QFile styleFile(qtStyleFileName);
 		if(styleFile.open(QIODevice::ReadOnly))
 		{
 			currentStelStyle.qtStyleSheet = styleFile.readAll();
 			styleFile.close();
 		}
 
-		QFile htmlStyleFile( StelFileMgr::findFile("data/gui/normalHtml.css") );
+		QFile htmlStyleFile(htmlStyleFileName);
 		if(htmlStyleFile.open(QIODevice::ReadOnly))
 		{
 			currentStelStyle.htmlStyleSheet = htmlStyleFile.readAll();
@@ -1104,14 +1107,4 @@ void StelGui::copySelectedObjectInfo(void)
 bool StelGui::getAstroCalcVisible()
 {
 	return astroCalcDialog && astroCalcDialog->visible();
-}
-
-QPixmap StelGui::ScaledPixmap( const QPixmap& pixmap ){
-	#if defined(Q_OS_ANDROID)
-		if( !pixmap.isNull() ){
-			return pixmap.scaled( pixmap.size() * 2 );
-		}
-	#endif
-	
-	return pixmap;
 }

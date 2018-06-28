@@ -443,7 +443,7 @@ QTabWidget::pane {
 }
 
 QTabWidget::tab-bar {
-	/*width: 1000px;*/
+	width: 1000px;
 	/* Used as a workaround to set the background of
 	 the space between the last tab (normally the rightmost one
 	 and the end of the window. Not necessary if
@@ -461,7 +461,6 @@ QTabBar {
 	font-size: 14px;
 	/* Don't put font-size in QTabBar::tab, as it causes the tab
 	 labels to be cut by the frame. */
-	icon-size: 64px;
 }
 
 QTabBar::tab {

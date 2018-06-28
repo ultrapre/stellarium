@@ -165,6 +165,8 @@
         <file>HorizontalAutoHideOff.png</file>
         <file>VerticalAutoHideOn.png</file>
         <file>world.png</file>
+        <file>normalHtml.css</file>
+        <file>normalStyle.css</file>
         <file>tabicon-plugins.png</file>
         <file>nv_filesave.png</file>
         <file>backspace.png</file>
