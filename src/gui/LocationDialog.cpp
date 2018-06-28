@@ -369,7 +369,7 @@ void LocationDialog::populatePlanetList()
 	planets->clear();
 	//For each planet, display the localized name and store the original as user
 	//data. Unfortunately, there's no other way to do this than with a cycle.
-	foreach(const PlanetP& p, ss)
+	for (const auto& p : ss)
 	{
 		planets->addItem(p->getNameI18n(), p->getEnglishName());
 	}
@@ -394,7 +394,7 @@ void LocationDialog::populateCountryList()
 	countries->clear();
 	//For each country, display the localized name and store the original as user
 	//data. Unfortunately, there's no other way to do this than with a cycle.
-	foreach(const QString& name, countryNames)
+	for (const auto& name : countryNames)
 	{
 		countries->addItem(q_(name), name);
 	}
@@ -414,13 +414,12 @@ void LocationDialog::populateTimeZonesList()
 	QComboBox* timeZones = ui->timeZoneNameComboBox;
 	// Return a list of all the known time zone names (from Qt)
 	QStringList tzNames;
-	QList<QByteArray> tzList = QTimeZone::availableTimeZoneIds(); // System dependent set of IANA timezone names.
-	QList<QByteArray>::iterator i;
-	for (i = tzList.begin(); i!= tzList.end(); ++i)
+	auto tzList = QTimeZone::availableTimeZoneIds(); // System dependent set of IANA timezone names.
+	for (const auto& tz : tzList)
 	{
-		tzNames.append(*i);
+		tzNames.append(tz);
 		// Activate this to get a list of known TZ names...
-		//qDebug() << "Qt/IANA TZ entry: " << *i;
+		//qDebug() << "Qt/IANA TZ entry: " << tz;
 	}
 
 	tzNames.sort();
@@ -432,7 +431,7 @@ void LocationDialog::populateTimeZonesList()
 	timeZones->clear();
 	//For each time zone, display the localized name and store the original as user
 	//data. Unfortunately, there's no other way to do this than with a loop.
-	foreach(const QString& name, tzNames)
+	for (const auto& name : tzNames)
 	{
 		timeZones->addItem(name, name);
 	}

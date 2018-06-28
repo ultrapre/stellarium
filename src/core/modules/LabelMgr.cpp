@@ -170,7 +170,8 @@ StelLabel::StelLabel(const QString& text, const QFont& font, const Vec3f& color)
 	  labelFont(font),
 	  labelColor(color),
 	  autoDelete(false),
-	  timer(NULL)
+	  id(0),
+	  timer(Q_NULLPTR)
 {
 }
 
@@ -399,7 +400,7 @@ void LabelMgr::init()
 void LabelMgr::draw(StelCore* core)
 {
 	StelPainter sPainter(core->getProjection(StelCore::FrameJ2000));
-	foreach(StelLabel* l, allLabels)
+	for (auto* l : allLabels)
 	{
 		l->draw(core, sPainter);
 	}
@@ -408,7 +409,7 @@ void LabelMgr::draw(StelCore* core)
 void LabelMgr::messageTimeout2()
 {
 	QObject* obj = QObject::sender();
-	foreach(StelLabel* l, allLabels)
+	for (auto* l : allLabels)
 	{
 		if (l->timer == obj)
 		{
@@ -421,7 +422,7 @@ void LabelMgr::messageTimeout2()
 void LabelMgr::messageTimeout1()
 {
 	QObject* obj = QObject::sender();
-	foreach(StelLabel* l, allLabels)
+	for (auto* l : allLabels)
 	{
 		if (l->timer == obj)
 		{
@@ -560,7 +561,7 @@ void LabelMgr::deleteLabel(int id)
 	
 void LabelMgr::update(double deltaTime)
 {
-	foreach(StelLabel* l, allLabels) 
+	for (auto* l : allLabels) 
 		l->update(deltaTime);
 }
 	
@@ -574,7 +575,7 @@ double LabelMgr::getCallOrder(StelModuleActionName actionName) const
 int LabelMgr::deleteAllLabels(void)
 {
 	int count=0;
-	foreach(StelLabel* l, allLabels)
+	for (auto* l : allLabels)
 	{
 		delete l;
 		count++;

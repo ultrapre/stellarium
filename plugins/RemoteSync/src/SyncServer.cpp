@@ -50,7 +50,7 @@ SyncServer::~SyncServer()
 	stop();
 
 	//delete handlers
-	foreach(SyncMessageHandler* h, handlerList)
+	for (auto* h : handlerList)
 	{
 		if(h)
 			delete h;
@@ -107,9 +107,8 @@ void SyncServer::broadcastMessage(const SyncMessage &msg)
 		return;
 	}
 
-	for(tClientList::iterator it = clients.begin();it!=clients.end();++it)
+	for (auto* client : clients)
 	{
-		SyncRemotePeer* client = *it;
 		if(client->isAuthenticated())
 		{
 			client->writeData(broadcastBuffer,size);
@@ -127,14 +126,14 @@ void SyncServer::stop()
 		qserver->close();
 
 		//delete senders
-		foreach(SyncServerEventSender* s, senderList)
+		for (auto* s : senderList)
 		{
 			if(s)
 				delete s;
 		}
 		senderList.clear();
 
-		for(tClientList::iterator it = clients.begin();it!=clients.end(); )
+		for (auto it = clients.begin(); it!=clients.end();)
 		{
 			//this may cause disconnected signal, which will remove the client
 			SyncRemotePeer* peer = *it;
@@ -149,7 +148,7 @@ void SyncServer::stop()
 
 void SyncServer::update()
 {
-	foreach(SyncServerEventSender* s, senderList)
+	for (auto* s : senderList)
 	{
 		s->update();
 	}
@@ -167,9 +166,9 @@ void SyncServer::timerEvent(QTimerEvent *evt)
 void SyncServer::checkTimeouts()
 {
 	//iterate over the connected clients
-	for(tClientList::iterator it = clients.begin(); it!=clients.end(); ++it)
+	for (auto* client : clients)
 	{
-		(*it)->checkTimeout();
+		client->checkTimeout();
 	}
 }
 
@@ -214,7 +213,7 @@ void SyncServer::handleNewConnection()
 void SyncServer::clientAuthenticated(SyncRemotePeer &peer)
 {
 	//we have to send the client the current app state
-	foreach(SyncServerEventSender* s, senderList)
+	for (auto* s : senderList)
 	{
 		s->newClientConnected(peer);
 	}

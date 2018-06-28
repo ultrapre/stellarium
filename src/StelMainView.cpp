@@ -372,12 +372,6 @@ protected:
 #ifndef QT_NO_DEBUG
 		StelOpenGL::clearGLErrors();
 #endif
-		QOpenGLFunctions* gl = QOpenGLContext::currentContext()->functions();
-
-		//clear the buffer (with black, this would not be strictly required for us because we repaint all pixels, but should improve perf on tile-based renderers)
-		// Here we can set a sky background color if really wanted (art applications. Astronomical sky should be 0/0/0/0)
-		gl->glClearColor(skyBackgroundColor[0], skyBackgroundColor[1], skyBackgroundColor[2], 0.f); //we also clear alpha to zero
-		gl->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		//update and draw
 		StelApp& app = StelApp::getInstance();
@@ -622,8 +616,18 @@ StelMainView::StelMainView(QSettings* settings)
 	connect(this, SIGNAL(screenshotRequested()), this, SLOT(doScreenshot()));
 
 #ifdef OPENGL_DEBUG_LOGGING
-	glLogger = new QOpenGLDebugLogger(this);
-	connect(glLogger, SIGNAL(messageLogged(QOpenGLDebugMessage)), this, SLOT(logGLMessage(QOpenGLDebugMessage)));
+	if (QApplication::testAttribute(Qt::AA_UseOpenGLES))
+	{
+		// QOpenGLDebugLogger doesn't work with OpenGLES's GL_KHR_debug.
+		// See Qt Bug 62070: https://bugreports.qt.io/browse/QTBUG-62070
+
+		glLogger = Q_NULLPTR;
+	}
+	else
+	{
+		glLogger = new QOpenGLDebugLogger(this);
+		connect(glLogger, SIGNAL(messageLogged(QOpenGLDebugMessage)), this, SLOT(logGLMessage(QOpenGLDebugMessage)));
+	}
 #endif
 
 	//get the desired opengl format parameters
@@ -785,29 +789,32 @@ QSurfaceFormat StelMainView::getDesiredGLFormat() const
 void StelMainView::init()
 {
 #ifdef OPENGL_DEBUG_LOGGING
-	if(!QOpenGLContext::currentContext()->hasExtension(QByteArrayLiteral("GL_KHR_debug")))
-		qWarning()<<"GL_KHR_debug extension missing, OpenGL debug logger will likely not work";
-	if(glLogger->initialize())
+	if (glLogger)
 	{
-		qDebug()<<"OpenGL debug logger initialized";
-		QVector<GLuint> disabledMsgs;
-		//if your GL implementation spams some output you are not interested in,
-		//you can disable their message IDs here
-		//disabledMsgs.append(100);
-		glLogger->disableMessages(disabledMsgs);
-		glLogger->startLogging(QOpenGLDebugLogger::SynchronousLogging);
-		//the internal log buffer may not be empty, so check it
-		foreach(const QOpenGLDebugMessage& msg, glLogger->loggedMessages())
+		if(!QOpenGLContext::currentContext()->hasExtension(QByteArrayLiteral("GL_KHR_debug")))
+			qWarning()<<"GL_KHR_debug extension missing, OpenGL debug logger will likely not work";
+		if(glLogger->initialize())
 		{
-			logGLMessage(msg);
+			qDebug()<<"OpenGL debug logger initialized";
+			QVector<GLuint> disabledMsgs;
+			//if your GL implementation spams some output you are not interested in,
+			//you can disable their message IDs here
+			//disabledMsgs.append(100);
+			glLogger->disableMessages(disabledMsgs);
+			glLogger->startLogging(QOpenGLDebugLogger::SynchronousLogging);
+			//the internal log buffer may not be empty, so check it
+			for (const auto& msg : glLogger->loggedMessages())
+			{
+				logGLMessage(msg);
+			}
 		}
-	}
-	else
-		qWarning()<<"Failed to initialize OpenGL debug logger";
+		else
+			qWarning()<<"Failed to initialize OpenGL debug logger";
 
-	connect(QOpenGLContext::currentContext(),SIGNAL(aboutToBeDestroyed()),this,SLOT(contextDestroyed()));
-	//for easier debugging, print the adress of the main GL context
-	qDebug()<<"CurCtxPtr:"<<QOpenGLContext::currentContext();
+		connect(QOpenGLContext::currentContext(),SIGNAL(aboutToBeDestroyed()),this,SLOT(contextDestroyed()));
+		//for easier debugging, print the adress of the main GL context
+		qDebug()<<"CurCtxPtr:"<<QOpenGLContext::currentContext();
+	}
 #endif
 
 	qDebug()<<"StelMainView::init";
@@ -1458,8 +1465,8 @@ void StelMainView::doScreenshot(void)
 	// First, image size:
 	glWidget->makeCurrent();
 	float pixelRatio = QOpenGLContext::currentContext()->screen()->devicePixelRatio();
-	int imgWidth =stelScene->width()  * pixelRatio;
-	int imgHeight=stelScene->height() * pixelRatio;
+	int imgWidth =stelScene->width();
+	int imgHeight=stelScene->height();
 	if (flagUseCustomScreenshotSize)
 	{
 		// Borrowed from Scenery3d renderer: determine maximum framebuffer size as minimum of texture, viewport and renderbuffer size
@@ -1507,7 +1514,7 @@ void StelMainView::doScreenshot(void)
 	QOpenGLFramebufferObjectFormat fbFormat;
 	fbFormat.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
 	fbFormat.setInternalTextureFormat(isGLES ? GL_RGBA : GL_RGB); // try to avoid transparent background!
-	QOpenGLFramebufferObject * fbObj = new QOpenGLFramebufferObject(imgWidth, imgHeight, fbFormat);
+	QOpenGLFramebufferObject * fbObj = new QOpenGLFramebufferObject(imgWidth * pixelRatio, imgHeight * pixelRatio, fbFormat);
 	fbObj->bind();
 	// Now the painter has to be convinced to paint to the potentially larger image frame.
 	QOpenGLPaintDevice fbObjPaintDev(imgWidth, imgHeight);
@@ -1521,7 +1528,7 @@ void StelMainView::doScreenshot(void)
 	sParams.viewportXywh[3]=imgHeight;
 
 	// Configure a helper value to allow some modules to tweak their output sizes. Currently used by StarMgr, maybe solve font issues?
-	customScreenshotMagnification=imgHeight/QApplication::desktop()->screenGeometry().height();
+	customScreenshotMagnification=(float)imgHeight/QApplication::desktop()->screenGeometry().height();
 
 	sParams.viewportCenter.set(0.0+(0.5+pParams.viewportCenterOffset.v[0])*imgWidth, 0.0+(0.5+pParams.viewportCenterOffset.v[1])*imgHeight);
 	sParams.viewportFovDiameter = qMin(imgWidth,imgHeight);

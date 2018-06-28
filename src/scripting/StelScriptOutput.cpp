@@ -17,9 +17,11 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#include "StelScriptOutput.hpp"
 #include <QDir>
 #include <QDebug>
+#include <QSettings>
+#include "StelScriptOutput.hpp"
+#include "StelApp.hpp"
 
 // Init static variables.
 QFile StelScriptOutput::outputFile;
@@ -55,14 +57,32 @@ void StelScriptOutput::saveOutputAs(const QString &name)
 	QFile asFile;
 	QFileInfo outputInfo(outputFile);
 	QDir dir=outputInfo.dir(); // will hold complete dirname
+	QFileInfo newFileNameInfo(name);
 
-	asFile.setFileName(dir.absolutePath() + "/" + name);
+	bool okToSaveToAbsolutePath=StelApp::getInstance().getSettings()->value("scripts/flag_script_allow_write_absolute_path", false).toBool();
+
+	if (!okToSaveToAbsolutePath && (newFileNameInfo.isAbsolute()))
+	{
+		qWarning() << "SCRIPTING CONFIGURATION ISSUE: You are trying to save to an absolute pathname.";
+		qWarning() << "  To enable this, edit config.ini and set [scripts]/flag_script_allow_write_absolute_path=true";
+		asFile.setFileName(dir.absolutePath() + "/" + newFileNameInfo.fileName());
+		qWarning() << "  Storing to " << asFile.fileName() << " instead";
+	}
+	else if (okToSaveToAbsolutePath && (newFileNameInfo.isAbsolute()))
+	{
+		asFile.setFileName(name);
+	}
+	else
+	{
+		asFile.setFileName(dir.absolutePath() + "/" + name);
+	}
+
 	if (!asFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text | QIODevice::Unbuffered))
 	{
-		qDebug() << "ERROR: Cannot open file" << dir.absolutePath() + "/" + name;
+		qDebug() << "ERROR: Cannot open file" << asFile.fileName();
 		return;
 	}
-	qDebug() << "saving copy of output.txt to " << dir.absolutePath() + "/" + name;
+	qDebug() << "saving copy of output.txt to " << asFile.fileName();
 	asFile.write(qPrintable(outputText), outputText.size());
 	asFile.close();
 }

@@ -241,7 +241,7 @@ QString Comet::getInfoString(const StelCore *core, const InfoStringGroup &flags)
 		double orbVel=orbitalVel.length();
 		if (orbVel>0.)
 		{ // AU/d * km/AU /24
-			oss << QString("%1: %2 %3").arg(q_("Velocity")).arg(orbVel* AU/86400., 0, 'f', 3).arg(kms) << "<br />";
+			oss << QString("%1: %2 %3").arg(q_("Orbital velocity")).arg(orbVel* AU/86400., 0, 'f', 3).arg(kms) << "<br />";
 		}
 	}
 
@@ -306,6 +306,12 @@ QString Comet::getInfoString(const StelCore *core, const InfoStringGroup &flags)
 		else
 			oss << QString("%1: %2 %3 (%4)").arg(comaEst, QString::number(coma, 'f', 0), km, comaDeg) << "<br />";
 		oss << QString("%1: %2 %3 (%4)").arg(q_("Gas tail length (estimate)"), QString::number(tail*1e-6, 'G', 3), Mkm, tailDeg) << "<br />";
+	}
+
+	if (flags&Size)
+	{
+		// Given the very irregular shape, other terminology like "equatorial radius" do not make much sense.
+		oss << QString("%1: %2 %3").arg(q_("Core diameter"), QString::number(AU * 2.0 * getRadius(), 'f', 1) , qc_("km", "distance")) << "<br />";
 	}
 
 	postProcessInfoString(str, flags);

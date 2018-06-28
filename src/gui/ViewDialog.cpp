@@ -234,8 +234,8 @@ void ViewDialog::createDialogContent()
 	colorButton(ui->planetTrailsColor, "SolarSystem.trailsColor");
 	connect(ui->planetTrailsColor, SIGNAL(released()), this, SLOT(askPlanetTrailsColor()));
 	connectBoolProperty(ui->planetTrailsCheckBox, "SolarSystem.trailsDisplayed");
-	ui->planetIsolatedTrailsCheckBox->setEnabled(ssmgr->getFlagIsolatedTrails());
-	connect(ssmgr,SIGNAL(flagIsolatedTrailsChanged(bool)),ui->planetIsolatedTrailsCheckBox, SLOT(setEnabled(bool)));
+	ui->planetIsolatedTrailsCheckBox->setEnabled(ssmgr->getFlagTrails());
+	connect(ssmgr,SIGNAL(trailsDisplayedChanged(bool)),ui->planetIsolatedTrailsCheckBox, SLOT(setEnabled(bool)));
 	connectBoolProperty(ui->hidePlanetNomenclatureCheckBox, "NomenclatureMgr.localNomenclatureHided");
 
 	StelModule* mnmgr = StelApp::getInstance().getModule("NomenclatureMgr");
@@ -1528,7 +1528,7 @@ void ViewDialog::populateLists()
 	l->blockSignals(true);
 	l->clear();	
 	const QStringList mappings = core->getAllProjectionTypeKeys();
-	foreach (QString s, mappings)
+	for (const auto& s : mappings)
 	{
 		l->addItem(core->projectionTypeKeyToNameI18n(s));
 	}
@@ -1543,7 +1543,7 @@ void ViewDialog::populateLists()
 	l->clear();
 	StelModule* lmgr = StelApp::getInstance().getModule("LandscapeMgr");
 	QStringList landscapeList = lmgr->property("allLandscapeNames").toStringList();
-	foreach (const QString landscapeName, landscapeList)
+	for (const auto& landscapeName : landscapeList)
 	{
 		QString label = q_(landscapeName);
 		QListWidgetItem* item = new QListWidgetItem(label);

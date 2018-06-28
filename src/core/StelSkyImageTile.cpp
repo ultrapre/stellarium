@@ -86,14 +86,14 @@ void StelSkyImageTile::draw(StelCore* core, StelPainter& sPainter, float)
 	getTilesToDraw(result, core, prj->getViewportConvexPolygon(0, 0), limitLuminance, true);
 
 	int numToBeLoaded=0;
-	foreach (StelSkyImageTile* t, result)
+	for (auto* t : result)
 		if (t->isReadyToDisplay()==false)
 			++numToBeLoaded;
 	updatePercent(result.size(), numToBeLoaded);
 
 	// Draw in the good order
 	sPainter.setBlending(true, GL_ONE, GL_ONE);
-	QMap<double, StelSkyImageTile*>::Iterator i = result.end();
+	auto i = result.end();
 	while (i!=result.begin())
 	{
 		--i;
@@ -161,7 +161,7 @@ void StelSkyImageTile::getTilesToDraw(QMultiMap<double, StelSkyImageTile*>& resu
 		}
 		else
 		{
-			foreach (const SphericalRegionP& poly, skyConvexPolygons)
+			for (const auto& poly : skyConvexPolygons)
 			{
 				if (viewPortPoly->contains(poly))
 				{
@@ -214,7 +214,7 @@ void StelSkyImageTile::getTilesToDraw(QMultiMap<double, StelSkyImageTile*>& resu
 		if (subTiles.isEmpty() && !subTilesUrls.isEmpty())
 		{
 			// Load the sub tiles because we reached the maximum resolution and they are not yet loaded
-			foreach (QVariant s, subTilesUrls)
+			for (const auto& s : subTilesUrls)
 			{
 				StelSkyImageTile* nt;
 				if (s.type()==QVariant::Map)
@@ -228,7 +228,7 @@ void StelSkyImageTile::getTilesToDraw(QMultiMap<double, StelSkyImageTile*>& resu
 			}
 		}
 		// Try to add the subtiles
-		foreach (MultiLevelJsonBase* tile, subTiles)
+		for (auto* tile : subTiles)
 		{
 			qobject_cast<StelSkyImageTile*>(tile)->getTilesToDraw(result, core, viewPortPoly, limitLuminance, !fullInScreen);
 		}
@@ -272,7 +272,7 @@ bool StelSkyImageTile::drawTile(StelCore* core, StelPainter& sPainter)
 
 	const bool withExtinction=(getFrameType()!=StelCore::FrameAltAz && core->getSkyDrawer()->getFlagHasAtmosphere() && core->getSkyDrawer()->getExtinction().getExtinctionCoefficient()>=0.01f);
 	
-	foreach (const SphericalRegionP& poly, skyConvexPolygons)
+	for (const auto& poly : skyConvexPolygons)
 	{
 		Vec4f extinctedColor = color;
 		if (withExtinction)
@@ -338,7 +338,7 @@ bool StelSkyImageTile::drawTile(StelCore* core, StelPainter& sPainter)
 		debugFont = &StelApp::getInstance().getFontManager().getStandardFont(StelApp::getInstance().getLocaleMgr().getSkyLanguage(), 12);
 	}
 	color.set(1.0,0.5,0.5,1.0);
-	foreach (const SphericalRegionP& poly, skyConvexPolygons)
+	for (const auto& poly : skyConvexPolygons)
 	{
 		Vec3d win;
 		Vec3d bary = poly->getPointInside();
@@ -442,7 +442,7 @@ void StelSkyImageTile::loadFromQVariantMap(const QVariantMap& map)
 	{
 		const QVariant& polyRaDec = polyList.at(i);
 		QVector<Vec3d> vertices;
-		foreach (const QVariant& vRaDec, polyRaDec.toList())
+		for (const auto& vRaDec : polyRaDec.toList())
 		{
 			const QVariantList vl = vRaDec.toList();
 			Vec3d v;
@@ -457,7 +457,7 @@ void StelSkyImageTile::loadFromQVariantMap(const QVariantMap& map)
 		{
 			const QVariant& polyXY = texCoordList.at(i);
 			QVector<Vec2f> texCoords;
-			foreach (const QVariant& vXY, polyXY.toList())
+			for (const auto& vXY : polyXY.toList())
 			{
 				const QVariantList vl = vXY.toList();
 				texCoords.append(Vec2f(vl.at(0).toFloat(&ok), vl.at(1).toFloat(&ok)));
@@ -506,15 +506,15 @@ void StelSkyImageTile::loadFromQVariantMap(const QVariantMap& map)
 	// This is a list of URLs to the child tiles or a list of already loaded map containing child information
 	// (in this later case, the StelSkyImageTile objects will be created later)
 	subTilesUrls = map.value("subTiles").toList();
-	for (QVariantList::Iterator i=subTilesUrls.begin(); i!=subTilesUrls.end();++i)
+	for (auto& variant : subTilesUrls)
 	{
-		if (i->type()==QVariant::Map)
+		if (variant.type() == QVariant::Map)
 		{
 			// Check if the JSON object is a reference, i.e. if it contains a $ref key
-			QVariantMap m = i->toMap();
+			QVariantMap m = variant.toMap();
 			if (m.size()==1 && m.contains("$ref"))
 			{
-				*i=QString(m["$ref"].toString());
+				variant = QString(m["$ref"].toString());
 			}
 		}
 	}

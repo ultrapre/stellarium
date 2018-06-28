@@ -190,7 +190,7 @@ void ConfigurationDialog::createDialogContent()
 #endif
 
 	// Selected object info
-	if (gui->getInfoTextFilters() == StelObject::InfoStringGroup(0))
+	if (gui->getInfoTextFilters() == StelObject::InfoStringGroup(Q_NULLPTR))
 	{
 		ui->noSelectedInfoRadio->setChecked(true);
 	}
@@ -482,7 +482,7 @@ void ConfigurationDialog::setSphericMirror(bool b)
 
 void ConfigurationDialog::setNoSelectedInfo(void)
 {
-	gui->setInfoTextFilters(StelObject::InfoStringGroup(0));
+	gui->setInfoTextFilters(StelObject::InfoStringGroup(Q_NULLPTR));
 	updateSelectedInfoCheckBoxes();
 }
 
@@ -808,7 +808,7 @@ void ConfigurationDialog::saveAllSettings()
 
 	// configuration dialog / selected object info tab
 	const StelObject::InfoStringGroup& flags = gui->getInfoTextFilters();
-	if (flags == StelObject::InfoStringGroup(0))
+	if (flags == StelObject::InfoStringGroup(Q_NULLPTR))
 		conf->setValue("gui/selected_object_info", "none");
 	else if (flags == StelObject::InfoStringGroup(StelObject::ShortInfo))
 		conf->setValue("gui/selected_object_info", "short");
@@ -977,7 +977,7 @@ void ConfigurationDialog::populatePluginsList()
 	plugins->clear();
 	QString selectedPluginName = "";
 	const QList<StelModuleMgr::PluginDescriptor> pluginsList = StelApp::getInstance().getModuleMgr().getPluginsList();	
-	foreach (const StelModuleMgr::PluginDescriptor& desc, pluginsList)
+	for (const auto& desc : pluginsList)
 	{
 		QString label = q_(desc.info.displayedName);
 		QListWidgetItem* item = new QListWidgetItem(label);
@@ -1002,7 +1002,7 @@ void ConfigurationDialog::pluginsSelectionChanged(QListWidgetItem* item, QListWi
 {
 	Q_UNUSED(previousItem);
 	const QList<StelModuleMgr::PluginDescriptor> pluginsList = StelApp::getInstance().getModuleMgr().getPluginsList();
-	foreach (const StelModuleMgr::PluginDescriptor& desc, pluginsList)
+	for (const auto& desc : pluginsList)
 	{
 		if (item->data(Qt::UserRole).toString()==desc.info.id)
 		{
@@ -1042,7 +1042,7 @@ void ConfigurationDialog::pluginConfigureCurrentSelection()
 
 	StelModuleMgr& moduleMgr = StelApp::getInstance().getModuleMgr();
 	const QList<StelModuleMgr::PluginDescriptor> pluginsList = moduleMgr.getPluginsList();
-	foreach (const StelModuleMgr::PluginDescriptor& desc, pluginsList)
+	for (const auto& desc : pluginsList)
 	{
 		if (id == desc.info.id)
 		{
@@ -1064,7 +1064,7 @@ void ConfigurationDialog::loadAtStartupChanged(int state)
 	QString id = ui->pluginsListWidget->currentItem()->data(Qt::UserRole).toString();
 	StelModuleMgr& moduleMgr = StelApp::getInstance().getModuleMgr();
 	const QList<StelModuleMgr::PluginDescriptor> pluginsList = moduleMgr.getPluginsList();
-	foreach (const StelModuleMgr::PluginDescriptor& desc, pluginsList)
+	for (const auto& desc : pluginsList)
 	{
 		if (id == desc.info.id)
 		{
@@ -1145,7 +1145,7 @@ void ConfigurationDialog::resetStarCatalogControls()
 	const QVariantList& catalogConfig = GETSTELMODULE(StarMgr)->getCatalogsDescription();
 	nextStarCatalogToDownload.clear();
 	int idx=0;
-	foreach (const QVariant& catV, catalogConfig)
+	for (const auto& catV : catalogConfig)
 	{
 		++idx;
 		const QVariantMap& m = catV.toMap();

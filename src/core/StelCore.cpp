@@ -516,6 +516,14 @@ void StelCore::preDraw()
 	currentProjectorParams.zNear = 0.000001;
 	currentProjectorParams.zFar = 500.;
 
+	// Clear the render buffer.
+	// Here we can set a sky background color if really wanted (art
+	// applications. Astronomical sky should be 0/0/0/0)
+	Vec3f backColor = StelMainView::getInstance().getSkyBackgroundColor();
+	QOpenGLFunctions* gl = QOpenGLContext::currentContext()->functions();
+	gl->glClearColor(backColor[0], backColor[1], backColor[2], 0.f);
+	gl->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
 	skyDrawer->preDraw();
 }
 
@@ -1267,10 +1275,10 @@ float StelCore::getUTCOffset(const double JD) const
 
 	StelLocation loc = getCurrentLocation();
 	QString tzName = getCurrentTimeZone();
-	QTimeZone* tz = new QTimeZone(tzName.toUtf8());
+	QTimeZone tz(tzName.toUtf8());
 
 	int shiftInSeconds = 0;
-	if (tzName=="system_default" || (loc.planetName=="Earth" && !tz->isValid() && !QString("LMST LTST").contains(tzName)))
+	if (tzName=="system_default" || (loc.planetName=="Earth" && !tz.isValid() && !QString("LMST LTST").contains(tzName)))
 	{
 		QDateTime local = universal.toLocalTime();
 		//Both timezones should be interpreted as UTC because secsTo() converts both
@@ -1281,12 +1289,12 @@ float StelCore::getUTCOffset(const double JD) const
 	else
 	{
 		// The first adoption of a standard time was on December 1, 1847 in Great Britain
-		if (tz->isValid() && loc.planetName=="Earth" && (JD>=StelCore::TZ_ERA_BEGINNING || getUseCustomTimeZone()))
+		if (tz.isValid() && loc.planetName=="Earth" && (JD>=StelCore::TZ_ERA_BEGINNING || getUseCustomTimeZone()))
 		{
 			if (getUseDST())
-				shiftInSeconds = tz->offsetFromUtc(universal);
+				shiftInSeconds = tz.offsetFromUtc(universal);
 			else
-				shiftInSeconds = tz->standardTimeOffset(universal);
+				shiftInSeconds = tz.standardTimeOffset(universal);
 		}
 		else
 			shiftInSeconds = (loc.longitude/15.f)*3600.f; // Local Mean Solar Time
@@ -1295,9 +1303,6 @@ float StelCore::getUTCOffset(const double JD) const
 			shiftInSeconds += getSolutionEquationOfTime(JD)*60;
 
 	}
-
-	delete tz;
-	tz = Q_NULLPTR;
 
 	float shiftInHours = shiftInSeconds / 3600.0f;
 	return shiftInHours;

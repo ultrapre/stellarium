@@ -62,7 +62,6 @@ public:
 	void setFlagShow(bool b){fader = b;}
 	bool getFlagShow() const {return fader;}
 private:
-	QSettings* conf ;
 	float radius;
 	QFont fontC, fontSC;
 	Vec3f color;
@@ -306,7 +305,7 @@ void LandscapeMgr::update(double deltaTime)
 	// TBD: Reactivate and verify this code!? Source, reference?
 //	float groundLuminance = 0;
 //	const vector<Planet*>& allPlanets = ssystem->getAllPlanets();
-//	for (vector<Planet*>::const_iterator i=allPlanets.begin();i!=allPlanets.end();++i)
+//	for (auto i=allPlanets.begin();i!=allPlanets.end();++i)
 //	{
 //		Vec3d pos = (*i)->getAltAzPos(core);
 //		pos.normalize();
@@ -858,7 +857,7 @@ QStringList LandscapeMgr::getAllLandscapeIDs() const
 QStringList LandscapeMgr::getUserLandscapeIDs() const
 {
 	QStringList result;
-	foreach (QString id, getNameToDirMap().values())
+	for (auto id : getNameToDirMap().values())
 	{
 		if(!packagedLandscapeIDs.contains(id))
 		{
@@ -1105,7 +1104,7 @@ QMap<QString,QString> LandscapeMgr::getNameToDirMap() const
 	QMap<QString,QString> result;
 	QSet<QString> landscapeDirs = StelFileMgr::listContents("landscapes",StelFileMgr::Directory);
 
-	foreach (const QString& dir, landscapeDirs)
+	for (const auto& dir : landscapeDirs)
 	{
 		QString fName = StelFileMgr::findFile("landscapes/" + dir + "/landscape.ini");
 		if (!fName.isEmpty())
@@ -1154,7 +1153,7 @@ QString LandscapeMgr::installLandscapeFromArchive(QString sourceFilePath, const 
 	//Detect top directory
 	QString topDir, iniPath;
 	QList<Stel::QZipReader::FileInfo> infoList = reader.fileInfoList();
-	foreach(Stel::QZipReader::FileInfo info, infoList)
+	for (const auto& info : infoList)
 	{
 		QFileInfo fileInfo(info.filePath);
 		if (fileInfo.fileName() == "landscape.ini")
@@ -1218,7 +1217,7 @@ QString LandscapeMgr::installLandscapeFromArchive(QString sourceFilePath, const 
 		return QString();
 	}
 	destinationDir.cd(landscapeID);
-	foreach(Stel::QZipReader::FileInfo info, infoList)
+	for (const auto& info : infoList)
 	{
 		QFileInfo fileInfo(info.filePath);
 		if (info.isFile && fileInfo.dir().path() == topDir)
@@ -1271,7 +1270,7 @@ bool LandscapeMgr::removeLandscape(const QString landscapeID)
 		return false;
 
 	QDir landscapeDir(landscapePath);
-	foreach (QString fileName, landscapeDir.entryList(QDir::Files | QDir::NoDotAndDotDot))
+	for (auto fileName : landscapeDir.entryList(QDir::Files | QDir::NoDotAndDotDot))
 	{
 		if(!landscapeDir.remove(fileName))
 		{
@@ -1372,7 +1371,7 @@ quint64 LandscapeMgr::loadLandscapeSize(const QString landscapeID) const
 		return landscapeSize;
 
 	QDir landscapeDir(landscapePath);
-	foreach (QFileInfo file, landscapeDir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot))
+	for (auto file : landscapeDir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot))
 	{
 		//qDebug() << "name:" << file.baseName() << "size:" << file.size();
 		landscapeSize += file.size();

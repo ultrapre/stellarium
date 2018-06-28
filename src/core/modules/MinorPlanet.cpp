@@ -315,10 +315,15 @@ QString MinorPlanet::getInfoString(const StelCore *core, const InfoStringGroup &
 		if (orbVel>0.)
 		{ // AU/d * km/AU /24
 			double orbVelKms=orbVel* AU/86400.;
-			oss << QString("%1: %2 %3").arg(q_("Orbital Velocity")).arg(orbVelKms, 0, 'f', 3).arg(kms) << "<br />";
+			oss << QString("%1: %2 %3").arg(q_("Orbital velocity")).arg(orbVelKms, 0, 'f', 3).arg(kms) << "<br />";
 			double helioVel=getHeliocentricEclipticVelocity().length(); // just in case we have asteroid moons!
 			if (helioVel!=orbVel)
-				oss << QString("%1: %2 %3").arg(q_("Heliocentric Velocity")).arg(helioVel* AU/86400., 0, 'f', 3).arg(kms) << "<br />";
+				oss << QString("%1: %2 %3").arg(q_("Heliocentric velocity")).arg(helioVel* AU/86400., 0, 'f', 3).arg(kms) << "<br />";
+		}
+		if (qAbs(re.period)>0.f)
+		{
+			double eqRotVel = 2.0*M_PI*(AU*getRadius())/(getSiderealDay()*86400.0);
+			oss << QString("%1: %2 %3").arg(q_("Equatorial rotation velocity")).arg(qAbs(eqRotVel), 0, 'f', 3).arg(kms) << "<br />";
 		}
 	}
 
@@ -351,6 +356,12 @@ QString MinorPlanet::getInfoString(const StelCore *core, const InfoStringGroup &
 		}
 
 		oss << QString("%1: %2").arg(q_("Apparent diameter"), sizeStr) << "<br />";
+	}
+
+	if (flags&Size)
+	{
+		// Many asteroides has irregular shape
+		oss << QString("%1: %2 %3").arg(q_("Diameter"), QString::number(AU * getRadius() * 2.0, 'f', 1) , qc_("km", "distance")) << "<br />";
 	}
 
 	// If semi-major axis not zero then calculate and display orbital period for asteroid in days

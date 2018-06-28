@@ -118,7 +118,7 @@ StelModule* StelModuleMgr::getModule(const QString& moduleID, bool noWarning)
 *************************************************************************/
 StelModule* StelModuleMgr::loadPlugin(const QString& moduleID)
 {
-	foreach (const PluginDescriptor& desc, getPluginsList())
+	for (const auto& desc : getPluginsList())
 	{
 		if (desc.info.id==moduleID)
 		{
@@ -135,7 +135,7 @@ StelModule* StelModuleMgr::loadPlugin(const QString& moduleID)
 
 QObjectList StelModuleMgr::loadExtensions(const QString &moduleID)
 {
-	foreach (const PluginDescriptor& desc, getPluginsList())
+	for (const auto& desc : getPluginsList())
 	{
 		if (desc.info.id==moduleID)
 		{
@@ -199,14 +199,13 @@ void StelModuleMgr::setPluginLoadAtStartup(const QString& key, bool b)
 *************************************************************************/
 void StelModuleMgr::generateCallingLists()
 {
-	QMap<StelModule::StelModuleActionName, QList<StelModule*> >::iterator mc;
 	// For each actions (e.g. "draw", "update", etc..)
-	for(mc=callOrders.begin();mc!=callOrders.end();++mc)
+	for (auto mc = callOrders.begin(); mc != callOrders.end(); ++mc)
 	{
 		// Flush previous call orders
 		mc.value().clear();
 		// and init them with modules in creation order
-		foreach (StelModule* m, getAllModules())
+		for (auto* m : getAllModules())
 		{
 			mc.value().push_back(m);
 		}
@@ -226,7 +225,7 @@ QList<StelModuleMgr::PluginDescriptor> StelModuleMgr::getPluginsList()
 
 	// First list all static plugins.
 	// If a dynamic plugin with the same ID exists, it will take precedence on the static one.
-	foreach (QObject *plugin, QPluginLoader::staticInstances())
+	for (auto* plugin : QPluginLoader::staticInstances())
 	{
 		StelPluginInterface* pluginInterface = qobject_cast<StelPluginInterface*>(plugin);
 		if (pluginInterface)
@@ -244,7 +243,7 @@ QList<StelModuleMgr::PluginDescriptor> StelModuleMgr::getPluginsList()
 	QSet<QString> moduleDirs;
 	moduleDirs = StelFileMgr::listContents("modules",StelFileMgr::Directory);
 
-	foreach (QString dir, moduleDirs)
+	for (auto dir : moduleDirs)
 	{
 		QString moduleFullPath = QString("modules/") + dir + "/lib" + dir;
 #ifdef Q_OS_WIN
@@ -305,7 +304,7 @@ QList<StelModuleMgr::PluginDescriptor> StelModuleMgr::getPluginsList()
 	QSettings* conf = StelApp::getInstance().getSettings();
 	Q_ASSERT(conf);
 	conf->beginGroup("plugins_load_at_startup");
-	for (QMap<QString, StelModuleMgr::PluginDescriptor>::Iterator iter=pluginDescriptorList.begin();iter!=pluginDescriptorList.end();++iter)
+	for (auto iter = pluginDescriptorList.begin(); iter != pluginDescriptorList.end(); ++iter)
 	{
 		bool startByDefault = iter.value().info.startByDefault;
 		iter->loadAtStartup = conf->value(iter.key(), startByDefault).toBool();

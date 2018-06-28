@@ -306,7 +306,7 @@ void Planet::init()
 	vMagAlgorithmMap.insert(Planet::ExplanatorySupplement_1992,	"ExpSup1992");
 	vMagAlgorithmMap.insert(Planet::Mueller_1893,			"Mueller1893"); // better name
 	vMagAlgorithmMap.insert(Planet::AstronomicalAlmanac_1984,	"AstrAlm1984"); // consistent name
-	vMagAlgorithmMap.insert(Planet::Generic,			"Generic"),
+	vMagAlgorithmMap.insert(Planet::Generic,			"Generic");
 	vMagAlgorithmMap.insert(Planet::UndefinedAlgorithm,		"");
 }
 
@@ -515,10 +515,15 @@ QString Planet::getInfoString(const StelCore* core, const InfoStringGroup& flags
 			double orbVelKms=orbVel* AU/86400.;
 //			if (englishName=="Moon")
 //				orbVelKms=orbVel;
-			oss << QString("%1: %2 %3").arg(q_("Orbital Velocity")).arg(orbVelKms, 0, 'f', 3).arg(kms) << "<br />";
+			oss << QString("%1: %2 %3").arg(q_("Orbital velocity")).arg(orbVelKms, 0, 'f', 3).arg(kms) << "<br />";
 			double helioVel=getHeliocentricEclipticVelocity().length();
 			if (helioVel!=orbVel)
-				oss << QString("%1: %2 %3").arg(q_("Heliocentric Velocity")).arg(helioVel* AU/86400., 0, 'f', 3).arg(kms) << "<br />";
+				oss << QString("%1: %2 %3").arg(q_("Heliocentric velocity")).arg(helioVel* AU/86400., 0, 'f', 3).arg(kms) << "<br />";
+		}
+		if (qAbs(re.period)>0.f)
+		{
+			double eqRotVel = 2.0*M_PI*(AU*getRadius())/(getSiderealDay()*86400.0);
+			oss << QString("%1: %2 %3").arg(q_("Equatorial rotation velocity")).arg(qAbs(eqRotVel), 0, 'f', 3).arg(kms) << "<br />";
 		}
 	}
 
@@ -569,6 +574,14 @@ QString Planet::getInfoString(const StelCore* core, const InfoStringGroup& flags
 			}
 		}
 		oss << QString("%1: %2").arg(q_("Apparent diameter"), sizeStr) << "<br />";
+	}
+
+	if (flags&Size)
+	{
+		QString diam = q_("Diameter");
+		if (getPlanetType()==isPlanet)
+			diam = q_("Equatorial diameter");
+		oss << QString("%1: %2 %3").arg(diam, QString::number(AU * getRadius() * 2.0, 'f', 1) , qc_("km", "distance")) << "<br />";
 	}
 
 	double siderealPeriod = getSiderealPeriod();
@@ -860,7 +873,7 @@ QVector<const Planet*> Planet::getCandidatesForShadow() const
 	if (this==sun || (parent.data()==sun && satellites.empty()))
 		return res;
 	
-	foreach (const PlanetP& planet, satellites)
+	for (const auto& planet : satellites)
 	{
 		if (willCastShadow(this, planet.data()))
 			res.append(planet.data());
@@ -870,7 +883,7 @@ QVector<const Planet*> Planet::getCandidatesForShadow() const
 	// Test satellites mutual occultations.
 	if (parent.data() != sun)
 	{
-		foreach (const PlanetP& planet, parent->satellites)
+		for (const auto& planet : parent->satellites)
 		{
 			//skip self-shadowing
 			if(planet.data() == this )
@@ -1827,11 +1840,9 @@ QOpenGLShaderProgram* Planet::createShader(const QString& name, PlanetShaderVars
 	}
 
 	//process fixed attribute locations
-	QMap<QByteArray,int>::const_iterator it = fixedAttributeLocations.begin();
-	while(it!=fixedAttributeLocations.end())
+	for (auto it = fixedAttributeLocations.begin(); it != fixedAttributeLocations.end(); ++it)
 	{
 		program->bindAttributeLocation(it.key(),it.value());
-		++it;
 	}
 
 	if(!StelPainter::linkProg(program,name))
@@ -2218,8 +2229,8 @@ void Planet::draw3dModel(StelCore* core, StelProjector::ModelViewTranformP trans
 
 		StelProjector::ModelViewTranformP transfo2 = transfo->clone();
 		transfo2->combine(Mat4d::zrotation(M_PI/180*(axisRotation + 90.)));
-		StelPainter* sPainter = new StelPainter(core->getProjection(transfo2));
-		gl = sPainter->glFuncs();
+		StelPainter sPainter(core->getProjection(transfo2));
+		gl = sPainter.glFuncs();
 		
 		// Set the main source of light to be the sun
 		Vec3d sunPos(0.);
@@ -2264,33 +2275,30 @@ void Planet::draw3dModel(StelCore* core, StelProjector::ModelViewTranformP trans
 			// when we zoom in, reduce the overbrightness. (LP:#1421173)
 			const float fov=core->getProjection(transfo)->getFov();
 			const float overbright=qBound(0.85f, 0.5f*fov, 2.0f); // scale full brightness to 0.85...2. (<2 when fov gets under 4 degrees)
-			sPainter->setColor(overbright, pow(0.75f, extinctedMag)*overbright, pow(0.42f, 0.9f*extinctedMag)*overbright);
+			sPainter.setColor(overbright, pow(0.75f, extinctedMag)*overbright, pow(0.42f, 0.9f*extinctedMag)*overbright);
 		}
 
 		//if (rings) /// GZ This was the previous condition. Not sure why rings were dropped?
 		if(ssm->getFlagUseObjModels() && !objModelPath.isEmpty())
 		{
-			if(!drawObjModel(sPainter, screenSz))
+			if(!drawObjModel(&sPainter, screenSz))
 			{
-				drawSphere(sPainter, screenSz, drawOnlyRing);
+				drawSphere(&sPainter, screenSz, drawOnlyRing);
 			}
 		}
 		else if (!survey || survey->getInterstate() < 1.0f)
 		{
-			drawSphere(sPainter, screenSz, drawOnlyRing);
+			drawSphere(&sPainter, screenSz, drawOnlyRing);
 		}
 
 		if (survey && survey->getInterstate() > 0.0f)
 		{
-			drawSurvey(core, sPainter);
-			drawSphere(sPainter, screenSz, true);
+			drawSurvey(core, &sPainter);
+			drawSphere(&sPainter, screenSz, true);
 		}
 
 
 		core->setClippingPlanes(n,f);  // Restore old clipping planes
-
-		delete sPainter;
-		sPainter=Q_NULLPTR;
 	}
 
 	bool allowDrawHalo = true;

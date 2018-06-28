@@ -99,9 +99,9 @@ Selection SelectionEventSender::constructMessage()
 	//(StelObject::getType does not correspond directly to StelObjectModule::getName)
 	//even then, some objects (e.g. Nebulas) dont seem to have a name at all!
 
-	for (QList<StelObjectP>::const_iterator iter=selObj.constBegin();iter!=selObj.constEnd();++iter)
+	for (const auto& obj : selObj)
 	{
-		msg.selectedObjects.append(qMakePair((*iter)->getType(), (*iter)->getID()));
+		msg.selectedObjects.append(qMakePair(obj->getType(), obj->getID()));
 	}
 
 	return msg;
@@ -129,7 +129,7 @@ void StelPropertyEventSender::newClientConnected(SyncRemotePeer &client)
 {
 	//send all current StelProperty values to the client
 	QList<StelProperty*> propList = propMgr->getAllProperties();
-	foreach(StelProperty* prop, propList)
+	for (const auto* prop : propList)
 	{
 		if(!prop->isSynchronizable())
 			continue;

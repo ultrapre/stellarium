@@ -621,7 +621,7 @@ void StelApp::initPlugIns()
 {
 	// Load dynamically all the modules found in the modules/ directories
 	// which are configured to be loaded at startup
-	foreach (StelModuleMgr::PluginDescriptor i, moduleMgr->getPluginsList())
+	for (const auto& i : moduleMgr->getPluginsList())
 	{
 		if (i.loadAtStartup==false)
 			continue;
@@ -689,7 +689,7 @@ void StelApp::update(double deltaTime)
 	moduleMgr->update();
 
 	// Send the event to every StelModule
-	foreach (StelModule* i, moduleMgr->getCallOrders(StelModule::ActionUpdate))
+	for (auto* i : moduleMgr->getCallOrders(StelModule::ActionUpdate))
 	{
 		i->update(deltaTime);
 	}
@@ -734,7 +734,7 @@ void StelApp::draw()
 	core->preDraw();
 
 	const QList<StelModule*> modules = moduleMgr->getCallOrders(StelModule::ActionDraw);
-	foreach(StelModule* module, modules)
+	for (auto* module : modules)
 	{
 		module->draw(core);
 	}
@@ -786,7 +786,7 @@ void StelApp::handleClick(QMouseEvent* inputEvent)
 	event.setAccepted(false);
 	
 	// Send the event to every StelModule
-	foreach (StelModule* i, moduleMgr->getCallOrders(StelModule::ActionHandleMouseClicks))
+	for (auto* i : moduleMgr->getCallOrders(StelModule::ActionHandleMouseClicks))
 	{
 		i->handleMouseClicks(&event);
 		if (event.isAccepted())
@@ -824,7 +824,7 @@ void StelApp::handleWheel(QWheelEvent* event)
 	wheelEventDelta[deltaIndex] = 0;
 
 	// Send the event to every StelModule
-	foreach (StelModule* i, moduleMgr->getCallOrders(StelModule::ActionHandleMouseClicks)) {
+	for (auto* i : moduleMgr->getCallOrders(StelModule::ActionHandleMouseClicks)) {
 		i->handleMouseWheel(&deltaEvent);
 		if (deltaEvent.isAccepted()) {
 			event->accept();
@@ -839,7 +839,7 @@ bool StelApp::handleMove(float x, float y, Qt::MouseButtons b)
 	if (viewportEffect)
 		viewportEffect->distortXY(x, y);
 	// Send the event to every StelModule
-	foreach (StelModule* i, moduleMgr->getCallOrders(StelModule::ActionHandleMouseMoves))
+	for (auto* i : moduleMgr->getCallOrders(StelModule::ActionHandleMouseMoves))
 	{
 		if (i->handleMouseMoves(x*devicePixelsPerPixel, y*devicePixelsPerPixel, b))
 			return true;
@@ -861,7 +861,7 @@ void StelApp::handleKeys(QKeyEvent* event)
 		}
 	}
 	// Send the event to every StelModule
-	foreach (StelModule* i, moduleMgr->getCallOrders(StelModule::ActionHandleKeys))
+	for (auto* i : moduleMgr->getCallOrders(StelModule::ActionHandleKeys))
 	{
 		i->handleKeys(event);
 		if (event->isAccepted())
@@ -873,7 +873,7 @@ void StelApp::handleKeys(QKeyEvent* event)
 void StelApp::handlePinch(qreal scale, bool started)
 {
 	// Send the event to every StelModule
-	foreach (StelModule* i, moduleMgr->getCallOrders(StelModule::ActionHandleMouseMoves))
+	for (auto* i : moduleMgr->getCallOrders(StelModule::ActionHandleMouseMoves))
 	{
 		if (i->handlePinch(scale, started))
 			return;
@@ -1024,7 +1024,7 @@ void StelApp::dumpModuleActionPriorities(StelModule::StelModuleActionName action
 	qDebug() << "Module Priorities for action named" << actionName;
 #endif
 
-	foreach(StelModule* module, modules)
+	for (auto* module : modules)
 	{
 		module->draw(core);
 		qDebug() << " -- " << module->getCallOrder(actionName) << "Module: " << module->objectName();

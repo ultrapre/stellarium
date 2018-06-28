@@ -195,7 +195,7 @@ void MainService::get(const QByteArray& operation, const APIParameters &paramete
 		QJsonObject mainObj;
 
 		StelModuleMgr& modMgr = StelApp::getInstance().getModuleMgr();
-		foreach(const StelModuleMgr::PluginDescriptor& desc, modMgr.getPluginsList())
+		for (const auto& desc : modMgr.getPluginsList())
 		{
 			QJsonObject pluginObj,infoObj;
 			pluginObj.insert("loadAtStartup", desc.loadAtStartup);
@@ -667,7 +667,7 @@ QJsonObject MainService::getActionChangesSinceID(int changeId)
 			//something is "broken", probably from an existing web interface that reconnected after restart
 			//force a full reload
 
-			foreach(StelAction* ac, actionMgr->getActionList())
+			for (const auto* ac : actionMgr->getActionList())
 			{
 				if(ac->isCheckable())
 				{
@@ -683,7 +683,7 @@ QJsonObject MainService::getActionChangesSinceID(int changeId)
 		{
 			//this is either the initial state (-2) or
 			//"broken" state again, force full reload
-			foreach(StelAction* ac, actionMgr->getActionList())
+			for (const auto* ac : actionMgr->getActionList())
 			{
 				if(ac->isCheckable())
 				{
@@ -729,9 +729,8 @@ QJsonObject MainService::getPropertyChangesSinceID(int changeId)
 			//this is either the initial state (-2) or
 			//something is "broken", probably from an existing web interface that reconnected after restart
 			//force a full reload
-			const StelPropertyMgr::StelPropertyMap& map = propMgr->getPropertyMap();
-			for(StelPropertyMgr::StelPropertyMap::const_iterator it = map.constBegin();
-			    it!=map.constEnd();++it)
+			const auto& map = propMgr->getPropertyMap();
+			for (auto it = map.constBegin(); it != map.constEnd(); ++it)
 			{
 				changes.insert(it.key(), QJsonValue::fromVariant((*it)->getValue()));
 			}
@@ -744,9 +743,8 @@ QJsonObject MainService::getPropertyChangesSinceID(int changeId)
 		{
 			//this is either the initial state (-2) or
 			//"broken" state again, force full reload
-			const StelPropertyMgr::StelPropertyMap& map = propMgr->getPropertyMap();
-			for(StelPropertyMgr::StelPropertyMap::const_iterator it = map.constBegin();
-			    it!=map.constEnd();++it)
+			const auto& map = propMgr->getPropertyMap();
+			for (auto it = map.constBegin(); it != map.constEnd(); ++it)
 			{
 				changes.insert(it.key(), QJsonValue::fromVariant((*it)->getValue()));
 			}

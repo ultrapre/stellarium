@@ -379,7 +379,7 @@ bool StelOBJ::parseFace(const ParseParams& params, const V3Vec& posList, const V
 		}
 
 		//check if the vertex is already in the vertex cache
-		VertexCache::const_iterator it = vertCache.find(v);
+		auto it = vertCache.find(v);
 		if(it!=vertCache.end())
 		{
 			//cache hit, reuse index
@@ -869,7 +869,7 @@ bool StelOBJ::load(QIODevice& device, const QString &basePath, const VertexOrder
 				{
 					//load external material file
 					MaterialList newMaterials = Material::loadFromFile(baseDir.absoluteFilePath(fileName));
-					foreach(const Material& m, newMaterials)
+					for (const auto& m : newMaterials)
 					{
 						m_materials.append(m);
 						//the map has the index of the material
