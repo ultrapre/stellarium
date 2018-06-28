@@ -284,7 +284,7 @@ void ToastSurvey::draw(StelPainter* sPainter)
 	// The maximum angle we want to see is the size of a tile in pixels time the angle for one visible pixel.
 	const double anglePerPixel = 1./sPainter->getProjector()->getPixelPerRadAtCenter()*180./M_PI;
 	const double maxAngle = anglePerPixel * getTilesSize();
-	int maxVisibleLevel = (int)(log2(360. / maxAngle));
+	int maxVisibleLevel = (int)(log(360. / maxAngle)/M_LN2);
 
 	// Lazily creation of the grid and root tile.
 	if (!grid) grid = new ToastGrid(maxLevel);
