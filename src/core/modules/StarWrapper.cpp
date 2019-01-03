@@ -54,15 +54,8 @@ QString StarWrapperBase::getInfoString(const StelCore *core, const InfoStringGro
 		oss << QString("%1: <b>%2</b>").arg(q_("Type"), q_("star")) << "<br />";
 	}
 
-	if (flags&Magnitude)
-	{
-		QString emag = "";
-		if (core->getSkyDrawer()->getFlagHasAtmosphere() && (alt_app>-3.0*M_PI/180.0)) // Don't show extincted magnitude much below horizon where model is meaningless.
-			emag = QString(" (%1: <b>%2</b>)").arg(q_("extincted to"), QString::number(getVMagnitudeWithExtinction(core), 'f', 2));
+	oss << getMagnitudeInfoString(core, flags, alt_app, 2);
 
-		oss << QString("%1: <b>%2</b>%3").arg(q_("Magnitude"), QString::number(getVMagnitude(core), 'f', 2), emag) << "<br />";
-	}
-	
 	if (flags&Extra)
 		oss << QString("%1: <b>%2</b>").arg(q_("Color Index (B-V)"), QString::number(getBV(), 'f', 2)) << "<br />";
 	
@@ -80,11 +73,28 @@ QString StarWrapper1::getEnglishName(void) const
 	return StarWrapperBase::getEnglishName();
 }
 
+QString StarWrapper1::getID(void) const
+{
+	QString hip;
+	if (s->getHip())
+	{
+		if (s->hasComponentID())
+			hip = QString("HIP %1 %2").arg(s->getHip()).arg(StarMgr::convertToComponentIds(s->getComponentIds()));
+		else
+			hip = QString("HIP %1").arg(s->getHip());
+	}
+
+	return hip;
+}
+
 QString StarWrapper1::getInfoString(const StelCore *core, const InfoStringGroup& flags) const
 {
 	QString str;
-
 	QTextStream oss(&str);
+	double az_app, alt_app;
+	StelUtils::rectToSphe(&az_app,&alt_app,getAltAzPosApparent(core));
+	Q_UNUSED(az_app);
+
 	const QString varType = StarMgr::getGcvsVariabilityType(s->getHip());
 	const int wdsObs = StarMgr::getWdsLastObservation(s->getHip());
 	const float wdsPA = StarMgr::getWdsLastPositionAngle(s->getHip());
@@ -199,14 +209,7 @@ QString StarWrapper1::getInfoString(const StelCore *core, const InfoStringGroup&
 
 	}
 
-	if (flags&Magnitude)
-	{
-		QString emag = "";
-		if (core->getSkyDrawer()->getFlagHasAtmosphere())
-			emag = QString(" (%1: <b>%2</b>)").arg(q_("extincted to"), QString::number(getVMagnitudeWithExtinction(core), 'f', 2));
-
-		oss << QString("%1: <b>%2</b>%3").arg(q_("Magnitude"), QString::number(getVMagnitude(core), 'f', 2), emag) << "<br />";
-	}
+	oss << getMagnitudeInfoString(core, flags, alt_app, 2);
 
 	if ((flags&AbsoluteMagnitude) && s->getPlx ()&& !isNan(s->getPlx()) && !isInf(s->getPlx()))
 		oss << QString("%1: %2").arg(q_("Absolute Magnitude")).arg(getVMagnitude(core)+5.*(1.+std::log10(0.00001*s->getPlx())), 0, 'f', 2) << "<br />";

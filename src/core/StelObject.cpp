@@ -220,6 +220,25 @@ float StelObject::getVMagnitudeWithExtinction(const StelCore* core) const
 	return vMag;
 }
 
+// Format the magnitude info string for the object
+QString StelObject::getMagnitudeInfoString(const StelCore *core, const InfoStringGroup& flags, const double alt_app, const int decimals) const
+{
+	if (flags&Magnitude)
+	{
+		QString emag = "";
+		if (core->getSkyDrawer()->getFlagHasAtmosphere() && (alt_app>-2.0*M_PI/180.0)) // Don't show extincted magnitude much below horizon where model is meaningless.
+		{
+			const Extinction &extinction=core->getSkyDrawer()->getExtinction();
+			float airmass=extinction.airmass(std::cos(M_PI/2.0-alt_app), true);
+
+			emag = QString(" (%1 <b>%2</b> %3 <b>%4</b> %5)").arg(q_("reduced to"), QString::number(getVMagnitudeWithExtinction(core), 'f', decimals), q_("by"), QString::number(airmass, 'f', 2), q_("Airmasses"));
+		}
+		return QString("%1: <b>%2</b>%3<br />").arg(q_("Magnitude"), QString::number(getVMagnitude(core), 'f', decimals), emag);
+	}
+	else
+		return QString();
+}
+
 // Format the positional info string contain J2000/of date/altaz/hour angle positions for the object
 QString StelObject::getCommonInfoString(const StelCore *core, const InfoStringGroup& flags) const
 {
@@ -294,7 +313,7 @@ QString StelObject::getCommonInfoString(const StelCore *core, const InfoStringGr
 		double dec_sidereal, ra_sidereal, ha_sidereal;
 		StelUtils::rectToSphe(&ra_sidereal,&dec_sidereal,getSiderealPosGeometric(core));
 		ra_sidereal = 2.*M_PI-ra_sidereal;
-		if (withAtmosphere && (alt_app>-3.0*M_PI/180.0)) // Don't show refracted values much below horizon where model is meaningless.
+		if (withAtmosphere && (alt_app>-2.0*M_PI/180.0)) // Don't show refracted values much below horizon where model is meaningless.
 		{
 			StelUtils::rectToSphe(&ra_sidereal,&dec_sidereal,getSiderealPosApparent(core));
 			ra_sidereal = 2.*M_PI-ra_sidereal;
@@ -354,7 +373,7 @@ QString StelObject::getCommonInfoString(const StelCore *core, const InfoStringGr
 		az = direction*M_PI - az;
 		if (az > M_PI*2)
 			az -= M_PI*2;
-		if (withAtmosphere && (alt_app>-3.0*M_PI/180.0)) // Don't show refracted altitude much below horizon where model is meaningless.
+		if (withAtmosphere && (alt_app>-2.0*M_PI/180.0)) // Don't show refracted altitude much below horizon where model is meaningless.
 		{
 			if (withDecimalDegree)
 			{
@@ -570,7 +589,7 @@ QString StelObject::getCommonInfoString(const StelCore *core, const InfoStringGr
 	if (flags&RTSTime && getType()!=QStringLiteral("Satellite"))
 	{
 		Vec3f rts = getRTSTime(StelApp::getInstance().getCore()); // required not const StelCore!
-		QString sTransit = qc_("Transit", "celestial event");
+		QString sTransit = qc_("Transit", "celestial event; passage across a meridian");
 		QString sRise = qc_("Rise", "celestial event");
 		QString sSet = qc_("Set", "celestial event");
 		float sunrise = 0.f;
@@ -675,7 +694,7 @@ void StelObject::postProcessInfoString(QString& str, const InfoStringGroup& flag
 	{
 		Vec3f color = getInfoColor();
 		StelCore* core = StelApp::getInstance().getCore();
-		if (core->isBrightDaylight() && core->getSkyDrawer()->getFlagHasAtmosphere()==true && !StelApp::getInstance().getVisionModeNight())
+		if (core->isBrightDaylight() && !StelApp::getInstance().getVisionModeNight())
 		{
 			// make info text more readable when atmosphere enabled at daylight.
 			color = StelUtils::strToVec3f(StelApp::getInstance().getSettings()->value("color/daylight_text_color", "0.0,0.0,0.0").toString());
@@ -718,6 +737,9 @@ QVariantMap StelObject::getInfoMap(const StelCore *core) const
 
 	map.insert("altitude", alt*180./M_PI);
 	map.insert("azimuth", az*180./M_PI);
+
+	const Extinction &extinction=core->getSkyDrawer()->getExtinction();
+	map.insert("airmass", extinction.airmass(alt, true));
 
 	// geometric altitude/azimuth
 	pos = getAltAzPosGeometric(core);

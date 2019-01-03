@@ -16,8 +16,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _QUASARS_HPP_
-#define _QUASARS_HPP_
+#ifndef QUASARS_HPP
+#define QUASARS_HPP
 
 #include "StelObjectModule.hpp"
 #include "StelObject.hpp"
@@ -28,11 +28,11 @@
 #include <QDateTime>
 #include <QList>
 #include <QSharedPointer>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 
 class StelPainter;
 
-class QNetworkAccessManager;
-class QNetworkReply;
 class QSettings;
 class QTimer;
 class QPixmap;
@@ -74,6 +74,10 @@ class Quasars : public StelObjectModule
 		   WRITE setFlagShowQuasars
 		   NOTIFY flagQuasarsVisibilityChanged
 		   )
+	Q_PROPERTY(Vec3f quasarsColor
+		   READ getMarkerColor
+		   WRITE setMarkerColor
+		   NOTIFY quasarsColorChanged)
 public:
 	//! @enum UpdateState
 	//! Used for keeping for track of the download/update status
@@ -100,10 +104,10 @@ public:
 	///////////////////////////////////////////////////////////////////////////
 	// Methods defined in StelObjectManager class
 	//! Used to get a list of objects which are near to some position.
-	//! @param v a vector representing the position in th sky around which to search for nebulae.
-	//! @param limitFov the field of view around the position v in which to search for satellites.
+	//! @param v a vector representing the position in th sky around which to search for quasars.
+	//! @param limitFov the field of view around the position v in which to search for quasars.
 	//! @param core the StelCore to use for computations.
-	//! @return an list containing the satellites located inside the limitFov circle around position v.
+	//! @return an list containing the quasars located inside the limitFov circle around position v.
 	virtual QList<StelObjectP> searchAround(const Vec3d& v, double limitFov, const StelCore* core) const;
 
 	//! Return the matching satellite object's pointer if exists or Q_NULLPTR.
@@ -182,6 +186,7 @@ signals:
 	void jsonUpdateComplete(void);
 
 	void flagQuasarsVisibilityChanged(bool b);
+	void quasarsColorChanged(Vec3f);
 
 public slots:
 	//! Download JSON from web recources described in the module section of the
@@ -228,6 +233,8 @@ public slots:
 	//! @endcode
 	void setMarkerColor(const Vec3f& c);
 
+	//! Connect this to StelApp font size.
+	void setFontSize(int s){font.setPixelSize(s);}
 private:
 	// Font used for displaying our text
 	QFont font;
@@ -272,7 +279,8 @@ private:
 
 	// variables and functions for the updater
 	UpdateState updateState;
-	QNetworkAccessManager* downloadMgr;
+	QNetworkAccessManager * networkManager;
+	QNetworkReply * downloadReply;
 	QString updateUrl;	
 	QTimer* updateTimer;
 	QTimer* messageTimer;
@@ -281,6 +289,9 @@ private:
 	QDateTime lastUpdate;
 	int updateFrequencyDays;	
 	bool enableAtStartup;
+
+	void startDownload(QString url);
+	void deleteDownloadProgressBar();
 
 	QSettings* conf;
 
@@ -299,7 +310,9 @@ private slots:
 	//! if the last update was longer than updateFrequencyHours ago then the update is
 	//! done.
 	void checkForUpdate(void);
-	void updateDownloadComplete(QNetworkReply* reply);
+
+	void updateDownloadProgress(qint64 bytesReceived, qint64 bytesTotal);
+	void downloadComplete(QNetworkReply * reply);
 
 	//! Display a message. This is used for plugin-specific warnings and such
 	void displayMessage(const QString& message, const QString hexColor="#999999");
@@ -324,4 +337,4 @@ public:
 	virtual QObjectList getExtensionList() const { return QObjectList(); }
 };
 
-#endif /*_QUASARS_HPP_*/
+#endif /* QUASARS_HPP */

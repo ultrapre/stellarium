@@ -88,15 +88,13 @@ void QuasarsDialog::createDialogContent()
 	connect(ui->internetUpdatesCheckbox, SIGNAL(stateChanged(int)), this, SLOT(setUpdatesEnabled(int)));
 	connect(ui->updateButton, SIGNAL(clicked()), this, SLOT(updateJSON()));
 	connect(qsr, SIGNAL(updateStateChanged(Quasars::UpdateState)), this, SLOT(updateStateReceiver(Quasars::UpdateState)));
-	connect(qsr, SIGNAL(jsonUpdateComplete(void)), this, SLOT(updateCompleteReceiver(void)));
-	connect(qsr, SIGNAL(jsonUpdateComplete(void)), qsr, SLOT(reloadCatalog()));
+	connect(qsr, SIGNAL(jsonUpdateComplete(void)), this, SLOT(updateCompleteReceiver(void)));	
 	connect(ui->updateFrequencySpinBox, SIGNAL(valueChanged(int)), this, SLOT(setUpdateValues(int)));
 	refreshUpdateValues(); // fetch values for last updated and so on
 	// if the state didn't change, setUpdatesEnabled will not be called, so we force it
 	setUpdatesEnabled(ui->internetUpdatesCheckbox->checkState());
 
-	colorButton(ui->quasarMarkerColor, qsr->getMarkerColor());
-	connect(ui->quasarMarkerColor,	SIGNAL(released()), this, SLOT(askQuasarsMarkerColor()));
+	connectColorButton(ui->quasarMarkerColor, "Quasars.quasarsColor", "Quasars/marker_color");
 
 	updateTimer = new QTimer(this);
 	connect(updateTimer, SIGNAL(timeout()), this, SLOT(refreshUpdateValues()));
@@ -159,6 +157,7 @@ void QuasarsDialog::setAboutHtml(void)
 
 void QuasarsDialog::refreshUpdateValues(void)
 {
+	QString nextUpdate = q_("Next update");
 	ui->lastUpdateDateTimeEdit->setDateTime(qsr->getLastUpdate());
 	ui->updateFrequencySpinBox->setValue(qsr->getUpdateFrequencyDays());
 	int secondsToUpdate = qsr->getSecondsToUpdate();
@@ -168,21 +167,24 @@ void QuasarsDialog::refreshUpdateValues(void)
 	else if (qsr->getUpdateState() == Quasars::Updating)
 		ui->nextUpdateLabel->setText(q_("Updating now..."));
 	else if (secondsToUpdate <= 60)
-		ui->nextUpdateLabel->setText(q_("Next update: < 1 minute"));
+		ui->nextUpdateLabel->setText(QString("%1: %2").arg(nextUpdate, q_("< 1 minute")));
 	else if (secondsToUpdate < 3600)
 	{
 		int n = (secondsToUpdate/60)+1;
-		ui->nextUpdateLabel->setText(qn_("Next update: %1 minute(s)", n).arg(n));
+		// TRANSLATORS: minutes.
+		ui->nextUpdateLabel->setText(QString("%1: %2 %3").arg(nextUpdate, QString::number(n), qc_("m", "time")));
 	}
 	else if (secondsToUpdate < 86400)
 	{
 		int n = (secondsToUpdate/3600)+1;
-		ui->nextUpdateLabel->setText(qn_("Next update: %1 hour(s)", n).arg(n));
+		// TRANSLATORS: hours.
+		ui->nextUpdateLabel->setText(QString("%1: %2 %3").arg(nextUpdate, QString::number(n), qc_("h", "time")));
 	}
 	else
 	{
 		int n = (secondsToUpdate/86400)+1;
-		ui->nextUpdateLabel->setText(qn_("Next update: %1 day(s)", n).arg(n));
+		// TRANSLATORS: days.
+		ui->nextUpdateLabel->setText(QString("%1: %2 %3").arg(nextUpdate, QString::number(n), qc_("d", "time")));
 	}
 }
 
@@ -276,27 +278,4 @@ void QuasarsDialog::updateJSON(void)
 	{
 		qsr->updateJSON();
 	}
-}
-
-void QuasarsDialog::askQuasarsMarkerColor()
-{
-	Vec3f vColor = qsr->getMarkerColor();
-	QColor color(0,0,0);
-	color.setRgbF(vColor.v[0], vColor.v[1], vColor.v[2]);
-	QColor c = QColorDialog::getColor(color, Q_NULLPTR, q_(ui->quasarMarkerColor->toolTip()));
-	if (c.isValid())
-	{
-		vColor = Vec3f(c.redF(), c.greenF(), c.blueF());
-		qsr->setMarkerColor(vColor);
-		ui->quasarMarkerColor->setStyleSheet("QToolButton { background-color:" + c.name() + "; }");
-	}
-}
-
-void QuasarsDialog::colorButton(QToolButton* toolButton, Vec3f vColor)
-{
-	QColor color(0,0,0);
-	color.setRgbF(vColor.v[0], vColor.v[1], vColor.v[2]);
-	// Use style sheet for create a nice buttons :)
-	toolButton->setStyleSheet("QToolButton { background-color:" + color.name() + "; }");
-	toolButton->setFixedSize(QSize(18, 18));
 }

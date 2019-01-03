@@ -17,13 +17,12 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
 */
 
-#ifndef _CONFIGUREORBITCOLORSDIALOG_HPP_
-#define _CONFIGUREORBITCOLORSDIALOG_HPP_
+#ifndef CONFIGUREORBITCOLORSDIALOG_HPP
+#define CONFIGUREORBITCOLORSDIALOG_HPP
 
 #include <QObject>
 #include "StelDialog.hpp"
 
-class QToolButton;
 class Ui_ConfigureOrbitColorsDialogForm;
 
 class ConfigureOrbitColorsDialog : public StelDialog
@@ -38,29 +37,7 @@ public slots:
         void retranslate();
 
 private slots:
-	void askGenericOrbitColor();
-	void askMajorPlanetsGroupOrbitColor();
-	void askMinorPlanetsGroupOrbitColor();
-	void askDwarfPlanetsGroupOrbitColor();
-	void askMoonsGroupOrbitColor();
-	void askCubewanosGroupOrbitColor();
-	void askPlutinosGroupOrbitColor();
-	void askSDOGroupOrbitColor();
-	void askOCOGroupOrbitColor();
-	void askCometsGroupOrbitColor();
-	void askSednoidsGroupOrbitColor();
-	void askMercuryOrbitColor();
-	void askVenusOrbitColor();
-	void askEarthOrbitColor();
-	void askMarsOrbitColor();
-	void askJupiterOrbitColor();
-	void askSaturnOrbitColor();
-	void askUranusOrbitColor();
-	void askNeptuneOrbitColor();
 	void setColorStyle();
-
-private:
-	void colorButton(QToolButton *toolButton, QString propName);
 
 protected:
         //! Initialize the dialog widgets and connect the signals/slots.
@@ -69,4 +46,4 @@ protected:
 
 };
 
-#endif // _CONFIGUREORBITCOLORSDIALOG_HPP_
+#endif // CONFIGUREORBITCOLORSDIALOG_HPP

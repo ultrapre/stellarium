@@ -16,8 +16,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _CUSTOMOBJECTMGR_HPP_
-#define _CUSTOMOBJECTMGR_HPP_
+#ifndef CUSTOMOBJECTMGR_HPP
+#define CUSTOMOBJECTMGR_HPP
 
 #include "StelObjectModule.hpp"
 #include "StelObject.hpp"
@@ -48,6 +48,8 @@ public:
 	virtual void draw(StelCore* core);
 	virtual void drawPointer(StelCore* core, StelPainter& painter);
 	virtual double getCallOrder(StelModuleActionName actionName) const;
+
+	void drawHighlights(StelCore* core, StelPainter& painter);
 
 	///////////////////////////////////////////////////////////////////////////
 	// Methods defined in StelObjectManager class
@@ -152,6 +154,13 @@ public slots:
 	//! @return current size
 	float getMarkersSize(void) const;
 
+	//! Set the select priority for custom objects
+	//! @param priority level
+	void setSelectPriority(float priority);
+
+	//! Get the select priority for custom objects
+	float getSelectPriority(void) const;
+
 private slots:
 	//! Called when a new object is selected.
 	void selectedObjectChange(StelModule::StelModuleSelectAction action);
@@ -159,6 +168,8 @@ private slots:
 	//! Remove just one custom object
 	void removeCustomObject(CustomObjectP);
 
+	//! Connect this to StelApp font size.
+	void setFontSize(int s){font.setPixelSize(s);}
 private:
 	// Font used for displaying our text
 	QFont font;
@@ -166,6 +177,7 @@ private:
 	StelTextureSP texPointer;
 	QList<CustomObjectP> customObjects;
 
+	Vec3f hightlightColor;
 	int countMarkers;
 	int radiusLimit;
 
@@ -183,4 +195,4 @@ private:
 	CustomObjectP selected;
 };
 
-#endif /*_CUSTOMOBJECTMGR_HPP_*/
+#endif /* CUSTOMOBJECTMGR_HPP */

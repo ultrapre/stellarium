@@ -86,13 +86,15 @@ void SatellitesImportDialog::createDialogContent()
 {
 	ui->setupUi(dialog);
 
-#ifdef Q_OS_WIN
-	//Kinetic scrolling for tablet pc and pc
-	QList<QWidget *> addscroll;
-	addscroll << ui->listView;
-	installKineticScrolling(addscroll);
-#endif
-	
+	// Kinetic scrolling
+	kineticScrollingList << ui->listView;
+	StelGui* gui= dynamic_cast<StelGui*>(StelApp::getInstance().getGui());
+	if (gui)
+	{
+		enableKineticScrolling(gui->getFlagUseKineticScrolling());
+		connect(gui, SIGNAL(flagUseKineticScrollingChanged(bool)), this, SLOT(enableKineticScrolling(bool)));
+	}
+
 	connect(ui->closeStelWindow, SIGNAL(clicked()),
 	        this, SLOT(close()));
 	connect(ui->TitleBar, SIGNAL(movedTo(QPoint)),
@@ -143,7 +145,7 @@ void SatellitesImportDialog::getData()
 		numberDownloadsComplete = 0;
 		
 		// Reusing some code from Satellites::updateTLEs()
-		if (progressBar == 0)
+		if (progressBar == nullptr)
 			progressBar = StelApp::getInstance().addProgressBar();
 		progressBar->setValue(0);
 		progressBar->setRange(0, sourceUrls.size());
@@ -233,7 +235,7 @@ void SatellitesImportDialog::receiveDownload(QNetworkReply* networkReply)
 		if (progressBar)
 		{
 			StelApp::getInstance().removeProgressBar(progressBar);
-			progressBar = 0;
+			progressBar = Q_NULLPTR;
 		}
 		
 		if (sourceFiles.isEmpty())
@@ -323,7 +325,7 @@ void SatellitesImportDialog::reset()
 	if (progressBar)
 	{
 		StelApp::getInstance().removeProgressBar(progressBar);
-		progressBar = 0;
+		progressBar = Q_NULLPTR;
 	}
 }
 

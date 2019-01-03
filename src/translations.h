@@ -73,6 +73,8 @@ class Translations
 		// TRANSLATORS: Type of object
 		N_("sednoid");
 		// TRANSLATORS: Type of object
+		N_("interstellar object");
+		// TRANSLATORS: Type of object
 		N_("observer");
 		// TRANSLATORS: Type of object
 		N_("artificial");
@@ -96,6 +98,8 @@ class Translations
 		N_("Oort cloud objects");
 		// TRANSLATORS: Type of objects (for "Lists" in the search tool)
 		N_("Sednoids");
+		// TRANSLATORS: Type of objects (for "Lists" in the search tool)
+		N_("Interstellar objects");
 		// TRANSLATORS: Type of objects (for "Lists" in the search tool)
 		N_("Constellations");
 		// TRANSLATORS: Type of objects (for "Lists" in the search tool)
@@ -415,6 +419,10 @@ class Translations
 		N_("A Catalog of Rich Clusters of Galaxies");
 		// TRANSLATORS: Catalogue of objects (for "Lists" in the search tool)
 		N_("Hickson Compact Group");
+		// TRANSLATORS: Catalogue of objects (for "Lists" in the search tool)
+		N_("Abell Catalog of Planetary Nebulae");
+		// TRANSLATORS: Catalogue of objects (for "Lists" in the search tool)
+		N_("ESO/Uppsala Survey of the ESO(B) Atlas")
 		// TRANSLATORS: Type of objects (for "Lists" in the search tool)
 		N_("Dwarf galaxies");
 		// TRANSLATORS: Catalogue of objects (for "Lists" in the search tool)
@@ -448,6 +456,8 @@ class Translations
 		// TRANSLATORS: Name of the sky culture
 		N_("Chinese");
 		// TRANSLATORS: Name of the sky culture
+		N_("Chinese Contemporary");
+		// TRANSLATORS: Name of the sky culture
 		N_("Egyptian");
 		// TRANSLATORS: Name of the sky culture
 		N_("Hawaiian Starlines");
@@ -469,6 +479,8 @@ class Translations
 		N_("Maori");
 		// TRANSLATORS: Name of the sky culture
 		N_("Mongolian");
+		// TRANSLATORS: Name of the sky culture
+		N_("Lokono");
 		// TRANSLATORS: Name of the sky culture
 		N_("Navajo");
 		// TRANSLATORS: Name of the sky culture
@@ -495,6 +507,10 @@ class Translations
 		N_("Western (H.A.Rey)");
 		// TRANSLATORS: Name of the sky culture
 		N_("Western (O.Hlad)");
+		// TRANSLATORS: Name of the sky culture
+		N_("Western (Sky & Telescope)");
+		// TRANSLATORS: Name of the sky culture
+		N_("Northern Andes");
 
 		
 		// =====================================================================
@@ -560,7 +576,7 @@ class Translations
 		// TRANSLATORS: Name of script
 		N_("Double eclipse from Deimos in 2031");
 		// TRANSLATORS: Name of script
-		N_("Eclipse from Olympus Mons Jan 10 2068");
+		N_("Eclipse from Olympus Mons Jan 2, 2021");
 		// TRANSLATORS: Name of script
 		N_("Occultation of Earth and Jupiter 2048");
 		// TRANSLATORS: Name of script
@@ -569,6 +585,8 @@ class Translations
 		N_("Solar System Screensaver");
 		// TRANSLATORS: Name of script
 		N_("Constellations Tour");
+		// TRANSLATORS: Name of script
+		N_("Western Constellations Tour");
 		// TRANSLATORS: Name of script
 		N_("Sun from different planets");
 		// TRANSLATORS: Name of script
@@ -607,6 +625,18 @@ class Translations
 		N_("The Jack Bennett Catalog");
 		// TRANSLATORS: Name of script
 		N_("Best objects in the New General Catalog");
+		// TRANSLATORS: Name of script
+		N_("Jupiter and triple shadow phenomena");
+		// TRANSLATORS: Name of script
+		N_("Jupiter without Galilean satellites");
+		// TRANSLATORS: Name of script
+		N_("Skybox Tiles");
+		// TRANSLATORS: Name of script
+		N_("Occultations of bright stars by planets");
+		// TRANSLATORS: Name of script
+		N_("Mutual occultations of planets");
+		// TRANSLATORS: Name of script
+		N_("Planet Objects Tour");
 		
 		// =====================================================================
 		// Script descriptions
@@ -629,6 +659,7 @@ class Translations
 		N_("Phobos races ahead of Mars and transits the sun, passes through it and then retrogrades back towards the sun and just partially transits it again (only seen in the southern hemisphere of Deimos), then Mars totally eclipses the sun while Phobos transits in darkness between Mars and Deimos. When Phobos emerges from Mars it is still eclipsed and dimmed in Mars' shadow, only to light up later.");
 		N_("Screensaver of various happenings in the Solar System. 300 events in all!");
 		N_("A tour of the western constellations.");
+		N_("A tour of the constellations of the selected sky culture.");
 		N_("Look at the Sun from big planets of Solar System and Pluto.");
 		N_("Best views of Earth from other Solar System bodies in the 21st Century.");
 		N_("Transit of Venus as seen from Sydney Australia, 6th June 2012.");
@@ -644,6 +675,11 @@ class Translations
 		N_("Ben Crowell has created Binosky, an observing list of Deep Sky Objects for Binoculars. In the script we give a list of these 31 objects, ordered by Right Ascension (2000.0).");
 		N_("The Jack Bennett Catalog of Southern Deep-Sky Objects (152 objects in all). The Bennett catalog was contributed by Auke Slotegraaf.");
 		N_("This list of 111 objects by A.J. Crayon and Steve Coe is used by members of the Saguaro Astronomy Club of Phoenix, AZ, for the Best of the NGC achievement award.");
+		N_("Demonstration of the mid-time of rare events - triple shadow phenomena of the satellites of Jupiter from 1900 to 2100. All events are given in Dynamical Time.");
+		N_("The planet Jupiter sometimes appears to be without moons, when the four Galilean satellites are simultaneously invisible because they are passing across the planet's disk (transit), are behind the planet (occultation), or are in its shadow (eclipse). This script demonstrates these rare phenomena from 1900 to 2100 in Dynamical Time.");
+		N_("This script demonstrates interesting phenomena - occultations bright stars by planets, 2000 to 2040.");
+		N_("This script demonstrates interesting and very rare phenomena - mutual occultations of planets, 0 to 2500.");
+		N_("A tour of the Solar System planets");
 		
 		// =====================================================================
 		// List of GUI elements (Qt's dialogs)

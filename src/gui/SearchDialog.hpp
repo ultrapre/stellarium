@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
 */
  
-#ifndef _SEARCHDIALOG_HPP_
-#define _SEARCHDIALOG_HPP_
+#ifndef SEARCHDIALOG_HPP
+#define SEARCHDIALOG_HPP
 
 #include <QObject>
 #include <QLabel>
@@ -29,6 +29,8 @@
 
 // pre declaration of the ui class
 class Ui_searchDialogForm;
+class QSortFilterProxyModel;
+class QStringListModel;
 
 struct stringLengthCompare
 {
@@ -49,7 +51,7 @@ public:
 	CompletionLabel(QWidget* parent=Q_NULLPTR);
 	~CompletionLabel();
 
-	QString getSelected(void);
+	QString getSelected(void) const;
 	void setValues(const QStringList&);
 	bool isEmpty() const {return values.isEmpty();}
 	void appendValues(const QStringList&);
@@ -141,9 +143,9 @@ private slots:
 	void gotoObject();
 	void gotoObject(const QString& nameI18n);
 	// for going from list views
-	void gotoObject(QListWidgetItem* item);
+	void gotoObject(const QModelIndex &modelIndex);
 
-	void searchListChanged(const QString& newText);
+	void searchListClear();
 	
 	//! Called when the user edit the manual position controls
 	void manualPositionChanged();
@@ -164,7 +166,7 @@ private slots:
 	void selectSimbadServer(int index);
 
 	//! Called when new type of objects selected in list view tab
-	void updateListWidget(int index);
+	void updateListView(int index);
 
 	// retranslate/recreate tab
 	void updateListTab();
@@ -221,6 +223,8 @@ private:
 	QMap<QString, Vec3d> simbadResults;
 	class StelObjectMgr* objectMgr;
 	class QSettings* conf;
+	QStringListModel* listModel;
+	QSortFilterProxyModel *proxyModel;
 
 	//! Used when substituting text with a Greek letter.
 	bool flagHasSelectedText;
@@ -240,5 +244,5 @@ public:
 
 };
 
-#endif // _SEARCHDIALOG_HPP_
+#endif // _SEARCHDIALOG_HPP
 

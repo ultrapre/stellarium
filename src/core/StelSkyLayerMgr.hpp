@@ -16,8 +16,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _STELSKYLAYERMGR_HPP_
-#define _STELSKYLAYERMGR_HPP_
+#ifndef STELSKYLAYERMGR_HPP
+#define STELSKYLAYERMGR_HPP
 
 #include "StelModule.hpp"
 #include "StelSkyLayer.hpp"
@@ -182,6 +182,8 @@ private slots:
 	//! @param percentage the percentage of loaded data
 	void percentLoadedChanged(int percentage);
 
+	void loadCollection();
+
 private:
 
 	//! Store the informations needed for a graphical element layer.
@@ -206,4 +208,4 @@ private:
 	bool flagShow;
 };
 
-#endif // _STELSKYLAYERMGR_HPP_
+#endif // STELSKYLAYERMGR_HPP

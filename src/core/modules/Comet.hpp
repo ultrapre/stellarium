@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
  
-#ifndef _COMET_HPP_
-#define _COMET_HPP_
+#ifndef COMET_HPP
+#define COMET_HPP
 
 #include "Planet.hpp"
 
@@ -116,7 +116,7 @@ public:
 private:
 	//! @returns estimates for (Coma diameter [AU], gas tail length [AU]).
 	//! Using the formula from Guide found by the GSoC2012 initiative at http://www.projectpluto.com/update7b.htm#comet_tail_formula
-	Vec2f getComaDiameterAndTailLengthAU();
+	Vec2f getComaDiameterAndTailLengthAU() const;
 	void drawTail(StelCore* core, StelProjector::ModelViewTranformP transfo, bool gas);
 	void drawComa(StelCore* core, StelProjector::ModelViewTranformP transfo);
 
@@ -174,4 +174,4 @@ private:
 	static StelTextureSP tailTexture;      // it seems not really necessary to have different textures. gas tail is just painted blue.
 };
 
-#endif //_COMET_HPP_
+#endif //COMET_HPP

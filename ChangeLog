@@ -1,3 +1,27 @@
+0.18.3 [2018-12-22]
+The major changes of this version:
+- Improvements and fixes for AstroCalc tool
+- Added new sky cultures
+- Added many DSO textures
+- Refactoring the GUI
+- Many improvements in the code
+
+0.18.2 [2018-08-15]
+The major changes of this version:
+- Improvements and fixes for AstroCalc tool and plugins
+- Added support Abell Catalog of Planetary Nebulae and ESO/Uppsala Survey of the ESO(B) Atlas
+- Added few new scripts
+- Updated code and data
+
+0.18.1 [2018-07-01]
+The major changes of this version:
+- Improvements and fixes for Hierarchical Progressive Surveys [HiPS] support
+- Updated code of plugins
+- Updated code and data
+- Updated GPS handling
+- Added rise, transit and set times for celestial objects
+- Added dithering support
+
 0.18.0 [2018-03-25]
 The major changes of this version:
 - Added support Hierarchical Progressive Surveys [HiPS] (Hello visualization of 

@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
 */
 
-#ifndef _DATETIMEDIALOG_HPP_
-#define _DATETIMEDIALOG_HPP_
+#ifndef DATETIMEDIALOG_HPP
+#define DATETIMEDIALOG_HPP
 
 #include <QObject>
 #include <QTimer>
@@ -85,7 +85,7 @@ private:
 	double jd;
 	void pushToWidgets();
 	void setMjd(double mjd) { jd = 2400000.5 + mjd; }
-	double getMjd() { return jd - 2400000.5 ; }
+	double getMjd() const { return jd - 2400000.5 ; }
 };
 
-#endif // _DATETIMEDIALOG_HPP_
+#endif // DATETIMEDIALOG_HPP

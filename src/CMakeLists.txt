@@ -11,6 +11,7 @@ ENDIF()
 
 SET(stellarium_lib_SRCS
      core/Dithering.hpp
+     core/SaturationShader.hpp
      core/healpix.c
      core/StelAudioMgr.hpp
      core/StelAudioMgr.cpp
@@ -136,8 +137,8 @@ SET(stellarium_lib_SRCS
      core/planetsephems/elp82b.h
      core/planetsephems/gust86.c
      core/planetsephems/gust86.h
-     core/planetsephems/l1.c
-     core/planetsephems/l1.h
+     core/planetsephems/l12.c
+     core/planetsephems/l12.h
      core/planetsephems/marssat.c
      core/planetsephems/marssat.h
      core/planetsephems/pluto.c
@@ -177,6 +178,8 @@ SET(stellarium_lib_SRCS
      core/modules/CustomObject.hpp
      core/modules/CustomObjectMgr.cpp
      core/modules/CustomObjectMgr.hpp
+     core/modules/HighlightMgr.cpp
+     core/modules/HighlightMgr.hpp
      core/modules/GridLinesMgr.cpp
      core/modules/GridLinesMgr.hpp
      core/modules/HipsMgr.hpp
@@ -448,7 +451,7 @@ IF(ENABLE_SPOUT AND SPOUT_LIBRARY_DLL)
      CONFIGURE_FILE(${SPOUT_LIBRARY_DLL} ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 ENDIF()
 
-SET(STELMAIN_DEPS ${ZLIB_LIBRARIES} qtcompress_stel glues_stel qcustomplot_stel ${STELLARIUM_STATIC_PLUGINS_LIBRARIES} ${STELLARIUM_QT_LIBRARIES} ${SPOUT_LIBRARY})
+SET(STELMAIN_DEPS ${ZLIB_LIBRARIES} qtcompress_stel glues_stel qcustomplot_stel qxlsx_stel ${STELLARIUM_STATIC_PLUGINS_LIBRARIES} ${STELLARIUM_QT_LIBRARIES} ${SPOUT_LIBRARY})
 IF(ENABLE_LIBGPS)
      SET(STELMAIN_DEPS ${STELMAIN_DEPS} ${GPS_LIBRARY})
 ENDIF()

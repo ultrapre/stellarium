@@ -19,6 +19,7 @@
 
 #include <QString>
 #include <QTextBrowser>
+#include <QScrollBar>
 #include <QVBoxLayout>
 #include <QWidget>
 #include <QFrame>
@@ -35,6 +36,8 @@
 #include <QDir>
 #include <QProcess>
 #include <QSysInfo>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 
 #include "ui_helpDialogGui.h"
 #include "HelpDialog.hpp"
@@ -48,11 +51,16 @@
 #include "StelLogger.hpp"
 #include "StelStyle.hpp"
 #include "StelActionMgr.hpp"
+#include "StelJsonParser.hpp"
 
 HelpDialog::HelpDialog(QObject* parent)
 	: StelDialog("Help", parent)
+	, message("")
+	, updateState(CompleteNoUpdates)
+	, networkManager(Q_NULLPTR)
+	, downloadReply(Q_NULLPTR)
 {
-	ui = new Ui_helpDialogForm;
+	ui = new Ui_helpDialogForm;	
 }
 
 HelpDialog::~HelpDialog()
@@ -89,12 +97,15 @@ void HelpDialog::createDialogContent()
 	connect(ui->closeStelWindow, SIGNAL(clicked()), this, SLOT(close()));
 	connect(ui->TitleBar, SIGNAL(movedTo(QPoint)), this, SLOT(handleMovedTo(QPoint)));
 
-#if defined(Q_OS_WIN) || defined(Q_OS_ANDROID)
-	//Kinetic scrolling for tablet pc and pc
-	QList<QWidget *> addscroll;
-	addscroll << ui->helpBrowser << ui->aboutBrowser << ui->logBrowser;
-	installKineticScrolling(addscroll);
-#endif
+	// Kinetic scrolling
+	kineticScrollingList << ui->helpBrowser << ui->aboutBrowser << ui->logBrowser;
+	StelGui* gui= dynamic_cast<StelGui*>(StelApp::getInstance().getGui());
+	if (gui)
+	{
+		enableKineticScrolling(gui->getFlagUseKineticScrolling());
+		connect(gui, SIGNAL(flagUseKineticScrollingChanged(bool)), this, SLOT(enableKineticScrolling(bool)));
+	}
+
 
 	// Help page
 	updateHelpText();
@@ -104,14 +115,96 @@ void HelpDialog::createDialogContent()
 	// About page
 	updateAboutText();
 
-	// Log page
+	// Log page	
 	ui->logPathLabel->setText(QString("%1/log.txt:").arg(StelFileMgr::getUserDir()));
 	connect(ui->stackedWidget, SIGNAL(currentChanged(int)), this, SLOT(updateLog(int)));
 	connect(ui->refreshButton, SIGNAL(clicked()), this, SLOT(refreshLog()));
 
+	// Set up download manager for checker of updates
+	networkManager = StelApp::getInstance().getNetworkAccessManager();
+	updateState = CompleteNoUpdates;
+	connect(ui->checkUpdatesButton, SIGNAL(clicked()), this, SLOT(checkUpdates()));
+	connect(this, SIGNAL(checkUpdatesComplete(void)), this, SLOT(updateAboutText()));
+
 	connect(ui->stackListWidget, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), this, SLOT(changePage(QListWidgetItem *, QListWidgetItem*)));
+}
 
+void HelpDialog::checkUpdates()
+{
+	if (networkManager->networkAccessible()==QNetworkAccessManager::Accessible)
+	{
+		if (updateState==HelpDialog::Updating)
+		{
+			qWarning() << "Already checking updates...";
+			return;
+		}
 
+		QUrl API("https://api.github.com/repos/Stellarium/stellarium/releases/latest");
+		connect(networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(downloadComplete(QNetworkReply*)));
+		QNetworkRequest request;
+		request.setUrl(API);
+		request.setRawHeader("User-Agent", StelUtils::getUserAgentString().toUtf8());
+		#if QT_VERSION >= 0x050600
+		request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
+		#endif
+		downloadReply = networkManager->get(request);
+
+		updateState = HelpDialog::Updating;
+	}
+}
+
+void HelpDialog::downloadComplete(QNetworkReply *reply)
+{
+	if (reply == Q_NULLPTR)
+		return;
+
+	disconnect(networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(downloadComplete(QNetworkReply*)));
+
+	if (reply->error() || reply->bytesAvailable()==0)
+	{
+		qWarning() << "Error: While trying to access"
+			   << reply->url().toString()
+			   << "the following error occured:"
+			   << reply->errorString();
+
+		reply->deleteLater();
+		downloadReply = Q_NULLPTR;
+		updateState = HelpDialog::DownloadError;
+		message = q_("Cannot check updates...");
+		return;
+	}
+
+	QVariantMap map;
+	try
+	{
+		map = StelJsonParser::parse(reply->readAll()).toMap();
+	}
+	catch (std::runtime_error &e)
+	{
+		qDebug() << "Answer format is wrong! Error: " << e.what();
+		message = q_("Cannot check updates...");
+		return;
+	}
+
+	updateState = HelpDialog::CompleteUpdates;
+
+	QString latestVersion = map["name"].toString();
+	latestVersion.replace("v","", Qt::CaseInsensitive);
+
+	QString appVersion = StelUtils::getApplicationVersion();
+	QStringList c = appVersion.split(".");	
+	int r = StelUtils::compareVersions(latestVersion, appVersion);
+	if (r==-1 || c.count()>3 || c.last().contains("-"))
+		message = q_("Looks like you are using the development version of Stellarium.");
+	else if (r==0)
+		message = q_("This is latest stable version of Stellarium.");
+	else
+		message = QString("%1 <a href='%2'>%3</a>").arg(q_("This version of Stellarium is outdated!"), map["html_url"].toString(), q_("Download new version."));
+
+	reply->deleteLater();
+	downloadReply = Q_NULLPTR;
+
+	emit(checkUpdatesComplete());
 	ui->stackListWidget->setFixedHeight( ui->stackListWidget->sizeHintForRow(0) );
 }
 
@@ -128,12 +221,14 @@ void HelpDialog::updateLog(int)
 		refreshLog();
 }
 
-void HelpDialog::refreshLog()
+void HelpDialog::refreshLog() const
 {
 	ui->logBrowser->setPlainText(StelLogger::getLog());
+	QScrollBar *sb = ui->logBrowser->verticalScrollBar();
+	sb->setValue(sb->maximum());
 }
 
-void HelpDialog::updateHelpText(void)
+void HelpDialog::updateHelpText(void) const
 {
 	QString htmlText = "<html><head><title>";
 	htmlText += q_("Stellarium Help").toHtmlEscaped();
@@ -234,7 +329,6 @@ void HelpDialog::updateHelpText(void)
 	// WARNING! Section titles are re-used above!
 	htmlText += "<h2 id=\"links\">" + q_("Further Reading").toHtmlEscaped() + "</h2>\n";
 	htmlText += q_("The following links are external web links, and will launch your web browser:\n").toHtmlEscaped();
-	htmlText += "<p><a href=\"http://stellarium.sourceforge.net/wiki/index.php/Category:User%27s_Guide\">" + q_("The Stellarium User Guide").toHtmlEscaped() + "</a>";
 
 	htmlText += "<p>";
 	// TRANSLATORS: The text between braces is the text of an HTML link.
@@ -257,7 +351,6 @@ void HelpDialog::updateHelpText(void)
 	htmlText += "</p>\n";
 
 	htmlText += "</body></html>\n";
-#undef E
 
 	ui->helpBrowser->clear();
 	StelGui* gui = dynamic_cast<StelGui*>(StelApp::getInstance().getGui());
@@ -267,7 +360,7 @@ void HelpDialog::updateHelpText(void)
 	ui->helpBrowser->scrollToAnchor("top");
 }
 
-void HelpDialog::updateAboutText(void)
+void HelpDialog::updateAboutText(void) const
 {
 	QStringList contributors;
 	contributors << "Vladislav Bataron" << "Barry Gerdes" << "Peter Walser" << "Michal Sojka"
@@ -296,6 +389,8 @@ void HelpDialog::updateAboutText(void)
 	QString newHtml = "<h1>" + StelUtils::getApplicationName() + "</h1>";
 	// Note: this legal notice is not suitable for traslation
 	newHtml += QString("<h3>Copyright &copy; %1 Stellarium Developers</h3>").arg(COPYRIGHT_YEARS);
+	if (!message.isEmpty())
+		newHtml += "<p><strong>" + message + "</strong></p>";
 	// newHtml += "<p><em>Version 0.15 is dedicated in memory of our team member Barry Gerdes.</em></p>";
 	newHtml += "<p>This program is free software; you can redistribute it and/or ";
 	newHtml += "modify it under the terms of the GNU General Public License ";
@@ -319,7 +414,6 @@ void HelpDialog::updateAboutText(void)
 	newHtml += "<li>" + q_("Developer: %1").arg(QString("Georg Zotti")).toHtmlEscaped() + "</li>";
 	newHtml += "<li>" + q_("Developer: %1").arg(QString("Alexander Wolf")).toHtmlEscaped() + "</li>";
 	newHtml += "<li>" + q_("Developer: %1").arg(QString("Marcos Cardinot")).toHtmlEscaped() + "</li>";
-	newHtml += "<li>" + q_("Developer: %1").arg(QString("Florian Schaukowitsch")).toHtmlEscaped() + "</li>";
 	newHtml += "<li>" + q_("Continuous Integration: %1").arg(QString("Hans Lambermont")).toHtmlEscaped() + "</li>";	
 	newHtml += "<li>" + q_("Tester: %1").arg(QString("Khalid AlAjaji")).toHtmlEscaped() + "</li></ul>";
 	newHtml += "<h3>" + q_("Former Developers").toHtmlEscaped() + "</h3>";
@@ -329,6 +423,7 @@ void HelpDialog::updateAboutText(void)
 	newHtml += "<li>" + q_("Developer: %1").arg(QString("Rob Spearman")).toHtmlEscaped() + "</li>";
 	newHtml += "<li>" + q_("Developer: %1").arg(QString("Bogdan Marinov")).toHtmlEscaped() + "</li>";
 	newHtml += "<li>" + q_("Developer: %1").arg(QString("Timothy Reaves")).toHtmlEscaped() + "</li>";
+	newHtml += "<li>" + q_("Developer: %1").arg(QString("Florian Schaukowitsch")).toHtmlEscaped() + "</li>";
 	newHtml += "<li>" + q_("Developer: %1").arg(QString("Andr%1s Mohari").arg(QChar(0x00E1))).toHtmlEscaped() + "</li>";
 	newHtml += "<li>" + q_("Developer: %1").arg(QString("Mike Storm")).toHtmlEscaped() + "</li>";
 	newHtml += "<li>" + q_("Developer: %1").arg(QString("Ferdinand Majerech")).toHtmlEscaped() + "</li>";

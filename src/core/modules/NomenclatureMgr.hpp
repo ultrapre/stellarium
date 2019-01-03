@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _NOMENCLATUREMGR_HPP_
-#define _NOMENCLATUREMGR_HPP_
+#ifndef NOMENCLATUREMGR_HPP
+#define NOMENCLATUREMGR_HPP
 
 #include "StelObjectModule.hpp"
 #include "StelObject.hpp"
@@ -65,8 +65,8 @@ public:
 	///////////////////////////////////////////////////////////////////////////
 	// Methods defined in StelObjectManager class
 	//! Used to get a list of objects which are near to some position.
-	//! @param v a vector representing the position in th sky around which to search for nebulae.
-	//! @param limitFov the field of view around the position v in which to search for satellites.
+	//! @param v a vector representing the position in th sky around which to search for nomenclatures.
+	//! @param limitFov the field of view around the position v in which to search for nomenclatures.
 	//! @param core the StelCore to use for computations.
 	//! @return an list containing the satellites located inside the limitFov circle around position v.
 	virtual QList<StelObjectP> searchAround(const Vec3d& v, double limitFov, const StelCore* core) const;
@@ -130,6 +130,10 @@ signals:
 	void localNomenclatureHidingChanged(bool b);
 	void nomenclatureColorChanged(const Vec3f & color) const;
 
+private slots:
+	//! Connect from StelApp to reflect font size change.
+	void setFontSize(int size){font.setPixelSize(size);}
+
 private:
 	SolarSystem* ssystem;
 
@@ -143,4 +147,4 @@ private:
 	QMultiHash<PlanetP, NomenclatureItemP> nomenclatureItems;
 };
 
-#endif /*_NOMENCLATUREMGR_HPP_*/
+#endif /* NOMENCLATUREMGR_HPP */

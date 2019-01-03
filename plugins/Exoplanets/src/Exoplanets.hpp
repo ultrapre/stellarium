@@ -16,8 +16,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _EXOPLANETS_HPP_
-#define _EXOPLANETS_HPP_
+#ifndef EXOPLANETS_HPP
+#define EXOPLANETS_HPP
 
 #include "StelObjectModule.hpp"
 #include "StelObject.hpp"
@@ -29,9 +29,9 @@
 #include <QDateTime>
 #include <QList>
 #include <QSharedPointer>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 
-class QNetworkAccessManager;
-class QNetworkReply;
 class QSettings;
 class QTimer;
 class ExoplanetsDialog;
@@ -76,6 +76,16 @@ class Exoplanets : public StelObjectModule
 		   WRITE setFlagShowExoplanets
 		   NOTIFY flagExoplanetsVisibilityChanged
 		   )
+	Q_PROPERTY(Vec3f markerColor
+		   READ getMarkerColor
+		   WRITE setMarkerColor
+		   NOTIFY markerColorChanged
+		   )
+	Q_PROPERTY(Vec3f habitableColor
+		   READ getHabitableColor
+		   WRITE setHabitableColor
+		   NOTIFY habitableColorChanged
+		   )
 public:	
 	//! @enum UpdateState
 	//! Used for keeping for track of the download/update status
@@ -110,7 +120,7 @@ public:
 	///////////////////////////////////////////////////////////////////////////
 	// Methods defined in StelObjectManager class
 	//! Used to get a list of objects which are near to some position.
-	//! @param v a vector representing the position in th sky around which to search for nebulae.
+	//! @param v a vector representing the position in th sky around which to search for exoplanets.
 	//! @param limitFov the field of view around the position v in which to search for exoplanets.
 	//! @param core the StelCore to use for computations.
 	//! @return an list containing the exoplanets located inside the limitFov circle around position v.
@@ -139,7 +149,7 @@ public:
 	virtual QString getStelObjectType() const { return Exoplanet::EXOPLANET_TYPE; }
 
 	//! get a exoplanet object by identifier
-	ExoplanetP getByID(const QString& id);
+	ExoplanetP getByID(const QString& id) const;
 
 	//! Implement this to tell the main Stellarium GUI that there is a GUI element to configure this
 	//! plugin.
@@ -239,6 +249,8 @@ signals:
 	void jsonUpdateComplete(void);
 
 	void flagExoplanetsVisibilityChanged(bool b);
+	void markerColorChanged(Vec3f);
+	void habitableColorChanged(Vec3f);
 
 public slots:
 	//! Download JSON from web recources described in the module section of the
@@ -261,7 +273,7 @@ public slots:
 
 	//! Define whether the button toggling exoplanets should be visible
 	void setFlagShowExoplanetsButton(bool b);
-	bool getFlagShowExoplanetsButton(void) { return flagShowExoplanetsButton; }
+	bool getFlagShowExoplanetsButton(void) const { return flagShowExoplanetsButton; }
 
 	//! Get status to display of distribution of exoplanetary systems
 	//! @return true if distribution of exoplanetary systems is enabled
@@ -287,7 +299,7 @@ public slots:
 	//! Get color for markers of exoplanetary systems
 	//! @param h set false if you want get color of markers of potentially habitable exoplanets
 	//! @return color
-	Vec3f getMarkerColor(bool habitable) const;
+	Vec3f getMarkerColor() const;
 	//! Set color for markers of exoplanetary systems
 	//! @param c color
 	//! @param h set true if you want set color for potentially habitable exoplanets
@@ -295,7 +307,20 @@ public slots:
 	//! // example of usage in scripts
 	//! Exoplanets.setMarkerColor(Vec3f(1.0,0.0,0.0), true);
 	//! @endcode
-	void setMarkerColor(const Vec3f& c, bool h);
+	void setMarkerColor(const Vec3f& c);
+
+	//! Get color for markers of habitable exoplanetary systems
+	//! @param h set false if you want get color of markers of potentially habitable exoplanets
+	//! @return color
+	Vec3f getHabitableColor() const;
+	//! Set color for markers of exoplanetary systems
+	//! @param c color
+	//! @param h set true if you want set color for potentially habitable exoplanets
+	//! @code
+	//! // example of usage in scripts
+	//! Exoplanets.setHabitableColor(Vec3f(1.0,0.0,0.0), true);
+	//! @endcode
+	void setHabitableColor(const Vec3f& c);
 
 	//! Get count of planetary systems from catalog
 	//! @return count of planetary systems
@@ -333,6 +358,8 @@ public slots:
 	//! Set the temperature scale from its key
 	void setCurrentTemperatureScaleKey(QString key);
 
+	//! Connect this to StelApp font size.
+	void setFontSize(int s){font.setPixelSize(s);}
 private:
 	// Font used for displaying our text
 	QFont font;
@@ -389,13 +416,17 @@ private:
 
 	// variables and functions for the updater
 	UpdateState updateState;
-	QNetworkAccessManager* downloadMgr;
+	QNetworkAccessManager * networkManager;
+	QNetworkReply * downloadReply;
 	QString updateUrl;	
 	QTimer* updateTimer;
 	bool updatesEnabled;
 	QDateTime lastUpdate;
 	int updateFrequencyHours;	
 	bool enableAtStartup;
+
+	void startDownload(QString url);
+	void deleteDownloadProgressBar();
 
 	QSettings* conf;
 
@@ -411,12 +442,14 @@ private slots:
 	//! if the last update was longer than updateFrequencyHours ago then the update is
 	//! done.
 	void checkForUpdate(void);
-	void updateDownloadComplete(QNetworkReply* reply);
+
+	void updateDownloadProgress(qint64 bytesReceived, qint64 bytesTotal);
+	void downloadComplete(QNetworkReply * reply);
 
 	//! Display a message. This is used for plugin-specific warnings and such
 	void displayMessage(const QString& message, const QString hexColor="#999999");
 
-	void reloadCatalog(void);
+	void reloadCatalog(void);	
 };
 
 
@@ -436,4 +469,4 @@ public:
 	virtual QObjectList getExtensionList() const { return QObjectList(); }
 };
 
-#endif /*_EXOPLANETS_HPP_*/
+#endif /* EXOPLANETS_HPP */

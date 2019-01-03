@@ -47,6 +47,8 @@
 #include <QMenu>
 #include <QMetaEnum>
 #include <QClipboard>
+#include <QSortFilterProxyModel>
+#include <QStringListModel>
 
 #include "SimbadSearcher.hpp"
 
@@ -78,7 +80,7 @@ void CompletionLabel::clearValues()
 	updateText();
 }
 
-QString CompletionLabel::getSelected()
+QString CompletionLabel::getSelected() const
 {
 	if (values.isEmpty())
 		return QString();
@@ -126,13 +128,15 @@ void CompletionLabel::updateText()
 
 // Start of members for class SearchDialog
 
-const char* SearchDialog::DEF_SIMBAD_URL = "http://simbad.u-strasbg.fr/";
+const char* SearchDialog::DEF_SIMBAD_URL = "https://simbad.u-strasbg.fr/";
 SearchDialog::SearchDialogStaticData SearchDialog::staticData;
 QString SearchDialog::extSearchText = "";
 
 SearchDialog::SearchDialog(QObject* parent)
 	: StelDialog("Search", parent)
 	, simbadReply(Q_NULLPTR)
+	, listModel(Q_NULLPTR)
+	, proxyModel(Q_NULLPTR)
 	, flagHasSelectedText(false)
 {
 	ui = new Ui_searchDialogForm;
@@ -321,12 +325,14 @@ void SearchDialog::createDialogContent()
 
 	ui->lineEditSearchSkyObject->installEventFilter(this);	
 
-#if defined(Q_OS_WIN) || defined(Q_OS_ANDROID)
-	//Kinetic scrolling for tablet pc and pc
-	QList<QWidget *> addscroll;
-	addscroll << ui->objectsListWidget;
-	installKineticScrolling(addscroll);
-#endif
+	// Kinetic scrolling
+	kineticScrollingList << ui->objectsListView;
+	StelGui* gui= dynamic_cast<StelGui*>(StelApp::getInstance().getGui());
+	if (gui)
+	{
+		enableKineticScrolling(gui->getFlagUseKineticScrolling());
+		connect(gui, SIGNAL(flagUseKineticScrollingChanged(bool)), this, SLOT(enableKineticScrolling(bool)));
+	}
 
 	populateCoordinateSystemsList();
 	populateCoordinateAxis();
@@ -386,9 +392,18 @@ void SearchDialog::createDialogContent()
 	ui->checkBoxLockPosition->setChecked(useLockPosition);
 
 	// list views initialization
-	connect(ui->objectTypeComboBox, SIGNAL(activated(int)), this, SLOT(updateListWidget(int)));
-	connect(ui->searchInListLineEdit, SIGNAL(textChanged(QString)), this, SLOT(searchListChanged(QString)));
-	connect(ui->searchInEnglishCheckBox, SIGNAL(toggled(bool)), this, SLOT(updateListTab()));	
+	listModel = new QStringListModel(this);
+	proxyModel = new QSortFilterProxyModel(ui->objectsListView);
+	proxyModel->setSourceModel(listModel);
+	proxyModel->sort(0, Qt::AscendingOrder);
+	proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+	ui->objectsListView->setModel(proxyModel);
+
+	connect(ui->objectTypeComboBox, SIGNAL(activated(int)), this, SLOT(updateListView(int)));
+	connect(ui->searchInListLineEdit, SIGNAL(textChanged(const QString&)), proxyModel, SLOT(setFilterWildcard(const QString&)));
+	connect(ui->searchInEnglishCheckBox, SIGNAL(toggled(bool)), this, SLOT(updateListTab()));
+	QAction *clearAction = ui->searchInListLineEdit->addAction(QIcon(":/graphicGui/backspace-white.png"), QLineEdit::ActionPosition::TrailingPosition);
+	connect(clearAction, SIGNAL(triggered()), this, SLOT(searchListClear()));
 	updateListTab();
 
 	connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(changeTab(int)));
@@ -546,7 +561,7 @@ void SearchDialog::manualPositionChanged()
 		}
 	}
 	mvmgr->setFlagTracking(false);
-	mvmgr->moveToJ2000(pos, aimUp, 0.05);
+	mvmgr->moveToJ2000(pos, aimUp, mvmgr->getAutoMoveDuration());
 	mvmgr->setFlagLockEquPos(useLockPosition);
 }
 
@@ -747,20 +762,14 @@ void SearchDialog::gotoObject(const QString &nameI18n)
 	simbadResults.clear();
 }
 
-void SearchDialog::gotoObject(QListWidgetItem *item)
+void SearchDialog::gotoObject(const QModelIndex &modelIndex)
 {
-	gotoObject(item->text());
+	gotoObject(proxyModel->data(modelIndex, Qt::DisplayRole).toString());
 }
 
-void SearchDialog::searchListChanged(const QString &newText)
+void SearchDialog::searchListClear()
 {
-	QList<QListWidgetItem*> items = ui->objectsListWidget->findItems(newText, Qt::MatchStartsWith);
-	ui->objectsListWidget->clearSelection();
-	if (!items.isEmpty())
-	{
-		items.at(0)->setSelected(true);
-		ui->objectsListWidget->scrollToItem(items.at(0));
-	}
+	ui->searchInListLineEdit->clear();	
 }
 
 bool SearchDialog::eventFilter(QObject*, QEvent *event)
@@ -859,20 +868,32 @@ void SearchDialog::selectSimbadServer(int index)
 	conf->setValue("search/simbad_server_url", simbadServerUrl);
 }
 
-void SearchDialog::updateListWidget(int index)
+void SearchDialog::updateListView(int index)
 {
 	QString moduleId = ui->objectTypeComboBox->itemData(index).toString();
-	ui->objectsListWidget->clear();
 	bool englishNames = ui->searchInEnglishCheckBox->isChecked();
-	ui->objectsListWidget->addItems(objectMgr->listAllModuleObjects(moduleId, englishNames));
-	ui->objectsListWidget->sortItems(Qt::AscendingOrder);
-	connect(ui->objectsListWidget, SIGNAL(itemClicked(QListWidgetItem*)),
-		this, SLOT(gotoObject(QListWidgetItem*)),
+	ui->searchInListLineEdit->clear();
+	ui->objectsListView->blockSignals(true);
+	ui->objectsListView->reset();
+	listModel->setStringList(objectMgr->listAllModuleObjects(moduleId, englishNames));
+	proxyModel->setSourceModel(listModel);
+	proxyModel->sort(0, Qt::AscendingOrder);
+	ui->objectsListView->blockSignals(false);
+	connect(ui->objectsListView, SIGNAL(clicked(const QModelIndex&)),
+		this, SLOT(gotoObject(const QModelIndex&)),
 		Qt::UniqueConnection); //bugfix: prevent multiple connections, which seems to have happened before
 }
 
 void SearchDialog::updateListTab()
 {
+	QVariant selectedObjectId;
+	QComboBox* objects = ui->objectTypeComboBox;
+	int index = objects->currentIndex();
+	if (index < 0)
+		selectedObjectId = QVariant("AsterismMgr"); // Let's enable "Asterisms" by default!
+	else
+		selectedObjectId = objects->itemData(index, Qt::UserRole);
+
 	if (StelApp::getInstance().getLocaleMgr().getAppLanguage().startsWith("en"))
 	{
 		// hide "names in English" checkbox
@@ -882,20 +903,22 @@ void SearchDialog::updateListTab()
 	{
 		ui->searchInEnglishCheckBox->show();
 	}
-	ui->objectTypeComboBox->blockSignals(true);
-	ui->objectTypeComboBox->clear();	
+	objects->blockSignals(true);
+	objects->clear();
 	QMap<QString, QString> modulesMap = objectMgr->objectModulesMap();
 	for (auto it = modulesMap.begin(); it != modulesMap.end(); ++it)
 	{
 		if (!objectMgr->listAllModuleObjects(it.key(), ui->searchInEnglishCheckBox->isChecked()).isEmpty())
 		{
-			QString moduleName = (ui->searchInEnglishCheckBox->isChecked() ? it.value(): q_(it.value()));
-			ui->objectTypeComboBox->addItem(moduleName, QVariant(it.key()));
+			// List of objects is not empty, let's add name of module or section!
+			objects->addItem(q_(it.value()), QVariant(it.key()));
 		}
-	}	
-	ui->objectTypeComboBox->model()->sort(0, Qt::AscendingOrder);
-	ui->objectTypeComboBox->blockSignals(false);
-	updateListWidget(ui->objectTypeComboBox->currentIndex());
+	}
+	index = objects->findData(selectedObjectId, Qt::UserRole, Qt::MatchCaseSensitive);
+	objects->setCurrentIndex(index);
+	objects->model()->sort(0, Qt::AscendingOrder);
+	objects->blockSignals(false);
+	updateListView(objects->currentIndex());
 }
 
 void SearchDialog::showContextMenu(const QPoint &pt)

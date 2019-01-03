@@ -85,13 +85,13 @@ public:
 
 
 //! Copies the default configuration file.
-//! This function copies the default_config.ini file to config.ini (or other
+//! This function copies the default_cfg.ini file to config.ini (or other
 //! name specified on the command line located in the user data directory.
 void copyDefaultConfigFile(const QString& newPath)
 {
-	QString defaultConfigFilePath = StelFileMgr::findFile("data/default_config.ini");
+	QString defaultConfigFilePath = StelFileMgr::findFile("data/default_cfg.ini");
 	if (defaultConfigFilePath.isEmpty())
-		qFatal("ERROR copyDefaultConfigFile failed to locate data/default_config.ini. Please check your installation.");
+		qFatal("ERROR copyDefaultConfigFile failed to locate data/default_cfg.ini. Please check your installation.");
 	QFile::copy(defaultConfigFilePath, newPath);
 	if (!StelFileMgr::exists(newPath))
 	{
@@ -235,7 +235,7 @@ int main(int argc, char **argv)
 
 	// OK we start the full program.
 	// Print the console splash and get on with loading the program
-	QString versionLine = QString("This is %1 - http://www.stellarium.org").arg(StelUtils::getApplicationName());
+	QString versionLine = QString("This is %1 - %2").arg(StelUtils::getApplicationName()).arg(STELLARIUM_URL);
 	QString copyrightLine = QString("Copyright (C) %1 Fabien Chereau et al.").arg(COPYRIGHT_YEARS);
 	int maxLength = qMax(versionLine.size(), copyrightLine.size());
 	qDebug() << qPrintable(QString(" %1").arg(QString().fill('-', maxLength+2)));
@@ -378,7 +378,7 @@ int main(int argc, char **argv)
 	QString baseFont = confSettings->value("gui/base_font_name", "DejaVu Sans").toString();
 	QFont tmpFont(baseFont);
 #endif
-	tmpFont.setPixelSize(confSettings->value("gui/base_font_size", 13).toInt());
+	tmpFont.setPixelSize(confSettings->value("gui/gui_font_size", 13).toInt());
 	QGuiApplication::setFont(tmpFont);
 
 	// Initialize translator feature

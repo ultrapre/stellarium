@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _ATMOSTPHERE_HPP_
-#define _ATMOSTPHERE_HPP_
+#ifndef ATMOSTPHERE_HPP
+#define ATMOSTPHERE_HPP
 
 #include "Skylight.hpp"
 #include "VecMath.hpp"
@@ -52,7 +52,7 @@ public:
 	//! Set fade in/out duration in seconds
 	void setFadeDuration(float duration) {fader.setDuration((int)(duration*1000.f));}
 	//! Get fade in/out duration in seconds
-	float getFadeDuration() {return (float)fader.getDuration()/1000.f;}
+	float getFadeDuration() const {return (float)fader.getDuration()/1000.f;}
 
 	//! Define whether to display atmosphere
 	void setFlagShow(bool b){fader = b;}
@@ -120,4 +120,4 @@ private:
 	GLuint bayerPatternTex=0;
 };
 
-#endif // _ATMOSTPHERE_HPP_
+#endif // ATMOSTPHERE_HPP

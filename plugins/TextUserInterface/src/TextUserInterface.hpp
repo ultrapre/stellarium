@@ -16,8 +16,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
  
-#ifndef TEXTUSERINTERFACE_HPP_
-#define _TEXTUSERINTERFACE_HPP_ 1
+#ifndef TEXTUSERINTERFACE_HPP
+#define TEXTUSERINTERFACE_HPP
 
 #include "StelModule.hpp"
 #include "DummyDialog.hpp"
@@ -29,8 +29,6 @@
 
 class TuiNode;
 
-//! This is an example of a plug-in which can be dynamically loaded into stellarium
-// TODO: Update this doc. Is it really dynamically loadable? Or just left-over template documentation from the plugin template?
 //! The Text User Interface (TUI) plugin replaces the old (pre-0.10 series) text user interface.
 //! It used to be activated with M until the 0.14 series, but was changed to Alt-T for 0.15 and later (to be consistent with the Ctrl-T hiding of the GUI).
 class TextUserInterface : public StelModule
@@ -108,4 +106,4 @@ public:
 	virtual QObjectList getExtensionList() const { return QObjectList(); }
 };
 
-#endif /*_TEXTUSERINTERFACE_HPP_*/
+#endif /* TEXTUSERINTERFACE_HPP*/

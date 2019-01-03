@@ -42,9 +42,15 @@ QTEST_GUILESS_MAIN(TestEphemeris)
 
 void TestEphemeris::initTestCase()
 {
-	//StelFileMgr::init();
+	#ifndef Q_OS_WIN
+	// FIXME: StelFileMgr::init(); is disabled on Windows due it will caused problem "could not find install location"
+	//        on Windows machines without installed Stellarium (e.g. AppVeyor). So, it will be give "false positive
+	//        test pass" at the moment for DE42x ephemeris.
+	StelFileMgr::init();
+	#endif
+
 	de430FilePath = StelFileMgr::findFile("ephem/" + QString(DE430_FILENAME), StelFileMgr::File);
-	de431FilePath = StelFileMgr::findFile("ephem/" + QString(DE431_FILENAME), StelFileMgr::File);
+	de431FilePath = StelFileMgr::findFile("ephem/" + QString(DE431_FILENAME), StelFileMgr::File);	
 
 	if (!de430FilePath.isEmpty())
 		qWarning() << "Use DE430 ephemeris file" << de430FilePath;
@@ -1023,13 +1029,13 @@ void TestEphemeris::testMercuryHeliocentricEphemerisVsop87()
 
 		QVERIFY2(actualErrorX <= acceptableError && actualErrorY <= acceptableError && actualErrorZ <= acceptableError,
 			 QString("jd=%1 x=%2 (%5) y=%3 (%6) z=%4 (%7)")
-			 .arg(QString::number(       jd, 'f', 15))
+			 .arg(QString::number(    jd, 'f', 15))
 			 .arg(QString::number(xyz[0], 'f', 15))
 			 .arg(QString::number(xyz[1], 'f', 15))
 			 .arg(QString::number(xyz[2], 'f', 15))
-			 .arg(QString::number(       x, 'f', 15))
-			 .arg(QString::number(       y, 'f', 15))
-			 .arg(QString::number(       z, 'f', 15))
+			 .arg(QString::number(     x, 'f', 15))
+			 .arg(QString::number(     y, 'f', 15))
+			 .arg(QString::number(     z, 'f', 15))
 			 .toUtf8());
 	}
 }
@@ -1056,13 +1062,13 @@ void TestEphemeris::testVenusHeliocentricEphemerisVsop87()
 
 		QVERIFY2(actualErrorX <= acceptableError && actualErrorY <= acceptableError && actualErrorZ <= acceptableError,
 			 QString("jd=%1 x=%2 (%5) y=%3 (%6) z=%4 (%7)")
-			 .arg(QString::number(       jd, 'f', 15))
+			 .arg(QString::number(    jd, 'f', 15))
 			 .arg(QString::number(xyz[0], 'f', 15))
 			 .arg(QString::number(xyz[1], 'f', 15))
 			 .arg(QString::number(xyz[2], 'f', 15))
-			 .arg(QString::number(       x, 'f', 15))
-			 .arg(QString::number(       y, 'f', 15))
-			 .arg(QString::number(       z, 'f', 15))
+			 .arg(QString::number(     x, 'f', 15))
+			 .arg(QString::number(     y, 'f', 15))
+			 .arg(QString::number(     z, 'f', 15))
 			 .toUtf8());
 	}
 }
@@ -1089,13 +1095,13 @@ void TestEphemeris::testMarsHeliocentricEphemerisVsop87()
 
 		QVERIFY2(actualErrorX <= acceptableError && actualErrorY <= acceptableError && actualErrorZ <= acceptableError,
 			 QString("jd=%1 x=%2 (%5) y=%3 (%6) z=%4 (%7)")
-			 .arg(QString::number(       jd, 'f', 15))
+			 .arg(QString::number(    jd, 'f', 15))
 			 .arg(QString::number(xyz[0], 'f', 15))
 			 .arg(QString::number(xyz[1], 'f', 15))
 			 .arg(QString::number(xyz[2], 'f', 15))
-			 .arg(QString::number(       x, 'f', 15))
-			 .arg(QString::number(       y, 'f', 15))
-			 .arg(QString::number(       z, 'f', 15))
+			 .arg(QString::number(     x, 'f', 15))
+			 .arg(QString::number(     y, 'f', 15))
+			 .arg(QString::number(     z, 'f', 15))
 			 .toUtf8());
 	}
 
@@ -1123,13 +1129,13 @@ void TestEphemeris::testJupiterHeliocentricEphemerisVsop87()
 
 		QVERIFY2(actualErrorX <= acceptableError && actualErrorY <= acceptableError && actualErrorZ <= acceptableError,
 			 QString("jd=%1 x=%2 (%5) y=%3 (%6) z=%4 (%7)")
-			 .arg(QString::number(       jd, 'f', 15))
+			 .arg(QString::number(    jd, 'f', 15))
 			 .arg(QString::number(xyz[0], 'f', 15))
 			 .arg(QString::number(xyz[1], 'f', 15))
 			 .arg(QString::number(xyz[2], 'f', 15))
-			 .arg(QString::number(       x, 'f', 15))
-			 .arg(QString::number(       y, 'f', 15))
-			 .arg(QString::number(       z, 'f', 15))
+			 .arg(QString::number(     x, 'f', 15))
+			 .arg(QString::number(     y, 'f', 15))
+			 .arg(QString::number(     z, 'f', 15))
 			 .toUtf8());
 	}
 }
@@ -1156,13 +1162,13 @@ void TestEphemeris::testSaturnHeliocentricEphemerisVsop87()
 
 		QVERIFY2(actualErrorX <= acceptableError && actualErrorY <= acceptableError && actualErrorZ <= acceptableError,
 			 QString("jd=%1 x=%2 (%5) y=%3 (%6) z=%4 (%7)")
-			 .arg(QString::number(       jd, 'f', 15))
+			 .arg(QString::number(    jd, 'f', 15))
 			 .arg(QString::number(xyz[0], 'f', 15))
 			 .arg(QString::number(xyz[1], 'f', 15))
 			 .arg(QString::number(xyz[2], 'f', 15))
-			 .arg(QString::number(       x, 'f', 15))
-			 .arg(QString::number(       y, 'f', 15))
-			 .arg(QString::number(       z, 'f', 15))
+			 .arg(QString::number(     x, 'f', 15))
+			 .arg(QString::number(     y, 'f', 15))
+			 .arg(QString::number(     z, 'f', 15))
 			 .toUtf8());
 	}
 }
@@ -1189,13 +1195,13 @@ void TestEphemeris::testUranusHeliocentricEphemerisVsop87()
 
 		QVERIFY2(actualErrorX <= acceptableError && actualErrorY <= acceptableError && actualErrorZ <= acceptableError,
 			 QString("jd=%1 x=%2 (%5) y=%3 (%6) z=%4 (%7)")
-			 .arg(QString::number(       jd, 'f', 15))
+			 .arg(QString::number(    jd, 'f', 15))
 			 .arg(QString::number(xyz[0], 'f', 15))
 			 .arg(QString::number(xyz[1], 'f', 15))
 			 .arg(QString::number(xyz[2], 'f', 15))
-			 .arg(QString::number(       x, 'f', 15))
-			 .arg(QString::number(       y, 'f', 15))
-			 .arg(QString::number(       z, 'f', 15))
+			 .arg(QString::number(     x, 'f', 15))
+			 .arg(QString::number(     y, 'f', 15))
+			 .arg(QString::number(     z, 'f', 15))
 			 .toUtf8());
 	}
 }
@@ -1222,13 +1228,13 @@ void TestEphemeris::testNeptuneHeliocentricEphemerisVsop87()
 
 		QVERIFY2(actualErrorX <= acceptableError && actualErrorY <= acceptableError && actualErrorZ <= acceptableError,
 			 QString("jd=%1 x=%2 (%5) y=%3 (%6) z=%4 (%7)")
-			 .arg(QString::number(       jd, 'f', 15))
+			 .arg(QString::number(    jd, 'f', 15))
 			 .arg(QString::number(xyz[0], 'f', 15))
 			 .arg(QString::number(xyz[1], 'f', 15))
 			 .arg(QString::number(xyz[2], 'f', 15))
-			 .arg(QString::number(       x, 'f', 15))
-			 .arg(QString::number(       y, 'f', 15))
-			 .arg(QString::number(       z, 'f', 15))
+			 .arg(QString::number(     x, 'f', 15))
+			 .arg(QString::number(     y, 'f', 15))
+			 .arg(QString::number(     z, 'f', 15))
 			 .toUtf8());
 	}
 }
@@ -1259,13 +1265,13 @@ void TestEphemeris::testMercuryHeliocentricEphemerisDe430()
 
 			QVERIFY2(actualErrorX <= acceptableError && actualErrorY <= acceptableError && actualErrorZ <= acceptableError,
 				 QString("jd=%1 x=%2 (%5) y=%3 (%6) z=%4 (%7)")
-				 .arg(QString::number(       jd, 'f', 15))
+				 .arg(QString::number(    jd, 'f', 15))
 				 .arg(QString::number(xyz[0], 'f', 15))
 				 .arg(QString::number(xyz[1], 'f', 15))
 				 .arg(QString::number(xyz[2], 'f', 15))
-				 .arg(QString::number(       x, 'f', 15))
-				 .arg(QString::number(       y, 'f', 15))
-				 .arg(QString::number(       z, 'f', 15))
+				 .arg(QString::number(     x, 'f', 15))
+				 .arg(QString::number(     y, 'f', 15))
+				 .arg(QString::number(     z, 'f', 15))
 				 .toUtf8());
 		}
 	}
@@ -1297,13 +1303,13 @@ void TestEphemeris::testVenusHeliocentricEphemerisDe430()
 
 			QVERIFY2(actualErrorX <= acceptableError && actualErrorY <= acceptableError && actualErrorZ <= acceptableError,
 				 QString("jd=%1 x=%2 (%5) y=%3 (%6) z=%4 (%7)")
-				 .arg(QString::number(       jd, 'f', 15))
+				 .arg(QString::number(    jd, 'f', 15))
 				 .arg(QString::number(xyz[0], 'f', 15))
 				 .arg(QString::number(xyz[1], 'f', 15))
 				 .arg(QString::number(xyz[2], 'f', 15))
-				 .arg(QString::number(       x, 'f', 15))
-				 .arg(QString::number(       y, 'f', 15))
-				 .arg(QString::number(       z, 'f', 15))
+				 .arg(QString::number(     x, 'f', 15))
+				 .arg(QString::number(     y, 'f', 15))
+				 .arg(QString::number(     z, 'f', 15))
 				 .toUtf8());
 		}
 	}
@@ -1335,13 +1341,13 @@ void TestEphemeris::testMarsHeliocentricEphemerisDe430()
 
 			QVERIFY2(actualErrorX <= acceptableError && actualErrorY <= acceptableError && actualErrorZ <= acceptableError,
 				 QString("jd=%1 x=%2 (%5) y=%3 (%6) z=%4 (%7)")
-				 .arg(QString::number(       jd, 'f', 15))
+				 .arg(QString::number(    jd, 'f', 15))
 				 .arg(QString::number(xyz[0], 'f', 15))
 				 .arg(QString::number(xyz[1], 'f', 15))
 				 .arg(QString::number(xyz[2], 'f', 15))
-				 .arg(QString::number(       x, 'f', 15))
-				 .arg(QString::number(       y, 'f', 15))
-				 .arg(QString::number(       z, 'f', 15))
+				 .arg(QString::number(     x, 'f', 15))
+				 .arg(QString::number(     y, 'f', 15))
+				 .arg(QString::number(     z, 'f', 15))
 				 .toUtf8());
 		}
 	}
@@ -1373,13 +1379,13 @@ void TestEphemeris::testJupiterHeliocentricEphemerisDe430()
 
 			QVERIFY2(actualErrorX <= acceptableError && actualErrorY <= acceptableError && actualErrorZ <= acceptableError,
 				 QString("jd=%1 x=%2 (%5) y=%3 (%6) z=%4 (%7)")
-				 .arg(QString::number(       jd, 'f', 15))
+				 .arg(QString::number(    jd, 'f', 15))
 				 .arg(QString::number(xyz[0], 'f', 15))
 				 .arg(QString::number(xyz[1], 'f', 15))
 				 .arg(QString::number(xyz[2], 'f', 15))
-				 .arg(QString::number(       x, 'f', 15))
-				 .arg(QString::number(       y, 'f', 15))
-				 .arg(QString::number(       z, 'f', 15))
+				 .arg(QString::number(     x, 'f', 15))
+				 .arg(QString::number(     y, 'f', 15))
+				 .arg(QString::number(     z, 'f', 15))
 				 .toUtf8());
 		}
 	}
@@ -1411,13 +1417,13 @@ void TestEphemeris::testSaturnHeliocentricEphemerisDe430()
 
 			QVERIFY2(actualErrorX <= acceptableError && actualErrorY <= acceptableError && actualErrorZ <= acceptableError,
 				 QString("jd=%1 x=%2 (%5) y=%3 (%6) z=%4 (%7)")
-				 .arg(QString::number(       jd, 'f', 15))
+				 .arg(QString::number(    jd, 'f', 15))
 				 .arg(QString::number(xyz[0], 'f', 15))
 				 .arg(QString::number(xyz[1], 'f', 15))
 				 .arg(QString::number(xyz[2], 'f', 15))
-				 .arg(QString::number(       x, 'f', 15))
-				 .arg(QString::number(       y, 'f', 15))
-				 .arg(QString::number(       z, 'f', 15))
+				 .arg(QString::number(     x, 'f', 15))
+				 .arg(QString::number(     y, 'f', 15))
+				 .arg(QString::number(     z, 'f', 15))
 				 .toUtf8());
 		}
 	}
@@ -1449,13 +1455,13 @@ void TestEphemeris::testUranusHeliocentricEphemerisDe430()
 
 			QVERIFY2(actualErrorX <= acceptableError && actualErrorY <= acceptableError && actualErrorZ <= acceptableError,
 				 QString("jd=%1 x=%2 (%5) y=%3 (%6) z=%4 (%7)")
-				 .arg(QString::number(       jd, 'f', 15))
+				 .arg(QString::number(    jd, 'f', 15))
 				 .arg(QString::number(xyz[0], 'f', 15))
 				 .arg(QString::number(xyz[1], 'f', 15))
 				 .arg(QString::number(xyz[2], 'f', 15))
-				 .arg(QString::number(       x, 'f', 15))
-				 .arg(QString::number(       y, 'f', 15))
-				 .arg(QString::number(       z, 'f', 15))
+				 .arg(QString::number(     x, 'f', 15))
+				 .arg(QString::number(     y, 'f', 15))
+				 .arg(QString::number(     z, 'f', 15))
 				 .toUtf8());
 		}
 	}
@@ -1487,13 +1493,13 @@ void TestEphemeris::testNeptuneHeliocentricEphemerisDe430()
 
 			QVERIFY2(actualErrorX <= acceptableError && actualErrorY <= acceptableError && actualErrorZ <= acceptableError,
 				 QString("jd=%1 x=%2 (%5) y=%3 (%6) z=%4 (%7)")
-				 .arg(QString::number(       jd, 'f', 15))
+				 .arg(QString::number(    jd, 'f', 15))
 				 .arg(QString::number(xyz[0], 'f', 15))
 				 .arg(QString::number(xyz[1], 'f', 15))
 				 .arg(QString::number(xyz[2], 'f', 15))
-				 .arg(QString::number(       x, 'f', 15))
-				 .arg(QString::number(       y, 'f', 15))
-				 .arg(QString::number(       z, 'f', 15))
+				 .arg(QString::number(     x, 'f', 15))
+				 .arg(QString::number(     y, 'f', 15))
+				 .arg(QString::number(     z, 'f', 15))
 				 .toUtf8());
 		}
 	}
@@ -1525,13 +1531,13 @@ void TestEphemeris::testMercuryHeliocentricEphemerisDe431()
 
 			QVERIFY2(actualErrorX <= acceptableError && actualErrorY <= acceptableError && actualErrorZ <= acceptableError,
 				 QString("jd=%1 x=%2 (%5) y=%3 (%6) z=%4 (%7)")
-				 .arg(QString::number(       jd, 'f', 15))
+				 .arg(QString::number(    jd, 'f', 15))
 				 .arg(QString::number(xyz[0], 'f', 15))
 				 .arg(QString::number(xyz[1], 'f', 15))
 				 .arg(QString::number(xyz[2], 'f', 15))
-				 .arg(QString::number(       x, 'f', 15))
-				 .arg(QString::number(       y, 'f', 15))
-				 .arg(QString::number(       z, 'f', 15))
+				 .arg(QString::number(     x, 'f', 15))
+				 .arg(QString::number(     y, 'f', 15))
+				 .arg(QString::number(     z, 'f', 15))
 				 .toUtf8());
 		}
 	}
@@ -1563,13 +1569,13 @@ void TestEphemeris::testVenusHeliocentricEphemerisDe431()
 
 			QVERIFY2(actualErrorX <= acceptableError && actualErrorY <= acceptableError && actualErrorZ <= acceptableError,
 				 QString("jd=%1 x=%2 (%5) y=%3 (%6) z=%4 (%7)")
-				 .arg(QString::number(       jd, 'f', 15))
+				 .arg(QString::number(    jd, 'f', 15))
 				 .arg(QString::number(xyz[0], 'f', 15))
 				 .arg(QString::number(xyz[1], 'f', 15))
 				 .arg(QString::number(xyz[2], 'f', 15))
-				 .arg(QString::number(       x, 'f', 15))
-				 .arg(QString::number(       y, 'f', 15))
-				 .arg(QString::number(       z, 'f', 15))
+				 .arg(QString::number(     x, 'f', 15))
+				 .arg(QString::number(     y, 'f', 15))
+				 .arg(QString::number(     z, 'f', 15))
 				 .toUtf8());
 		}
 	}
@@ -1601,13 +1607,13 @@ void TestEphemeris::testMarsHeliocentricEphemerisDe431()
 
 			QVERIFY2(actualErrorX <= acceptableError && actualErrorY <= acceptableError && actualErrorZ <= acceptableError,
 				 QString("jd=%1 x=%2 (%5) y=%3 (%6) z=%4 (%7)")
-				 .arg(QString::number(       jd, 'f', 15))
+				 .arg(QString::number(    jd, 'f', 15))
 				 .arg(QString::number(xyz[0], 'f', 15))
 				 .arg(QString::number(xyz[1], 'f', 15))
 				 .arg(QString::number(xyz[2], 'f', 15))
-				 .arg(QString::number(       x, 'f', 15))
-				 .arg(QString::number(       y, 'f', 15))
-				 .arg(QString::number(       z, 'f', 15))
+				 .arg(QString::number(     x, 'f', 15))
+				 .arg(QString::number(     y, 'f', 15))
+				 .arg(QString::number(     z, 'f', 15))
 				 .toUtf8());
 		}
 	}
@@ -1639,13 +1645,13 @@ void TestEphemeris::testJupiterHeliocentricEphemerisDe431()
 
 			QVERIFY2(actualErrorX <= acceptableError && actualErrorY <= acceptableError && actualErrorZ <= acceptableError,
 				 QString("jd=%1 x=%2 (%5) y=%3 (%6) z=%4 (%7)")
-				 .arg(QString::number(       jd, 'f', 15))
+				 .arg(QString::number(    jd, 'f', 15))
 				 .arg(QString::number(xyz[0], 'f', 15))
 				 .arg(QString::number(xyz[1], 'f', 15))
 				 .arg(QString::number(xyz[2], 'f', 15))
-				 .arg(QString::number(       x, 'f', 15))
-				 .arg(QString::number(       y, 'f', 15))
-				 .arg(QString::number(       z, 'f', 15))
+				 .arg(QString::number(     x, 'f', 15))
+				 .arg(QString::number(     y, 'f', 15))
+				 .arg(QString::number(     z, 'f', 15))
 				 .toUtf8());
 		}
 	}
@@ -1677,13 +1683,13 @@ void TestEphemeris::testSaturnHeliocentricEphemerisDe431()
 
 			QVERIFY2(actualErrorX <= acceptableError && actualErrorY <= acceptableError && actualErrorZ <= acceptableError,
 				 QString("jd=%1 x=%2 (%5) y=%3 (%6) z=%4 (%7)")
-				 .arg(QString::number(       jd, 'f', 15))
+				 .arg(QString::number(    jd, 'f', 15))
 				 .arg(QString::number(xyz[0], 'f', 15))
 				 .arg(QString::number(xyz[1], 'f', 15))
 				 .arg(QString::number(xyz[2], 'f', 15))
-				 .arg(QString::number(       x, 'f', 15))
-				 .arg(QString::number(       y, 'f', 15))
-				 .arg(QString::number(       z, 'f', 15))
+				 .arg(QString::number(     x, 'f', 15))
+				 .arg(QString::number(     y, 'f', 15))
+				 .arg(QString::number(     z, 'f', 15))
 				 .toUtf8());
 		}
 	}
@@ -1715,13 +1721,13 @@ void TestEphemeris::testUranusHeliocentricEphemerisDe431()
 
 			QVERIFY2(actualErrorX <= acceptableError && actualErrorY <= acceptableError && actualErrorZ <= acceptableError,
 				 QString("jd=%1 x=%2 (%5) y=%3 (%6) z=%4 (%7)")
-				 .arg(QString::number(       jd, 'f', 15))
+				 .arg(QString::number(    jd, 'f', 15))
 				 .arg(QString::number(xyz[0], 'f', 15))
 				 .arg(QString::number(xyz[1], 'f', 15))
 				 .arg(QString::number(xyz[2], 'f', 15))
-				 .arg(QString::number(       x, 'f', 15))
-				 .arg(QString::number(       y, 'f', 15))
-				 .arg(QString::number(       z, 'f', 15))
+				 .arg(QString::number(     x, 'f', 15))
+				 .arg(QString::number(     y, 'f', 15))
+				 .arg(QString::number(     z, 'f', 15))
 				 .toUtf8());
 		}
 	}
@@ -1753,13 +1759,13 @@ void TestEphemeris::testNeptuneHeliocentricEphemerisDe431()
 
 			QVERIFY2(actualErrorX <= acceptableError && actualErrorY <= acceptableError && actualErrorZ <= acceptableError,
 				 QString("jd=%1 x=%2 (%5) y=%3 (%6) z=%4 (%7)")
-				 .arg(QString::number(       jd, 'f', 15))
+				 .arg(QString::number(    jd, 'f', 15))
 				 .arg(QString::number(xyz[0], 'f', 15))
 				 .arg(QString::number(xyz[1], 'f', 15))
 				 .arg(QString::number(xyz[2], 'f', 15))
-				 .arg(QString::number(       x, 'f', 15))
-				 .arg(QString::number(       y, 'f', 15))
-				 .arg(QString::number(       z, 'f', 15))
+				 .arg(QString::number(     x, 'f', 15))
+				 .arg(QString::number(     y, 'f', 15))
+				 .arg(QString::number(     z, 'f', 15))
 				 .toUtf8());
 		}
 	}

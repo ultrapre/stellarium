@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _SATELLITES_HPP_
-#define _SATELLITES_HPP_ 1
+#ifndef SATELLITES_HPP
+#define SATELLITES_HPP
 
 #include "StelObjectModule.hpp"
 #include "Satellite.hpp"
@@ -201,7 +201,7 @@ public:
 	///////////////////////////////////////////////////////////////////////////
 	// Methods defined in StelObjectManager class
 	//! Used to get a list of objects which are near to some position.
-	//! @param v a vector representing the position in th sky around which to search for nebulae.
+	//! @param v a vector representing the position in th sky around which to search for satellites.
 	//! @param limitFov the field of view around the position v in which to search for satellites.
 	//! @param core the StelCore to use for computations.
 	//! @return an list containing the satellites located inside the limitFov circle around position v.
@@ -643,5 +643,5 @@ public:
 	virtual QObjectList getExtensionList() const { return QObjectList(); }
 };
 
-#endif /*_SATELLITES_HPP_*/
+#endif /* SATELLITES_HPP */
 

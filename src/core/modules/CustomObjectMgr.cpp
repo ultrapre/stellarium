@@ -36,7 +36,8 @@ CustomObjectMgr::CustomObjectMgr()
 {
 	setObjectName("CustomObjectMgr");
 	conf = StelApp::getInstance().getSettings();
-	font.setPixelSize(StelApp::getInstance().getBaseFontSize());
+	setFontSize(StelApp::getInstance().getScreenFontSize());
+	connect(&StelApp::getInstance(), SIGNAL(screenFontSizeChanged(int)), this, SLOT(setFontSize(int)));
 }
 
 CustomObjectMgr::~CustomObjectMgr()
@@ -125,6 +126,7 @@ void CustomObjectMgr::init()
 	setMarkersSize(conf->value("gui/custom_marker_size", 5.f).toFloat());
 	// Limit the click radius to 15px in any direction
 	setActiveRadiusLimit(conf->value("gui/custom_marker_radius_limit", 15).toInt());
+	setSelectPriority(conf->value("gui/custom_marker_priority", 0.f).toFloat());
 
 	GETSTELMODULE(StelObjectMgr)->registerStelObjectMgr(this);
 }
@@ -133,6 +135,16 @@ void CustomObjectMgr::deinit()
 {
 	customObjects.clear();	
 	texPointer.clear();
+}
+
+void CustomObjectMgr::setSelectPriority(float priority)
+{
+	CustomObject::selectPriority = priority;
+}
+
+float CustomObjectMgr::getSelectPriority() const
+{
+	return CustomObject::selectPriority;
 }
 
 void CustomObjectMgr::addCustomObject(QString designation, Vec3d coordinates, bool isVisible)
@@ -221,7 +233,6 @@ void CustomObjectMgr::draw(StelCore* core)
 
 	if (GETSTELMODULE(StelObjectMgr)->getFlagSelectedObjectPointer())
 		drawPointer(core, painter);
-
 }
 
 void CustomObjectMgr::drawPointer(StelCore* core, StelPainter& painter)
@@ -380,4 +391,3 @@ void CustomObjectMgr::setActiveRadiusLimit(const int radius)
 {
 	radiusLimit = radius;
 }
-

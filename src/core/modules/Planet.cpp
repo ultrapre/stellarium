@@ -43,6 +43,7 @@
 #include "StelOBJ.hpp"
 #include "StelOpenGLArray.hpp"
 #include "StelHips.hpp"
+#include "RefractionExtinction.hpp"
 
 #include <limits>
 #include <QByteArray>
@@ -73,6 +74,7 @@ Vec3f Planet::orbitPlutinosColor = Vec3f(1.0f,0.6f,1.0f);
 Vec3f Planet::orbitScatteredDiscObjectsColor = Vec3f(1.0f,0.6f,1.0f);
 Vec3f Planet::orbitOortCloudObjectsColor = Vec3f(1.0f,0.6f,1.0f);
 Vec3f Planet::orbitSednoidsColor = Vec3f(1.0f,0.6f,1.0f);
+Vec3f Planet::orbitInterstellarColor = Vec3f(1.0f,0.2f,1.0f);
 Vec3f Planet::orbitCometsColor = Vec3f(1.0f,0.6f,1.0f);
 Vec3f Planet::orbitMercuryColor = Vec3f(1.0f,0.6f,1.0f);
 Vec3f Planet::orbitVenusColor = Vec3f(1.0f,0.6f,1.0f);
@@ -267,7 +269,7 @@ Planet::Planet(const QString& englishName,
 			qWarning()<<"Cannot resolve path to model file"<<aobjModelName<<"of object"<<englishName;
 		}
 	}
-	if (englishName!="Pluto") // TODO: add some far-out slow object types: other Plutoids, KBO, SDO, OCO, ...
+	if ((pType <= isDwarfPlanet) && (englishName!="Pluto")) // concentrate on "inner" objects, KBO etc. stay at 1/s recomputation.
 	{
 		deltaJDE = 0.001*StelCore::JD_SECOND;
 	}
@@ -295,6 +297,7 @@ void Planet::init()
 	pTypeMap.insert(Planet::isSDO,		"scattered disc object");
 	pTypeMap.insert(Planet::isOCO,		"Oort cloud object");
 	pTypeMap.insert(Planet::isSednoid,	"sednoid");
+	pTypeMap.insert(Planet::isInterstellar,	"interstellar object");
 	pTypeMap.insert(Planet::isUNDEFINED,	"UNDEFINED"); // something must be broken before we ever see this!
 
 	if (vMagAlgorithmMap.count() > 0)
@@ -383,6 +386,7 @@ const QString Planet::getContextString() const
 		case isSDO:
 		case isOCO:
 		case isSednoid:
+		case isInterstellar:
 			context = "minor planet";
 			break;
 		case isComet:
@@ -424,12 +428,9 @@ QString Planet::getInfoString(const StelCore* core, const InfoStringGroup& flags
 
 	if (flags&Magnitude && getVMagnitude(core)!=std::numeric_limits<float>::infinity())
 	{
-		QString emag = "";
-		if (core->getSkyDrawer()->getFlagHasAtmosphere() && (alt_app>-3.0*M_PI/180.0)) // Don't show extincted magnitude much below horizon where model is meaningless.
-			emag = QString(" (%1: <b>%2</b>)").arg(q_("extincted to"), QString::number(getVMagnitudeWithExtinction(core), 'f', 2));
-
-		oss << QString("%1: <b>%2</b>%3").arg(q_("Magnitude"), QString::number(getVMagnitude(core), 'f', 2), emag) << "<br />";
+		oss << getMagnitudeInfoString(core, flags, alt_app, 2);
 	}
+
 	if (flags&AbsoluteMagnitude && (getAbsoluteMagnitude() > -99.))
 	{
 		oss << QString("%1: %2").arg(q_("Absolute Magnitude")).arg(getAbsoluteMagnitude(), 0, 'f', 2) << "<br />";
@@ -608,7 +609,8 @@ QString Planet::getInfoString(const StelCore* core, const InfoStringGroup& flags
 			if (qAbs(siderealDay)>0 && getPlanetType()!=isArtificial)
 			{
 				oss << QString("%1: %2").arg(q_("Sidereal day"), StelUtils::hoursToHmsStr(qAbs(siderealDay*24))) << "<br />";
-				oss << QString("%1: %2").arg(q_("Mean solar day"), StelUtils::hoursToHmsStr(qAbs(getMeanSolarDay()*24))) << "<br />";
+				if (englishName!="Sun")
+					oss << QString("%1: %2").arg(q_("Mean solar day"), StelUtils::hoursToHmsStr(qAbs(getMeanSolarDay()*24))) << "<br />";
 			}
 			else if (re.period==0.)
 			{
@@ -857,6 +859,7 @@ bool willCastShadow(const Planet* thisPlanet, const Planet* p)
 	static const double sunRadius = 696000./AU;
 	double d = planetPos.length() / (p->getRadius()/sunRadius+1);
 	double penumbraRadius = (shadowDistance-d)/d*sunRadius;
+	// TODO: Note that Earth's shadow should be enlarged a bit. (6-7% following Danjon?)
 	
 	double penumbraCenterToThisPlanetCenterDistance = (ppVector*shadowDistance-thisPos).length();
 	
@@ -1119,26 +1122,37 @@ double Planet::getSiderealTime(double JD, double JDE) const
 
 	if (englishName=="Jupiter")
 	{
-		// http://www.projectpluto.com/grs_form.htm
+		// N.B. This is not sideralTime but some SystemII longitude shifted by GRS position and texture position. For the time being, nobody should complain, though.
+		//
+		// CM2 considerations from http://www.projectpluto.com/grs_form.htm
 		// CM( System II) =  181.62 + 870.1869147 * jd + correction [870d rotation every day]
-		const double rad  = M_PI/180.;
-		double jup_mean = (JDE - 2455636.938) * 360. / 4332.89709;
-		double eqn_center = 5.55 * sin( rad*jup_mean);
-		double angle = (JDE - 2451870.628) * 360. / 398.884 - eqn_center;
-		//double correction = 11 * sin( rad*angle) + 5 * cos( rad*angle)- 1.25 * cos( rad*jup_mean) - eqn_center; // original correction
-		double correction = 25.8 + 11 * sin( rad*angle) - 2.5 * cos( rad*jup_mean) - eqn_center; // light speed correction not used because in stellarium the jd is manipulated for that
+		//const double rad  = M_PI/180.;
+		//double jup_mean = (JDE - 2455636.938) * 360. / 4332.89709;
+		//double eqn_center = 5.55 * sin( rad*jup_mean);
+		//double angle = (JDE - 2451870.628) * 360. / 398.884 - eqn_center;
+		////double correction = 11 * sin( rad*angle) + 5 * cos( rad*angle)- 1.25 * cos( rad*jup_mean) - eqn_center; // original correction
+		//double correction = 25.8 + 11 * sin( rad*angle) - 2.5 * cos( rad*jup_mean) - eqn_center; // light speed correction not used because in stellarium the jd is manipulated for that
+
+		// GZ These corrections above are actually the phase angle of Jupiter (11 degree term, shown by our 3D geometry),
+		// all other terms of above are approximate and light-time corrections.
+		// These correction terms are required for earth-based observations, but we do the math and 3d-based view geometry anyway!
+		// --> None of these correction terms need to be applied!
+		// But the CM2 formula includes an average light time correction for Jupiter, which we have to take off here.
+		// This assumes a start value which includes average light time.
+		const double correction= 870.1869147 * 5.202561*AU / SPEED_OF_LIGHT / 86400.0;
 		double cm2=181.62 + 870.1869147 * JDE + correction; // Central Meridian II
-		cm2=cm2 - 360.0*(int)(cm2/360.);
+		cm2=std::fmod(cm2, 360.0);
 		// http://www.skyandtelescope.com/observing/transit-times-of-jupiters-great-red-spot/ writes:
 		// The predictions assume the Red Spot was at Jovian System II longitude 216° in September 2014 and continues to drift 1.25° per month, based on historical trends noted by JUPOS.
 		// GRS longitude was at 2014-09-08 216d with a drift of 1.25d every month
+		// Updated 2018-08, note as checkpoint that GRS longitude was given as 292d in S&T August 2018.
 		double longitudeGRS = 0.;
 		if (flagCustomGrsSettings)
 			longitudeGRS = customGrsLongitude + customGrsDrift*(JDE - customGrsJD)/365.25;
 		else
 			longitudeGRS=216+1.25*( JDE - 2456908)/30;
 		// qDebug() << "Jupiter: CM2 = " << cm2 << " longitudeGRS = " << longitudeGRS << " --> rotation = " << (cm2 - longitudeGRS);
-		return cm2 - longitudeGRS + 50.; // Jupiter Texture not 0d
+		return cm2 - longitudeGRS  +  (187./512.)*360.; // Last term is pixel position of GRS in texture.
 		// To verify:
 		// GRS at 2015-02-26 23:07 UT on picture at https://maximusphotography.files.wordpress.com/2015/03/jupiter-febr-26-2015.jpg
 		//        2014-02-25 19:03 UT    http://www.damianpeach.com/jup1314/2014_02_25rgb0305.jpg
@@ -1275,7 +1289,7 @@ double Planet::getElongation(const Vec3d& obsPos) const
 	const Vec3d& planetHelioPos = getHeliocentricEclipticPos();
 	const double planetRq = planetHelioPos.lengthSquared();
 	const double observerPlanetRq = (obsPos - planetHelioPos).lengthSquared();
-	return std::acos((observerPlanetRq  + observerRq - planetRq)/(2.0*sqrt(observerPlanetRq*observerRq)));
+	return std::acos((observerPlanetRq  + observerRq - planetRq)/(2.0*std::sqrt(observerPlanetRq*observerRq)));
 }
 
 // Source: Explanatory Supplement 2013, Table 10.6 and formula (10.5) with semimajorAxis a from Table 8.7.
@@ -1769,6 +1783,7 @@ void Planet::PlanetShaderVars::initLocations(QOpenGLShaderProgram* p)
 
 	// Moon-specific variables
 	GL(earthShadow = p->uniformLocation("earthShadow"));
+	GL(eclipsePush = p->uniformLocation("eclipsePush"));
 	GL(normalMap = p->uniformLocation("normalMap"));
 
 	// Rings-specific variables
@@ -2037,7 +2052,7 @@ bool Planet::initShader()
 		transformFShader = "void main()\n{ }\n";
 	}
 #endif
-	GL(transformShaderProgram = createShader("transformShaderProgam", transformShaderVars, transformVShader, transformFShader,QByteArray(),attrLoc));
+	GL(transformShaderProgram = createShader("transformShaderProgram", transformShaderVars, transformVShader, transformFShader,QByteArray(),attrLoc));
 
 	//check if ALL shaders have been created correctly
 	shaderError = !(planetShaderProgram&&
@@ -2449,13 +2464,14 @@ void sRing(Ring3DModel* model, const float rMin, const float rMax, int slices, c
 
 void Planet::computeModelMatrix(Mat4d &result) const
 {
-	result = Mat4d::translation(eclipticPos) * rotLocalToParent * Mat4d::zrotation(M_PI/180*(axisRotation + 90.));
+	result = Mat4d::translation(eclipticPos) * rotLocalToParent;
 	PlanetP p = parent;
 	while (p && p->parent)
 	{
 		result = Mat4d::translation(p->eclipticPos) * result * p->rotLocalToParent;
 		p = p->parent;
 	}
+	result = result * Mat4d::zrotation(M_PI/180*(axisRotation + 90.));
 }
 
 Planet::RenderData Planet::setCommonShaderUniforms(const StelPainter& painter, QOpenGLShaderProgram* shader, const PlanetShaderVars& shaderVars) const
@@ -2555,11 +2571,15 @@ void Planet::drawSphere(StelPainter* painter, float screenSz, bool drawOnlyRing)
 
 	// Generates the vertice
 	Planet3DModel model;
-	sSphere(&model, radius*sphereScale, oneMinusOblateness, nb_facet, nb_facet);
+	sSphere(&model, radius, oneMinusOblateness, nb_facet, nb_facet);
 	
 	QVector<float> projectedVertexArr(model.vertexArr.size());
 	for (int i=0;i<model.vertexArr.size()/3;++i)
-		painter->getProjector()->project(*((Vec3f*)(model.vertexArr.constData()+i*3)), *((Vec3f*)(projectedVertexArr.data()+i*3)));
+	{
+		Vec3f p = *((Vec3f*)(model.vertexArr.constData()+i*3));
+		p *= sphereScale;
+		painter->getProjector()->project(p, *((Vec3f*)(projectedVertexArr.data()+i*3)));
+	}
 	
 	const SolarSystem* ssm = GETSTELMODULE(SolarSystem);
 
@@ -2632,6 +2652,18 @@ void Planet::drawSphere(StelPainter* painter, float screenSz, bool drawOnlyRing)
 		{
 			GL(texEarthShadow->bind(3));
 			GL(moonShaderProgram->setUniformValue(moonShaderVars.earthShadow, 3));
+			// Ad-hoc visibility improvement during lunar eclipses:
+			// During partial umbra phase, make moon brighter so that the bright limb and umbra border has more visibility.
+			// When the moon is about half in umbra (geoc.elong 179.4), we start to raise its brightness.
+			float push=1.0f;
+			const double elong=getElongation(ssm->getEarth()->getEclipticPos()) * (180.0/M_PI);
+			const float x=elong - 179.5f;
+			if (x>0.0)
+				push+=20.0f * x;
+			if (x>0.1)
+				push=3.0f;
+
+			GL(moonShaderProgram->setUniformValue(moonShaderVars.eclipsePush, (GLfloat) push)); // constant for now...
 		}
 	}
 
@@ -2708,6 +2740,7 @@ void Planet::drawSphere(StelPainter* painter, float screenSz, bool drawOnlyRing)
 void Planet::drawSurvey(StelCore* core, StelPainter* painter)
 {
 	if (!Planet::initShader()) return;
+	const SolarSystem* ssm = GETSTELMODULE(SolarSystem);
 
 	painter->setDepthMask(true);
 	painter->setDepthTest(true);
@@ -2723,6 +2756,11 @@ void Planet::drawSurvey(StelCore* core, StelPainter* painter)
 	{
 		shader = ringPlanetShaderProgram;
 		shaderVars = &ringPlanetShaderVars;
+	}
+	if (this == ssm->getMoon())
+	{
+		shader = moonShaderProgram;
+		shaderVars = &moonShaderVars;
 	}
 
 	GL(shader->bind());
@@ -2741,6 +2779,17 @@ void Planet::drawSurvey(StelCore* core, StelPainter* painter)
 		rings->tex->bind(2);
 	}
 
+	if (this == ssm->getMoon())
+	{
+		GL(normalMap->bind(2));
+		GL(moonShaderProgram->setUniformValue(moonShaderVars.normalMap, 2));
+		if (!rData.shadowCandidates.isEmpty())
+		{
+			GL(texEarthShadow->bind(3));
+			GL(moonShaderProgram->setUniformValue(moonShaderVars.earthShadow, 3));
+		}
+	}
+
 	// Apply a rotation otherwize the hips surveys don't get rendered at the
 	// proper position.  Not sure why...
 	painter->getProjector()->getModelViewTransform()->combine(Mat4d::zrotation(M_PI / 2.0));
@@ -2755,7 +2804,7 @@ void Planet::drawSurvey(StelCore* core, StelPainter* painter)
 			v = verts[i];
 			painter->getProjector()->project(v, v);
 			projectedVertsArray[i] = Vec3f(v[0], v[1], v[2]);
-			v = Mat4d::scaling(radius * sphereScale) * verts[i];
+			v = Mat4d::scaling(radius) * verts[i];
 			v = Mat4d::scaling(Vec3d(1, 1, oneMinusOblateness)) * v;
 			// Undo the rotation we applied for the survey fix.
 			v = Mat4d::zrotation(M_PI / 2.0) * v;
@@ -3197,6 +3246,9 @@ Vec3f Planet::getCurrentOrbitColor() const
 					break;
 				case isSednoid:
 					orbColor = orbitSednoidsColor;
+					break;
+				case isInterstellar:
+					orbColor = orbitInterstellarColor;
 					break;
 				default:
 					orbColor = orbitColor;

@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _METEOR_HPP_
-#define _METEOR_HPP_
+#ifndef METEOR_HPP
+#define METEOR_HPP
 
 #include "StelTextureTypes.hpp"
 #include "VecMath.hpp"
@@ -62,21 +62,21 @@ public:
 	virtual void draw(const StelCore* core, StelPainter& sPainter);
 
 	//! Indicate if the meteor still visible.
-	bool isAlive() { return m_alive; }
+	bool isAlive() const { return m_alive; }
 	//! Set meteor absolute magnitude.
 	void setAbsMag(float mag) { m_absMag = mag; }
 	//! Get meteor absolute magnitude.
-	float absMag() { return m_absMag; }
+	float absMag() const { return m_absMag; }
 
 private:
 	//! Determine color vectors of line and prism used to draw meteor train.
 	void buildColorVectors(const QList<ColorPair> colors);
 
 	//! get RGB from color name
-	Vec4f getColorFromName(QString colorName);
+	static Vec4f getColorFromName(QString colorName);
 
 	//! Calculates the train thickness and bolide size.
-	void calculateThickness(const StelCore* core, float &thickness, float &bolideSize);
+	static void calculateThickness(const StelCore* core, float &thickness, float &bolideSize);
 
 	//! Draws the meteor bolide.
 	void drawBolide(StelPainter &sPainter, const float &bolideSize);
@@ -85,7 +85,7 @@ private:
 	void drawTrain(StelPainter& sPainter, const float &thickness);
 
 	//! Calculates the z-component of a meteor as a function of meteor zenith angle
-	float meteorZ(float zenithAngle, float altitude);
+	static float meteorZ(float zenithAngle, float altitude);
 
 	//! find meteor position in horizontal coordinate system
 	Vec3d radiantToAltAz(Vec3d position);
@@ -112,4 +112,4 @@ private:
 	QVector<Vec4f> m_lineColorVector;
 };
 
-#endif // _METEOR_HPP_
+#endif // METEOR_HPP

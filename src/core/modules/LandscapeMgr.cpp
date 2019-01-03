@@ -44,6 +44,8 @@
 #include <QFile>
 #include <QTemporaryFile>
 #include <QMouseEvent>
+#include <QPainter>
+#include <QOpenGLPaintDevice>
 
 #include <stdexcept>
 
@@ -55,7 +57,7 @@ public:
 	virtual ~Cardinals();
 	void draw(const StelCore* core, double latitude) const;
 	void setColor(const Vec3f& c) {color = c;}
-	Vec3f get_color() {return color;}
+	Vec3f get_color() const {return color;}
 	void updateI18n();
 	void update(double deltaTime) {fader.update((int)(deltaTime*1000));}
 	void set_fade_duration(float duration) {fader.setDuration((int)(duration*1000.f));}
@@ -77,11 +79,11 @@ Cardinals::Cardinals(float _radius)
 {
 	QSettings* conf = StelApp::getInstance().getSettings();
 	Q_ASSERT(conf);
-	int baseFontSize = StelApp::getInstance().getBaseFontSize();
+	int screenFontSize = StelApp::getInstance().getScreenFontSize();
 	// Default font size is 24
-	fontC.setPixelSize(conf->value("viewing/cardinal_font_size", baseFontSize+11).toInt());
+	fontC.setPixelSize(conf->value("viewing/cardinal_font_size", screenFontSize+11).toInt());
 	// Default font size is 18
-	fontSC.setPixelSize(conf->value("viewing/subcardinal_font_size", baseFontSize+5).toInt());
+	fontSC.setPixelSize(conf->value("viewing/subcardinal_font_size", screenFontSize+5).toInt());
 }
 
 Cardinals::~Cardinals()
@@ -198,7 +200,7 @@ LandscapeMgr::LandscapeMgr()
 	, flagLandscapeUseMinimalBrightness(false)
 	, defaultMinimalBrightness(0.01)
 	, flagLandscapeSetsMinimalBrightness(false)
-	, flagAtmosphereAutoEnabling(false)
+	, flagEnvironmentAutoEnabling(false)
 {
 	setObjectName("LandscapeMgr"); // should be done by StelModule's constructor.
 
@@ -421,6 +423,15 @@ void LandscapeMgr::draw(StelCore* core)
 
 	// Draw the cardinal points
 	cardinalsPoints->draw(core, StelApp::getInstance().getCore()->getCurrentLocation().latitude);
+
+	// Workaround for a bug with spherical mirror mode when we don't show the cardinal points.
+	// I am not really sure why this seems to fix the problem.  If you want to
+	// remove this, make sure the spherical mirror mode with cardinal points
+	// toggled off works properly!
+	const StelProjectorP prj = core->getProjection(StelCore::FrameAltAz, StelCore::RefractionOff);
+	QOpenGLPaintDevice device;
+	device.setSize(QSize(prj->getViewportWidth(), prj->getViewportHeight()));
+	QPainter painter(&device);
 }
 
 void LandscapeMgr::init()
@@ -448,7 +459,7 @@ void LandscapeMgr::init()
 	setDefaultMinimalBrightness(conf->value("landscape/minimal_brightness", 0.01).toFloat());
 	setFlagLandscapeUseMinimalBrightness(conf->value("landscape/flag_minimal_brightness", false).toBool());
 	setFlagLandscapeSetsMinimalBrightness(conf->value("landscape/flag_landscape_sets_minimal_brightness",false).toBool());
-	setFlagAtmosphereAutoEnable(conf->value("viewing/flag_atmosphere_auto_enable",true).toBool());
+	setFlagEnvironmentAutoEnable(conf->value("viewing/flag_environment_auto_enable",true).toBool());
 	setFlagIllumination(conf->value("landscape/flag_enable_illumination_layer", true).toBool());
 	setFlagLabels(conf->value("landscape/flag_enable_labels", true).toBool());
 
@@ -754,21 +765,24 @@ void LandscapeMgr::onTargetLocationChanged(StelLocation loc)
 
 		if (loc.planetName.contains("Observer", Qt::CaseInsensitive))
 		{
-			setFlagAtmosphere(false);
-			setFlagFog(false);
-			setFlagLandscape(false);
+			if (flagEnvironmentAutoEnabling)
+			{
+				setFlagAtmosphere(false);
+				setFlagFog(false);
+				setFlagLandscape(false);
+			}
 		}
 		else
 		{
 			SolarSystem* ssystem = (SolarSystem*)StelApp::getInstance().getModuleMgr().getModule("SolarSystem");
 			PlanetP pl = ssystem->searchByEnglishName(loc.planetName);
-			if (pl && flagAtmosphereAutoEnabling)
+			if (pl && flagEnvironmentAutoEnabling)
 			{
 				QSettings* conf = StelApp::getInstance().getSettings();
-				setFlagAtmosphere(pl->hasAtmosphere() & conf->value("landscape/flag_atmosphere", true).toBool());
-				setFlagFog(pl->hasAtmosphere() & conf->value("landscape/flag_fog", true).toBool());
+				setFlagAtmosphere(pl->hasAtmosphere() && conf->value("landscape/flag_atmosphere", true).toBool());
+				setFlagFog(pl->hasAtmosphere() && conf->value("landscape/flag_fog", true).toBool());
+				setFlagLandscape(true);
 			}
-			setFlagLandscape(true);
 		}
 	}
 }
@@ -826,19 +840,19 @@ bool LandscapeMgr::getFlagLandscapeAutoSelection() const
 	return flagLandscapeAutoSelection;
 }
 
-void LandscapeMgr::setFlagAtmosphereAutoEnable(bool b)
+void LandscapeMgr::setFlagEnvironmentAutoEnable(bool b)
 {
-	if(b != flagAtmosphereAutoEnabling)
+	if(b != flagEnvironmentAutoEnabling)
 	{
-		flagAtmosphereAutoEnabling = b;
-		emit setFlagAtmosphereAutoEnableChanged(b);
+		flagEnvironmentAutoEnabling = b;
+		emit setFlagEnvironmentAutoEnableChanged(b);
 	}
 
 }
 
-bool LandscapeMgr::getFlagAtmosphereAutoEnable() const
+bool LandscapeMgr::getFlagEnvironmentAutoEnable() const
 {
-	return flagAtmosphereAutoEnabling;
+	return flagEnvironmentAutoEnabling;
 }
 
 /*********************************************************************
@@ -986,7 +1000,7 @@ bool LandscapeMgr::getFlagAtmosphere() const
 	return atmosphere->getFlagShow();
 }
 
-float LandscapeMgr::getAtmosphereFadeIntensity()
+float LandscapeMgr::getAtmosphereFadeIntensity() const
 {
 	return atmosphere->getFadeIntensity();
 }
@@ -1081,7 +1095,7 @@ Landscape* LandscapeMgr::createFromFile(const QString& landscapeFile, const QStr
 }
 
 
-QString LandscapeMgr::nameToID(const QString& name) const
+QString LandscapeMgr::nameToID(const QString& name)
 {
 	QMap<QString,QString> nameToDirMap = getNameToDirMap();
 
@@ -1099,7 +1113,7 @@ QString LandscapeMgr::nameToID(const QString& name) const
 /****************************************************************************
  get a map of landscape names (from landscape.ini name field) to ID (dir name)
  ****************************************************************************/
-QMap<QString,QString> LandscapeMgr::getNameToDirMap() const
+QMap<QString,QString> LandscapeMgr::getNameToDirMap()
 {
 	QMap<QString,QString> result;
 	QSet<QString> landscapeDirs = StelFileMgr::listContents("landscapes",StelFileMgr::Directory);
@@ -1312,7 +1326,7 @@ bool LandscapeMgr::removeLandscape(const QString landscapeID)
 	return true;
 }
 
-QString LandscapeMgr::getLandscapePath(const QString landscapeID) const
+QString LandscapeMgr::getLandscapePath(const QString landscapeID)
 {
 	QString result;
 	//Is this necessary? This function is private.

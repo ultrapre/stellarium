@@ -59,128 +59,23 @@ QString getApplicationVersion()
 QString getUserAgentString()
 {
 	// Get info about operating system
-	QString platform = StelUtils::getOperatingSystemInfo();
-	if (platform.contains("Linux"))
-		platform = "Linux";
-	else if (platform.contains("FreeBSD"))
-		platform = "FreeBSD";
-	else if (platform.contains("NetBSD"))
-		platform = "NetBSD";
-	else if (platform.contains("OpenBSD"))
-		platform = "OpenBSD";
+	QString os = StelUtils::getOperatingSystemInfo();
+	if (os.contains("FreeBSD"))
+		os = "FreeBSD";
+	else if (os.contains("NetBSD"))
+		os = "NetBSD";
+	else if (os.contains("OpenBSD"))
+		os = "OpenBSD";
 
-	// Set user agent as "Stellarium/$version$ ($platform$; $CPU architecture$)"
-	platform.append("; " + QSysInfo::currentCpuArchitecture());
-
-	return QString("Stellarium/%1 (%2)").arg(StelUtils::getApplicationVersion()).arg(platform);
+	// Set user agent as "Stellarium/$version$ ($operating system$; $CPU architecture$)"
+	return QString("Stellarium/%1 (%2; %3)").arg(StelUtils::getApplicationVersion(), os, QSysInfo::currentCpuArchitecture());
 }
 
 QString getOperatingSystemInfo()
 {
 	QString OS = "Unknown operating system";
 
-	#ifdef Q_OS_WIN
-	switch(QSysInfo::WindowsVersion)
-	{
-		case QSysInfo::WV_95:
-			OS = "Windows 95";
-			break;
-		case QSysInfo::WV_98:
-			OS = "Windows 98";
-			break;
-		case QSysInfo::WV_Me:
-			OS = "Windows Me";
-			break;
-		case QSysInfo::WV_NT:
-			OS = "Windows NT";
-			break;
-		case QSysInfo::WV_2000:
-			OS = "Windows 2000";
-			break;
-		case QSysInfo::WV_XP:
-			OS = "Windows XP";
-			break;
-		case QSysInfo::WV_2003:
-			OS = "Windows Server 2003";
-			break;
-		case QSysInfo::WV_VISTA:
-			OS = "Windows Vista";
-			break;
-		case QSysInfo::WV_WINDOWS7:
-			OS = "Windows 7";
-			break;
-		case QSysInfo::WV_WINDOWS8:
-			OS = "Windows 8";
-			break;
-		case QSysInfo::WV_WINDOWS8_1:
-			OS = "Windows 8.1";
-			break;
-		#if QT_VERSION >= 0x050500
-		case QSysInfo::WV_WINDOWS10:
-			OS = "Windows 10";
-			break;
-		#endif
-		default:
-			OS = "Unsupported Windows version";
-			break;
-	}
-
-	// somebody writing something useful for Macs would be great here
-	#elif defined Q_OS_MAC
-	switch(QSysInfo::MacintoshVersion)
-	{
-		case QSysInfo::MV_PANTHER:
-			OS = "Mac OS X 10.3 series";
-			break;
-		case QSysInfo::MV_TIGER:
-			OS = "Mac OS X 10.4 series";
-			break;
-		case QSysInfo::MV_LEOPARD:
-			OS = "Mac OS X 10.5 series";
-			break;
-		case QSysInfo::MV_SNOWLEOPARD:
-			OS = "Mac OS X 10.6 series";
-			break;
-		case QSysInfo::MV_LION:
-			OS = "Mac OS X 10.7 series";
-			break;
-		case QSysInfo::MV_MOUNTAINLION:
-			OS = "Mac OS X 10.8 series";
-			break;
-		case QSysInfo::MV_MAVERICKS:
-			OS = "Mac OS X 10.9 series";
-			break;
-		case QSysInfo::MV_YOSEMITE:
-			OS = "Mac OS X 10.10 series";
-			break;
-		#if QT_VERSION >= 0x050500
-		case QSysInfo::MV_ELCAPITAN:
-			OS = "Mac OS X 10.11 series";
-			break;
-		#endif
-		#if QT_VERSION >= 0x050600
-		case QSysInfo::MV_SIERRA:
-			OS = "Mac OS X 10.12 series";
-			break;
-		#endif
-		default:
-			OS = "Unsupported Mac version";
-			break;
-	}
-
-	#elif defined Q_OS_LINUX
-	QFile procVersion("/proc/version");
-	if(!procVersion.open(QIODevice::ReadOnly | QIODevice::Text))
-		OS = "Unknown Linux version";
-	else
-	{
-		QString version = procVersion.readAll();
-		if(version.right(1) == "\n")
-			version.chop(1);
-		OS = version;
-		procVersion.close();
-	}
-	#elif defined Q_OS_BSD4
+	#ifdef Q_OS_BSD4
 	// Check FreeBSD, NetBSD, OpenBSD and DragonFly BSD
 	QProcess uname;
 	uname.start("/usr/bin/uname -srm");
@@ -188,6 +83,8 @@ QString getOperatingSystemInfo()
 	uname.waitForFinished();
 	const QString BSDsystem = uname.readAllStandardOutput();
 	OS = BSDsystem.trimmed();
+	#else
+	OS = QSysInfo::prettyProductName();
 	#endif
 
 	return OS;
@@ -342,7 +239,7 @@ QString radToHmsStrAdapt(const double angle)
  Convert an angle in radian to a hms formatted string
  If decimal is true,  output should be like this: "  16h29m55.3s"
  If decimal is true,  output should be like this: "  16h20m00.4s"
- If decimal is false, output should be like this: "0h26m5s"
+ If decimal is false, output should be like this: "   0h26m5s"
 *************************************************************************/
 QString radToHmsStr(const double angle, const bool decimal)
 {
@@ -1995,11 +1892,23 @@ double getDeltaTByIslamSadiqQureshi(const double jDay)
 	int year, month, day;
 	getDateFromJulianDay(jDay, &year, &month, &day);
 	double deltaT; // Return deltaT for the edge year outside valid range.
-	double u;
-	const double ub=(jDay-2454101.0)/36525.0; // (2007-jan-0.5)
+	double u, ub;
 
-	// Limited years!
-	year=qBound(1620, year, 2007);
+	// Limited years: Apply border values!
+	//year=qBound(1620, year, 2007);
+	if (year<1620)
+	{
+		const double j1620=qDateTimeToJd(QDateTime(QDate(1620, 1, 1), QTime(0, 0, 0), Qt::UTC));
+		ub=(j1620-2454101.0)/36525.0;
+	}
+	else if (year>2007)
+	{
+		const double j2008=qDateTimeToJd(QDateTime(QDate(2008, 1, 1), QTime(0, 0, 0), Qt::UTC));
+		ub=(j2008-2454101.0)/36525.0;
+	}
+	else
+		ub=(jDay-2454101.0)/36525.0; // (2007-jan-0.5)
+
 
 	if (year <= 1698)
 	{

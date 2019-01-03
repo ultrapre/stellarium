@@ -19,8 +19,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _LANDSCAPEMGR_HPP_
-#define _LANDSCAPEMGR_HPP_
+#ifndef LANDSCAPEMGR_HPP
+#define LANDSCAPEMGR_HPP
 
 #include "StelModule.hpp"
 #include "StelUtils.hpp"
@@ -104,10 +104,10 @@ class LandscapeMgr : public StelModule
 		   READ getDefaultMinimalBrightness
 		   WRITE setDefaultMinimalBrightness
 		   NOTIFY defaultMinimalBrightnessChanged)
-	Q_PROPERTY(bool flagAtmosphereAutoEnabling
-		   READ getFlagAtmosphereAutoEnable
-		   WRITE setFlagAtmosphereAutoEnable
-		   NOTIFY setFlagAtmosphereAutoEnableChanged)
+	Q_PROPERTY(bool flagEnvironmentAutoEnabling
+		   READ getFlagEnvironmentAutoEnable
+		   WRITE setFlagEnvironmentAutoEnable
+		   NOTIFY setFlagEnvironmentAutoEnableChanged)
 	Q_PROPERTY(QString currentLandscapeID
 		   READ getCurrentLandscapeID
 		   WRITE setCurrentLandscapeID
@@ -194,7 +194,7 @@ public slots:
 	void setAtmosphereAverageLuminance(const float overrideLuminance);
 
 	//! Return a map of landscape names to landscape IDs (directory names).
-	QMap<QString,QString> getNameToDirMap() const;
+	static QMap<QString,QString> getNameToDirMap();
 
 	//! Retrieve a list of the names of all the available landscapes in
 	//! the file search path sub-directories of the landscape area
@@ -334,7 +334,7 @@ public slots:
 	void setFlagAtmosphere(const bool displayed);
 
 	//! Get current display intensity of atmosphere ([0..1], for smoother transitions)
-	float getAtmosphereFadeIntensity();
+	float getAtmosphereFadeIntensity() const;
 
 	//! Get atmosphere fade duration in s.
 	float getAtmosphereFadeDuration() const;
@@ -434,10 +434,20 @@ public slots:
 	//! Set flag for autoselect of landscapes for planets.
 	void setFlagLandscapeAutoSelection(bool enableAutoSelect);
 
+	//! Get flag for auto-enable of atmospheres and landscapes for planets.
+	bool getFlagEnvironmentAutoEnable() const;
+	//! Set flag for auto-enable atmosphere and landscape for planets with atmospheres in location window
+	void setFlagEnvironmentAutoEnable(bool b);
+
 	//! Get flag for auto-enable of atmospheres for planets.
-	bool getFlagAtmosphereAutoEnable() const;
+	//! @note this function is enabled for backward compatibility
+	//! @deprecated
+	bool getFlagAtmosphereAutoEnable() const { return getFlagEnvironmentAutoEnable(); }
+
 	//! Set flag for auto-enable atmosphere for planets with atmospheres in location window
-	void setFlagAtmosphereAutoEnable(bool b);
+	//! @note this function is enabled for backward compatibility
+	//! @deprecated
+	void setFlagAtmosphereAutoEnable(bool b) { setFlagEnvironmentAutoEnable(b); }
 
 	//! Forward opacity query to current landscape.
 	//! @param azalt direction of view line to sample in azaltimuth coordinates.
@@ -467,7 +477,7 @@ signals:
 	void flagLandscapeUseMinimalBrightnessChanged(const bool value);
 	void flagLandscapeSetsMinimalBrightnessChanged(const bool value);
 	void defaultMinimalBrightnessChanged(const double value);
-	void setFlagAtmosphereAutoEnableChanged(const bool enabled);
+	void setFlagEnvironmentAutoEnableChanged(const bool enabled);
 
 	//! Emitted whenever the default landscape is changed
 	//! @param id the landscape id of the new default landscape
@@ -529,13 +539,13 @@ private:
 	//! For a given landscape name, return the landscape ID.
 	//! This takes a name of the landscape, as described in the landscape:name item in the
 	//! landscape.ini, and returns the landscape ID which corresponds to that name.
-	QString nameToID(const QString& name) const;
+	static QString nameToID(const QString& name);
 
 	//! Returns the path to an installed landscape's directory.
 	//! It uses StelFileMgr to look for it in the possible directories.
 	//! @param landscapeID an installed landscape's identifier (the folder name)
 	//! @returns an empty string, if no such landscape was found.
-	QString getLandscapePath(const QString landscapeID) const;
+	static QString getLandscapePath(const QString landscapeID);
 
 	Atmosphere* atmosphere;			// Atmosphere
 	Cardinals* cardinalsPoints;		// Cardinals points
@@ -555,8 +565,8 @@ private:
 	double defaultMinimalBrightness;
 	//! Indicate use of the minimal brightness value specified in the current landscape.ini, if present.
 	bool flagLandscapeSetsMinimalBrightness;
-	//! Indicate auto-enable atmosphere for planets with atmospheres in location window
-	bool flagAtmosphereAutoEnabling;
+	//! Indicate auto-enable atmosphere and landscape for planets with atmospheres in location window
+	bool flagEnvironmentAutoEnabling;
 
 	//! The ID of the currently loaded landscape
 	QString currentLandscapeID;
@@ -581,4 +591,4 @@ private:
 	QString currentPlanetName;
 };
 
-#endif // _LANDSCAPEMGR_HPP_
+#endif // LANDSCAPEMGR_HPP

@@ -31,7 +31,7 @@
 #include "SolarSystem.hpp"
 #include <QDebug>
 
-#include <stdio.h>
+#include <cstdio>
 
 StelSkyImageTile::StelSkyImageTile()
 {
@@ -481,7 +481,7 @@ void StelSkyImageTile::loadFromQVariantMap(const QVariantMap& map)
 	if (map.contains("imageUrl"))
 	{
 		QString imageUrl = map.value("imageUrl").toString();
-		if (baseUrl.startsWith("http://"))
+		if (baseUrl.startsWith("http", Qt::CaseInsensitive))
 		{
 			absoluteImageURI = baseUrl+imageUrl;
 		}

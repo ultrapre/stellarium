@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _ASTERISMMGR_HPP_
-#define _ASTERISMMGR_HPP_
+#ifndef ASTERISMMGR_HPP
+#define ASTERISMMGR_HPP
 
 #include "StelObjectType.hpp"
 #include "StelObjectModule.hpp"
@@ -89,13 +89,13 @@ public:
 	// Methods defined in the StelModule class
 	//! Initialize the AsterismMgr.
 	//! Reads from the asterism parser object and updates the loading bar
-	//! as constellation objects are loaded for the required sky culture.
+	//! as asterism objects are loaded for the required sky culture.
 	virtual void init();
 
-	//! Draw constellation lines, art, names and boundaries.
+	//! Draw asterism lines, art, names and boundaries.
 	virtual void draw(StelCore* core);
 
-	//! Updates time-varying state for each Constellation.
+	//! Updates time-varying state for each asterism.
 	virtual void update(double deltaTime);
 
 	//! Return the value defining the order of call for the given action
@@ -255,4 +255,4 @@ private:
 	int rayHelperThickness;
 };
 
-#endif // _ASTERISMMGR_HPP_
+#endif // ASTERISMMGR_HPP

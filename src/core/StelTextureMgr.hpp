@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _STELTEXTUREMGR_HPP_
-#define _STELTEXTUREMGR_HPP_
+#ifndef STELTEXTUREMGR_HPP
+#define STELTEXTUREMGR_HPP
 
 #include "StelTexture.hpp"
 #include <QObject>
@@ -60,8 +60,8 @@ public:
 	//! @returns the existing or new wrapper for the texture with the given GL name. Returns a null pointer if the texture name is invalid.
 	StelTextureSP wrapperForGLTexture(GLuint texId);
 
-	//! Returns the estimated memory usage of all textures currently loaded through StelTexture
-	int getGLMemoryUsage();
+//	//! Returns the estimated memory usage of all textures currently loaded through StelTexture
+//	int getGLMemoryUsage();
 
 private:
 	friend class StelTexture;
@@ -85,4 +85,4 @@ private:
 };
 
 
-#endif // _STELTEXTUREMGR_HPP_
+#endif // STELTEXTUREMGR_HPP

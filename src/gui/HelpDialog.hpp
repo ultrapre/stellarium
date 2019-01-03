@@ -17,22 +17,34 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _HELPDIALOG_HPP_
-#define _HELPDIALOG_HPP_
+#ifndef HELPDIALOG_HPP
+#define HELPDIALOG_HPP
 
 #include <QString>
 #include <QObject>
 #include <QSettings>
+#include <QNetworkReply>
 
 #include "StelDialog.hpp"
 
 class Ui_helpDialogForm;
 class QListWidgetItem;
+class QNetworkAccessManager;
 
 class HelpDialog : public StelDialog
 {
 	Q_OBJECT
 public:
+	//! @enum UpdateState
+	//! Used for keeping for track of the download/update status
+	enum UpdateState {
+		Updating,				//!< Update in progress
+		CompleteNoUpdates,	//!< Update completed, there we no updates
+		CompleteUpdates,		//!< Update completed, there were updates
+		DownloadError,			//!< Error during download phase
+		OtherError				//!< Other error
+	};
+
 	HelpDialog(QObject* parent);
 	~HelpDialog();
 
@@ -49,6 +61,15 @@ protected:
 
 	Ui_helpDialogForm* ui;
 
+private:
+	QString message;
+	UpdateState updateState;
+	QNetworkAccessManager * networkManager;
+	QNetworkReply * downloadReply;
+
+signals:
+	void checkUpdatesComplete(void);
+
 private slots:
 	//! Show/bring to foreground the shortcut editor window.
 	void showShortcutsWindow();
@@ -57,17 +78,20 @@ private slots:
 	void updateLog(int);
 
 	//! Updated text in Help tab.
-	void updateHelpText(void);
+	void updateHelpText(void) const;
 
 	//! Updated text in About tab.
-	void updateAboutText(void);
+	void updateAboutText(void) const;
 
 	//! Sync the displayed log.
-	void refreshLog();
+	void refreshLog() const;
 
 	void changePage(QListWidgetItem *current, QListWidgetItem *previous);
 
+	void checkUpdates(void);
+	void downloadComplete(QNetworkReply * reply);
+
 };
 
-#endif /*_HELPDIALOG_HPP_*/
+#endif /*_HELPDIALOG_HPP*/
 

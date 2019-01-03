@@ -83,7 +83,8 @@ StelPluginInfo SupernovaeStelPluginInterface::getPluginInfo() const
 Supernovae::Supernovae()
 	: SNCount(0)
 	, updateState(CompleteNoUpdates)
-	, downloadMgr(Q_NULLPTR)
+	, networkManager(Q_NULLPTR)
+	, downloadReply(Q_NULLPTR)
 	, progressBar(Q_NULLPTR)
 	, updateTimer(Q_NULLPTR)
 	, updatesEnabled(false)
@@ -92,7 +93,8 @@ Supernovae::Supernovae()
 	setObjectName("Supernovae");
 	configDialog = new SupernovaeDialog();
 	conf = StelApp::getInstance().getSettings();
-	font.setPixelSize(StelApp::getInstance().getBaseFontSize());
+	setFontSize(StelApp::getInstance().getScreenFontSize());
+	connect(&StelApp::getInstance(), SIGNAL(screenFontSizeChanged(int)), this, SLOT(setFontSize(int)));
 }
 
 /*
@@ -172,14 +174,15 @@ void Supernovae::init()
 	readJsonFile();
 
 	// Set up download manager and the update schedule
-	downloadMgr = new QNetworkAccessManager(this);
-	connect(downloadMgr, SIGNAL(finished(QNetworkReply*)), this, SLOT(updateDownloadComplete(QNetworkReply*)));
+	networkManager = StelApp::getInstance().getNetworkAccessManager();
 	updateState = CompleteNoUpdates;
 	updateTimer = new QTimer(this);
 	updateTimer->setSingleShot(false);   // recurring check for update
 	updateTimer->setInterval(13000);     // check once every 13 seconds to see if it is time for an update
 	connect(updateTimer, SIGNAL(timeout()), this, SLOT(checkForUpdate()));
 	updateTimer->start();
+
+	connect(this, SIGNAL(jsonUpdateComplete(void)), this, SLOT(reloadCatalog()));
 
 	GETSTELMODULE(StelObjectMgr)->registerStelObjectMgr(this);
 }
@@ -379,8 +382,16 @@ QVariantMap Supernovae::loadSNeMap(QString path)
 		qWarning() << "[Supernovae] cannot open" << QDir::toNativeSeparators(path);
 	else
 	{
-		map = StelJsonParser::parse(jsonFile.readAll()).toMap();
-		jsonFile.close();
+		try
+		{
+			map = StelJsonParser::parse(jsonFile.readAll()).toMap();
+			jsonFile.close();
+		}
+		catch (std::runtime_error &e)
+		{
+			qDebug() << "[Supernovae] File format is wrong! Error: " << e.what();
+			return QVariantMap();
+		}
 	}
 	return map;
 }
@@ -420,13 +431,21 @@ int Supernovae::getJsonFileVersion(void) const
 	}
 
 	QVariantMap map;
-	map = StelJsonParser::parse(&sneJsonFile).toMap();
+	try
+	{
+		map = StelJsonParser::parse(&sneJsonFile).toMap();
+		sneJsonFile.close();
+	}
+	catch (std::runtime_error &e)
+	{
+		qDebug() << "[Supernovae] File format is wrong! Error: " << e.what();
+		return jsonVersion;
+	}
 	if (map.contains("version"))
 	{
 		jsonVersion = map.value("version").toInt();
 	}
 
-	sneJsonFile.close();
 	qDebug() << "[Supernovae] version of the catalog:" << jsonVersion;
 	return jsonVersion;
 }
@@ -466,13 +485,21 @@ float Supernovae::getLowerLimitBrightness() const
 	}
 
 	QVariantMap map;
-	map = StelJsonParser::parse(&sneJsonFile).toMap();
+	try
+	{
+		map = StelJsonParser::parse(&sneJsonFile).toMap();
+		sneJsonFile.close();
+	}
+	catch (std::runtime_error &e)
+	{
+		qDebug() << "[Supernovae] File format is wrong! Error: " << e.what();
+		return lowerLimit;
+	}
 	if (map.contains("limit"))
 	{
 		lowerLimit = map.value("limit").toFloat();
 	}
 
-	sneJsonFile.close();
 	return lowerLimit;
 }
 
@@ -509,7 +536,7 @@ void Supernovae::restoreDefaultConfigIni(void)
 	conf->remove("");
 
 	conf->setValue("updates_enabled", true);
-	conf->setValue("url", "http://stellarium.org/json/supernovae.json");
+	conf->setValue("url", "https://stellarium.org/json/supernovae.json");
 	conf->setValue("update_frequency_days", 100);
 	conf->endGroup();
 }
@@ -518,7 +545,7 @@ void Supernovae::readSettingsFromConfig(void)
 {
 	conf->beginGroup("Supernovae");
 
-	updateUrl = conf->value("url", "http://stellarium.org/json/supernovae.json").toString();
+	updateUrl = conf->value("url", "https://stellarium.org/json/supernovae.json").toString();
 	updateFrequencyDays = conf->value("update_frequency_days", 100).toInt();
 	lastUpdate = QDateTime::fromString(conf->value("last_update", "2012-06-11T12:00:00").toString(), Qt::ISODate);
 	updatesEnabled = conf->value("updates_enabled", true).toBool();
@@ -545,7 +572,7 @@ int Supernovae::getSecondsToUpdate(void)
 
 void Supernovae::checkForUpdate(void)
 {
-	if (updatesEnabled && lastUpdate.addSecs(updateFrequencyDays * 3600 * 24) <= QDateTime::currentDateTime() && downloadMgr->networkAccessible()==QNetworkAccessManager::Accessible)
+	if (updatesEnabled && lastUpdate.addSecs(updateFrequencyDays * 3600 * 24) <= QDateTime::currentDateTime() && networkManager->networkAccessible()==QNetworkAccessManager::Accessible)
 		updateJSON();
 }
 
@@ -556,65 +583,141 @@ void Supernovae::updateJSON(void)
 		qWarning() << "[Supernovae] already updating...  will not start again current update is complete.";
 		return;
 	}
-	else
+
+	qDebug() << "[Supernovae] Updating supernovae catalog...";
+	startDownload(updateUrl);
+}
+
+void Supernovae::deleteDownloadProgressBar()
+{
+	disconnect(this, SLOT(updateDownloadProgress(qint64,qint64)));
+
+	if (progressBar)
 	{
-		qDebug() << "[Supernovae] starting update...";
+		StelApp::getInstance().removeProgressBar(progressBar);
+		progressBar = Q_NULLPTR;
+	}
+}
+
+void Supernovae::startDownload(QString urlString)
+{
+	QUrl url(urlString);
+	if (!url.isValid() || url.isRelative() || !url.scheme().startsWith("http", Qt::CaseInsensitive))
+	{
+		qWarning() << "[Supernovae] Invalid URL:" << urlString;
+		return;
 	}
 
-	lastUpdate = QDateTime::currentDateTime();
-	conf->setValue("Supernovae/last_update", lastUpdate.toString(Qt::ISODate));
+	if (progressBar == Q_NULLPTR)
+		progressBar = StelApp::getInstance().addProgressBar();
+	progressBar->setValue(0);
+	progressBar->setRange(0, 0);
+
+	connect(networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(downloadComplete(QNetworkReply*)));
+	QNetworkRequest request;
+	request.setUrl(QUrl(updateUrl));
+	request.setRawHeader("User-Agent", StelUtils::getUserAgentString().toUtf8());
+	#if QT_VERSION >= 0x050600
+	request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
+	#endif
+	downloadReply = networkManager->get(request);
+	connect(downloadReply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(updateDownloadProgress(qint64,qint64)));
 
 	updateState = Supernovae::Updating;
 	emit(updateStateChanged(updateState));
-
-	if (progressBar==Q_NULLPTR)
-		progressBar = StelApp::getInstance().addProgressBar();
-
-	progressBar->setValue(0);
-	progressBar->setRange(0, 100);
-	progressBar->setFormat("Update historical supernovae");
-
-	QNetworkRequest request;
-	request.setUrl(QUrl(updateUrl));
-	request.setRawHeader("User-Agent", QString("Mozilla/5.0 (Stellarium Historical Supernovae Plugin %1; http://stellarium.org/)").arg(SUPERNOVAE_PLUGIN_VERSION).toUtf8());
-	downloadMgr->get(request);
-
-	updateState = Supernovae::CompleteUpdates;
-	emit(updateStateChanged(updateState));
-	emit(jsonUpdateComplete());
 }
 
-void Supernovae::updateDownloadComplete(QNetworkReply* reply)
+void Supernovae::updateDownloadProgress(qint64 bytesReceived, qint64 bytesTotal)
 {
-	// check the download worked, and save the data to file if this is the case.
-	if (reply->error() == QNetworkReply::NoError && reply->bytesAvailable()>0)
+	if (progressBar == Q_NULLPTR)
+		return;
+
+	int currentValue = 0;
+	int endValue = 0;
+
+	if (bytesTotal > -1 && bytesReceived <= bytesTotal)
 	{
-		// download completed successfully.
-		QString jsonFilePath = StelFileMgr::findFile("modules/Supernovae", StelFileMgr::Flags(StelFileMgr::Writable|StelFileMgr::Directory)) + "/supernovae.json";
-		if (jsonFilePath.isEmpty())
+		//Round to the greatest possible derived unit
+		while (bytesTotal > 1024)
 		{
-			qWarning() << "[Supernovae] cannot write JSON data to file:" << QDir::toNativeSeparators(jsonFilePath);
-			return;
+			bytesReceived = std::floor(bytesReceived / 1024.);
+			bytesTotal    = std::floor(bytesTotal / 1024.);
 		}
+		currentValue = bytesReceived;
+		endValue = bytesTotal;
+	}
+
+	progressBar->setValue(currentValue);
+	progressBar->setRange(0, endValue);
+}
+
+void Supernovae::downloadComplete(QNetworkReply *reply)
+{
+	if (reply == Q_NULLPTR)
+		return;
+
+	disconnect(networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(downloadComplete(QNetworkReply*)));
+
+	#if QT_VERSION < 0x050600
+	int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+	if (statusCode == 301 || statusCode == 302 || statusCode == 307)
+	{
+		QUrl rawUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+		QUrl redirectUrl(rawUrl.toString(QUrl::RemoveQuery));
+		qDebug() << "[Supernovae] The query has been redirected to" << redirectUrl.toString();
+		updateUrl = redirectUrl.toString();
+		conf->setValue("Supernovae/url", updateUrl);
+		reply->deleteLater();
+		downloadReply = Q_NULLPTR;
+		startDownload(redirectUrl.toString());
+		return;
+	}
+	#endif
+
+	deleteDownloadProgressBar();
+
+	if (reply->error() || reply->bytesAvailable()==0)
+	{
+		qWarning() << "[Supernovae] Download error: While trying to access"
+			   << reply->url().toString()
+			   << "the following error occured:"
+			   << reply->errorString();
+
+		reply->deleteLater();
+		downloadReply = Q_NULLPTR;
+		return;
+	}
+
+	// download completed successfully.
+	try
+	{
+		QString jsonFilePath = StelFileMgr::findFile("modules/Supernovae", StelFileMgr::Flags(StelFileMgr::Writable|StelFileMgr::Directory)) + "/supernovae.json";
 		QFile jsonFile(jsonFilePath);
 		if (jsonFile.exists())
 			jsonFile.remove();
 
-		if(jsonFile.open(QIODevice::WriteOnly | QIODevice::Text))
+		if (jsonFile.open(QIODevice::WriteOnly | QIODevice::Text))
 		{
 			jsonFile.write(reply->readAll());
 			jsonFile.close();
 		}
-	}
-	else
-		qWarning() << "[Supernovae] FAILED to download" << reply->url() << " Error: " << reply->errorString();
 
-	if (progressBar)
-	{
-		progressBar->setValue(100);
-		StelApp::getInstance().removeProgressBar(progressBar);
-		progressBar = Q_NULLPTR;
+		updateState = Supernovae::CompleteUpdates;
+
+		lastUpdate = QDateTime::currentDateTime();
+		conf->setValue("Supernovae/last_update", lastUpdate.toString(Qt::ISODate));
 	}
+	catch (std::runtime_error &e)
+	{
+		qWarning() << "[Supernovae] Cannot write JSON data to file:" << e.what();
+		updateState = Supernovae::DownloadError;
+	}
+
+	emit(updateStateChanged(updateState));
+	emit(jsonUpdateComplete());
+
+	reply->deleteLater();
+	downloadReply = Q_NULLPTR;
 
 	readJsonFile();
 }

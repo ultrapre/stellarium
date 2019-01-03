@@ -18,16 +18,20 @@ SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
 PROJECT(Stellarium)
 # Use integer versions instead of strings for easier handling if required
 SET(STELLARIUM_MAJOR 0)
-SET(STELLARIUM_MINOR 90)
-SET(STELLARIUM_PATCH 0)
+SET(STELLARIUM_MINOR 18)
+SET(STELLARIUM_PATCH 3)
 ADD_DEFINITIONS(
--DSTELLARIUM_MAJOR=${STELLARIUM_MAJOR}
--DSTELLARIUM_MINOR=${STELLARIUM_MINOR}
--DSTELLARIUM_PATCH=${STELLARIUM_PATCH}
+     -DSTELLARIUM_MAJOR=${STELLARIUM_MAJOR}
+     -DSTELLARIUM_MINOR=${STELLARIUM_MINOR}
+     -DSTELLARIUM_PATCH=${STELLARIUM_PATCH}
 )
 SET(VERSION "${STELLARIUM_MAJOR}.${STELLARIUM_MINOR}.${STELLARIUM_PATCH}")
 SET(PACKAGE stellarium)
-SET(COPYRIGHT_YEARS "2000-2018")
+STRING(TIMESTAMP CURRENTYEAR "%Y")
+SET(COPYRIGHT_YEARS "2000-${CURRENTYEAR}")
+
+SET(STELLARIUM_URL "https://stellarium.org/")
+ADD_DEFINITIONS(-DSTELLARIUM_URL="${STELLARIUM_URL}")
 
 SET(PACKAGE_VERSION "${VERSION}")
 ADD_DEFINITIONS(-DPACKAGE_VERSION="${PACKAGE_VERSION}")
@@ -35,7 +39,7 @@ ADD_DEFINITIONS(-DCOPYRIGHT_YEARS="${COPYRIGHT_YEARS}")
 # Write version of Stellarium to Stellarium User Guide
 CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/cmake/version.tex.cmake ${PROJECT_SOURCE_DIR}/guide/version.tex @ONLY NEWLINE_STYLE LF)
 
-# currently Qt 5.4 - 5.6 is recommended, we can no longer build with Qt 5.3, and 5.7 may have some bugs (on Mac? 5.7 is fine on Windows) 5.8 on Windows seems OK.
+# currently Qt 5.6/5.9 is recommended
 SET(MINIMAL_QT_VERSION "5.4.0")
 
 # Use customized cmake macros
@@ -108,8 +112,13 @@ ADD_DEFINITIONS(-D_USE_MATH_DEFINES)
 
 # flags shared for gcc-like compilers (also MinGW/Clang)
 # Qt 5.7 requires C++11 support
-SET(STEL_GCC_C_FLAGS "-Wall -Wextra -Wno-unused-parameter -Wno-unused-result")
-SET(STEL_GCC_CXX_FLAGS "-Wall -Wextra -Wno-unused-parameter -Wno-unused-result")
+SET(STEL_GCC_C_FLAGS "-Wall -Wextra -Wno-unused-parameter")
+SET(STEL_GCC_CXX_FLAGS "-Wall -Wextra -Wno-unused-parameter")
+# Intel C/C++ compilers do not have an option -Wno-unused-results
+IF(NOT "${CMAKE_CXX_COMPILER_ID}" MATCHES "Intel")
+     SET(STEL_GCC_C_FLAGS "${STEL_GCC_C_FLAGS} -Wno-unused-result")
+     SET(STEL_GCC_CXX_FLAGS "${STEL_GCC_CXX_FLAGS} -Wno-unused-result")
+ENDIF()
 
 # Set whether to try using C++11 when compiling. Required for Qt >= 5.7"
 IF(NOT (CMAKE_VERSION VERSION_LESS 3.1.0))
@@ -436,7 +445,6 @@ IF(${Qt5Gui_OPENGL_IMPLEMENTATION} MATCHES "GLES")
      SET(STEL_GLES_LIBS Qt5::Gui_EGL Qt5::Gui_GLESv2)
 ENDIF()
 
-
 # Tell CMake to run moc when necessary:
 SET(CMAKE_AUTOMOC ON)
 # As moc files are generated in the binary dir, tell CMake to always look for includes there:
@@ -472,6 +480,7 @@ IF(ENABLE_GPS)
      ENDIF(WIN32)
 ELSE(ENABLE_GPS)
      SET(ENABLE_LIBGPS 0)
+     MESSAGE(STATUS "GPS: disabled.")
 ENDIF(ENABLE_GPS)
 
 
@@ -627,7 +636,7 @@ IF(CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebI
      ADD_DEFINITIONS(-DNDEBUG)
 ENDIF()
 
-CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/cmake/default_config.ini.cmake ${CMAKE_SOURCE_DIR}/data/default_config.ini @ONLY)
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/cmake/default_cfg.ini.cmake ${CMAKE_SOURCE_DIR}/data/default_cfg.ini @ONLY)
 
 ########### uninstall files ###############
 CONFIGURE_FILE(
@@ -662,7 +671,7 @@ IF(GENERATE_PACKAGE_TARGET)
      SET(CPACK_SOURCE_IGNORE_FILES "/.tx/" "/CVS/" "/.svn/" "/.git/" "/.github/" "/.bzr/" "builds/" "installers/" "util/spout2" "util/DSSToStellarium/toastForShape$" "Stellarium.tag$" "Stellarium.kdevelop.pcs$" "/CMakeLists.txt.user$" "\\\\.bzrignore$" "\\\\.gitignore$" "\\\\.clang-format$" "\\\\.yml$" "~$" "\\\\.swp$" "\\\\.#" "/#")
      SET(CPACK_RPM_PACKAGE_LICENSE "GPLv2+")
      SET(CPACK_RPM_PACKAGE_GROUP "Amusements/Graphics")
-     SET(CPACK_RPM_PACKAGE_URL "http://stellarium.org/")
+     SET(CPACK_RPM_PACKAGE_URL "${STELLARIUM_URL}")
      SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "${CPACK_PACKAGE_VENDOR} <stellarium@googlegroups.com>")
      SET(CPACK_DEBIAN_PACKAGE_SECTION "science")
      SET(CPACK_DEBIAN_PACKAGE_VERSION "${VERSION}+deb1")

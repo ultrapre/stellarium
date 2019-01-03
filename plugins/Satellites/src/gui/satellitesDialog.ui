@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>530</width>
-    <height>417</height>
+    <width>579</width>
+    <height>491</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -564,7 +564,11 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEditSearch"/>
+          <widget class="QLineEdit" name="lineEditSearch">
+           <property name="placeholderText">
+            <string>Search in list...</string>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QListView" name="satellitesList">
@@ -711,6 +715,9 @@
          </item>
          <item>
           <layout class="QGridLayout" name="flagsCheckBoxesLayout">
+           <property name="verticalSpacing">
+            <number>6</number>
+           </property>
            <item row="0" column="0">
             <widget class="QCheckBox" name="displayedCheckbox">
              <property name="toolTip">
@@ -747,6 +754,31 @@
              </property>
             </widget>
            </item>
+           <item row="1" column="1" alignment="Qt::AlignLeft">
+            <widget class="QPushButton" name="satColorPickerButton">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>18</width>
+               <height>18</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>Change color for selected satellite(s)</string>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+            </widget>
+           </item>
           </layout>
          </item>
          <item>
@@ -764,7 +796,13 @@
            <item>
             <widget class="QTextEdit" name="descriptionTextEdit">
              <property name="readOnly">
-              <bool>true</bool>
+              <bool>false</bool>
+             </property>
+             <property name="acceptRichText">
+              <bool>false</bool>
+             </property>
+             <property name="placeholderText">
+              <string notr="true"/>
              </property>
             </widget>
            </item>

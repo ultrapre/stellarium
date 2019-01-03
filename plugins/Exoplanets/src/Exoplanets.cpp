@@ -89,7 +89,8 @@ Exoplanets::Exoplanets()
 	, EPCountAll(0)
 	, EPCountPH(0)
 	, updateState(CompleteNoUpdates)
-	, downloadMgr(Q_NULLPTR)
+	, networkManager(Q_NULLPTR)
+	, downloadReply(Q_NULLPTR)
 	, updateTimer(Q_NULLPTR)
 	, updatesEnabled(false)
 	, updateFrequencyHours(0)
@@ -102,7 +103,8 @@ Exoplanets::Exoplanets()
 	setObjectName("Exoplanets");
 	exoplanetsConfigDialog = new ExoplanetsDialog();
 	conf = StelApp::getInstance().getSettings();
-	font.setPixelSize(StelApp::getInstance().getBaseFontSize());	
+	setFontSize(StelApp::getInstance().getScreenFontSize());
+	connect(&StelApp::getInstance(), SIGNAL(screenFontSizeChanged(int)), this, SLOT(setFontSize(int)));
 }
 
 /*
@@ -198,14 +200,15 @@ void Exoplanets::init()
 	readJsonFile();
 
 	// Set up download manager and the update schedule
-	downloadMgr = new QNetworkAccessManager(this);
-	connect(downloadMgr, SIGNAL(finished(QNetworkReply*)), this, SLOT(updateDownloadComplete(QNetworkReply*)));
+	networkManager = StelApp::getInstance().getNetworkAccessManager();
 	updateState = CompleteNoUpdates;
 	updateTimer = new QTimer(this);
 	updateTimer->setSingleShot(false);   // recurring check for update
 	updateTimer->setInterval(13000);     // check once every 13 seconds to see if it is time for an update
 	connect(updateTimer, SIGNAL(timeout()), this, SLOT(checkForUpdate()));
 	updateTimer->start();
+
+	connect(this, SIGNAL(jsonUpdateComplete(void)), this, SLOT(reloadCatalog()));
 
 	GETSTELMODULE(StelObjectMgr)->registerStelObjectMgr(this);
 }
@@ -521,8 +524,16 @@ QVariantMap Exoplanets::loadEPMap(QString path)
 		qWarning() << "[Exoplanets] Cannot open " << QDir::toNativeSeparators(path);
 	else
 	{
-		map = StelJsonParser::parse(jsonFile.readAll()).toMap();
-		jsonFile.close();
+		try
+		{
+			map = StelJsonParser::parse(jsonFile.readAll()).toMap();
+			jsonFile.close();
+		}
+		catch (std::runtime_error &e)
+		{
+			qDebug() << "[Exoplanets] File format is wrong! Error: " << e.what();
+			return QVariantMap();
+		}
 	}
 	return map;
 }
@@ -599,8 +610,16 @@ int Exoplanets::getJsonFileFormatVersion(void) const
 	}
 
 	QVariantMap map;
-	map = StelJsonParser::parse(&jsonEPCatalogFile).toMap();
-	jsonEPCatalogFile.close();
+	try
+	{
+		map = StelJsonParser::parse(&jsonEPCatalogFile).toMap();
+		jsonEPCatalogFile.close();
+	}
+	catch (std::runtime_error &e)
+	{
+		qDebug() << "[Exoplanets] File format is wrong! Error: " << e.what();
+		return jsonVersion;
+	}
 	if (map.contains("version"))
 	{
 		jsonVersion = map.value("version").toInt();
@@ -634,7 +653,7 @@ bool Exoplanets::checkJsonFileFormat() const
 	return true;
 }
 
-ExoplanetP Exoplanets::getByID(const QString& id)
+ExoplanetP Exoplanets::getByID(const QString& id) const
 {
 	for (const auto& eps : ep)
 	{
@@ -676,7 +695,7 @@ void Exoplanets::loadConfiguration(void)
 {
 	conf->beginGroup("Exoplanets");
 
-	updateUrl = conf->value("url", "http://stellarium.org/json/exoplanets.json").toString();
+	updateUrl = conf->value("url", "https://www.stellarium.org/json/exoplanets.json").toString();
 	updateFrequencyHours = conf->value("update_frequency_hours", 72).toInt();
 	lastUpdate = QDateTime::fromString(conf->value("last_update", "2012-05-24T12:00:00").toString(), Qt::ISODate);
 	updatesEnabled = conf->value("updates_enabled", true).toBool();
@@ -686,8 +705,8 @@ void Exoplanets::loadConfiguration(void)
 	enableAtStartup = conf->value("enable_at_startup", false).toBool();
 	flagShowExoplanetsButton = conf->value("flag_show_exoplanets_button", true).toBool();
 	setFlagShowExoplanetsDesignations(conf->value("flag_show_designations", true).toBool());
-	setMarkerColor(StelUtils::strToVec3f(conf->value("exoplanet_marker_color", "0.4,0.9,0.5").toString()), false);
-	setMarkerColor(StelUtils::strToVec3f(conf->value("habitable_exoplanet_marker_color", "1.0,0.5,0.0").toString()), true);
+	setMarkerColor(StelUtils::strToVec3f(conf->value("exoplanet_marker_color", "0.4,0.9,0.5").toString()));
+	setHabitableColor(StelUtils::strToVec3f(conf->value("habitable_exoplanet_marker_color", "1.0,0.5,0.0").toString()));
 	setCurrentTemperatureScaleKey(conf->value("temperature_scale", "Celsius").toString());
 
 	conf->endGroup();
@@ -706,8 +725,8 @@ void Exoplanets::saveConfiguration(void)
 	conf->setValue("enable_at_startup", enableAtStartup);
 	conf->setValue("flag_show_exoplanets_button", flagShowExoplanetsButton);
 	conf->setValue("flag_show_designations", getFlagShowExoplanetsDesignations());
-	conf->setValue("habitable_exoplanet_marker_color", StelUtils::vec3fToStr(getMarkerColor(true)));
-	conf->setValue("exoplanet_marker_color", StelUtils::vec3fToStr(getMarkerColor(false)));
+	conf->setValue("habitable_exoplanet_marker_color", StelUtils::vec3fToStr(getHabitableColor()));
+	conf->setValue("exoplanet_marker_color", StelUtils::vec3fToStr(getMarkerColor()));
 	conf->setValue("temperature_scale", getCurrentTemperatureScaleKey());
 
 	conf->endGroup();
@@ -721,7 +740,7 @@ int Exoplanets::getSecondsToUpdate(void)
 
 void Exoplanets::checkForUpdate(void)
 {
-	if (updatesEnabled && lastUpdate.addSecs(updateFrequencyHours * 3600) <= QDateTime::currentDateTime() && downloadMgr->networkAccessible()==QNetworkAccessManager::Accessible)
+	if (updatesEnabled && lastUpdate.addSecs(updateFrequencyHours * 3600) <= QDateTime::currentDateTime() && networkManager->networkAccessible()==QNetworkAccessManager::Accessible)
 		updateJSON();
 }
 
@@ -732,71 +751,8 @@ void Exoplanets::updateJSON(void)
 		qWarning() << "[Exoplanets] Already updating...  will not start again current update is complete.";
 		return;
 	}
-	else
-	{
-		qDebug() << "[Exoplanets] Starting update...";
-	}
-
-	lastUpdate = QDateTime::currentDateTime();
-	conf->setValue("Exoplanets/last_update", lastUpdate.toString(Qt::ISODate));
-
-	updateState = Exoplanets::Updating;
-	emit(updateStateChanged(updateState));
-
-	if (progressBar==Q_NULLPTR)
-		progressBar = StelApp::getInstance().addProgressBar();
-
-	progressBar->setValue(0);
-	progressBar->setRange(0, 100);
-	progressBar->setFormat("Update exoplanets");
-
-	QNetworkRequest request;
-	request.setUrl(QUrl(updateUrl));
-	request.setRawHeader("User-Agent", QString("Mozilla/5.0 (Stellarium Exoplanets Plugin %1; http://stellarium.org/)").arg(EXOPLANETS_PLUGIN_VERSION).toUtf8());
-	downloadMgr->get(request);
-
-	updateState = Exoplanets::CompleteUpdates;
-	emit(updateStateChanged(updateState));
-	emit(jsonUpdateComplete());
-}
-
-void Exoplanets::updateDownloadComplete(QNetworkReply* reply)
-{
-	// check the download worked, and save the data to file if this is the case.
-	if (reply->error() == QNetworkReply::NoError && reply->bytesAvailable()>0)
-	{
-		// download completed successfully.
-		try
-		{
-			QString jsonFilePath = StelFileMgr::findFile("modules/Exoplanets", StelFileMgr::Flags(StelFileMgr::Writable|StelFileMgr::Directory)) + "/exoplanets.json";
-			QFile jsonFile(jsonFilePath);
-			if (jsonFile.exists())
-				jsonFile.remove();
-
-			if (jsonFile.open(QIODevice::WriteOnly | QIODevice::Text))
-			{
-				jsonFile.write(reply->readAll());
-				jsonFile.close();
-			}
-		}
-		catch (std::runtime_error &e)
-		{
-			qWarning() << "[Exoplanets] Cannot write JSON data to file:" << e.what();
-		}
-
-	}
-	else
-		qWarning() << "[Exoplanets] FAILED to download" << reply->url() << " Error: " << reply->errorString();
-
-
-	if (progressBar)
-	{
-		progressBar->setValue(100);
-		StelApp::getInstance().removeProgressBar(progressBar);
-		progressBar = Q_NULLPTR;
-	}
-
-	readJsonFile();
+	qDebug() << "[Exoplanets] Updating exoplanets catalog...";
+	startDownload(updateUrl);
 }
 
 void Exoplanets::displayMessage(const QString& message, const QString hexColor)
@@ -880,22 +836,26 @@ void Exoplanets::setHabitableMode(bool b)
 	Exoplanet::habitableMode=b;
 }
 
-Vec3f Exoplanets::getMarkerColor(bool habitable) const
+Vec3f Exoplanets::getMarkerColor() const
 {
-	Vec3f c = Exoplanet::exoplanetMarkerColor;
-	if (habitable)
-		c = Exoplanet::habitableExoplanetMarkerColor;
-
-
-	return c;
+	return Exoplanet::exoplanetMarkerColor;
 }
 
-void Exoplanets::setMarkerColor(const Vec3f &c, bool h)
+void Exoplanets::setMarkerColor(const Vec3f &c)
 {
-	if (h)
-		Exoplanet::habitableExoplanetMarkerColor = c;
-	else
-		Exoplanet::exoplanetMarkerColor = c;
+	Exoplanet::exoplanetMarkerColor = c;
+	emit markerColorChanged(c);
+}
+
+Vec3f Exoplanets::getHabitableColor() const
+{
+	return Exoplanet::habitableExoplanetMarkerColor;
+}
+
+void Exoplanets::setHabitableColor(const Vec3f &c)
+{
+	Exoplanet::habitableExoplanetMarkerColor = c;
+	emit habitableColorChanged(c);
 }
 
 void Exoplanets::setFlagShowExoplanets(bool b)
@@ -922,6 +882,141 @@ void Exoplanets::setCurrentTemperatureScaleKey(QString key)
 QString Exoplanets::getCurrentTemperatureScaleKey() const
 {
 	return metaObject()->enumerator(metaObject()->indexOfEnumerator("TemperatureScale")).key(Exoplanet::temperatureScaleID);
+}
+
+void Exoplanets::deleteDownloadProgressBar()
+{
+	disconnect(this, SLOT(updateDownloadProgress(qint64,qint64)));
+
+	if (progressBar)
+	{
+		StelApp::getInstance().removeProgressBar(progressBar);
+		progressBar = Q_NULLPTR;
+	}
+}
+
+void Exoplanets::startDownload(QString urlString)
+{
+	QUrl url(urlString);
+	if (!url.isValid() || url.isRelative() || !url.scheme().startsWith("http", Qt::CaseInsensitive))
+	{
+		qWarning() << "[Exoplanets] Invalid URL:" << urlString;
+		return;
+	}
+
+	if (progressBar == Q_NULLPTR)
+		progressBar = StelApp::getInstance().addProgressBar();
+	progressBar->setValue(0);
+	progressBar->setRange(0, 0);
+
+	connect(networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(downloadComplete(QNetworkReply*)));
+	QNetworkRequest request;
+	request.setUrl(QUrl(updateUrl));
+	request.setRawHeader("User-Agent", StelUtils::getUserAgentString().toUtf8());
+	#if QT_VERSION >= 0x050600
+	request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
+	#endif
+	downloadReply = networkManager->get(request);
+	connect(downloadReply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(updateDownloadProgress(qint64,qint64)));
+
+	updateState = Exoplanets::Updating;
+	emit(updateStateChanged(updateState));
+}
+
+void Exoplanets::updateDownloadProgress(qint64 bytesReceived, qint64 bytesTotal)
+{
+	if (progressBar == Q_NULLPTR)
+		return;
+
+	int currentValue = 0;
+	int endValue = 0;
+
+	if (bytesTotal > -1 && bytesReceived <= bytesTotal)
+	{
+		//Round to the greatest possible derived unit
+		while (bytesTotal > 1024)
+		{
+			bytesReceived = std::floor(bytesReceived / 1024.);
+			bytesTotal    = std::floor(bytesTotal / 1024.);
+		}
+		currentValue = bytesReceived;
+		endValue = bytesTotal;
+	}
+
+	progressBar->setValue(currentValue);
+	progressBar->setRange(0, endValue);
+}
+
+void Exoplanets::downloadComplete(QNetworkReply *reply)
+{
+	if (reply == Q_NULLPTR)
+		return;
+
+	disconnect(networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(downloadComplete(QNetworkReply*)));
+
+	#if QT_VERSION < 0x050600
+	int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+	if (statusCode == 301 || statusCode == 302 || statusCode == 307)
+	{
+		QUrl rawUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+		QUrl redirectUrl(rawUrl.toString(QUrl::RemoveQuery));
+		qDebug() << "[Exoplanets] The query has been redirected to" << redirectUrl.toString();
+		updateUrl = redirectUrl.toString();
+		conf->setValue("Exoplanets/url", updateUrl);
+		reply->deleteLater();
+		downloadReply = Q_NULLPTR;
+		startDownload(redirectUrl.toString());
+		return;
+	}
+	#endif
+
+	deleteDownloadProgressBar();
+
+	if (reply->error() || reply->bytesAvailable()==0)
+	{
+		qWarning() << "[Exoplanets] Download error: While trying to access"
+			   << reply->url().toString()
+			   << "the following error occured:"
+			   << reply->errorString();
+
+		reply->deleteLater();
+		downloadReply = Q_NULLPTR;
+		return;
+	}
+
+	// download completed successfully.
+	try
+	{
+		QString jsonFilePath = StelFileMgr::findFile("modules/Exoplanets", StelFileMgr::Flags(StelFileMgr::Writable|StelFileMgr::Directory)) + "/exoplanets.json";
+		QFile jsonFile(jsonFilePath);
+		if (jsonFile.exists())
+			jsonFile.remove();
+
+		if (jsonFile.open(QIODevice::WriteOnly | QIODevice::Text))
+		{
+			jsonFile.write(reply->readAll());
+			jsonFile.close();
+		}
+
+		updateState = Exoplanets::CompleteUpdates;
+
+		lastUpdate = QDateTime::currentDateTime();
+		conf->setValue("Exoplanets/last_update", lastUpdate.toString(Qt::ISODate));
+
+	}
+	catch (std::runtime_error &e)
+	{
+		qWarning() << "[Exoplanets] Cannot write JSON data to file:" << e.what();
+		updateState = Exoplanets::DownloadError;
+	}
+
+	emit(updateStateChanged(updateState));
+	emit(jsonUpdateComplete());
+
+	reply->deleteLater();
+	downloadReply = Q_NULLPTR;
+
+	readJsonFile();
 }
 
 void Exoplanets::translations()

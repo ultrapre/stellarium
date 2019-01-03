@@ -17,15 +17,16 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef METEORSHOWERSMGR_HPP_
-#define METEORSHOWERSMGR_HPP_
+#ifndef METEORSHOWERSMGR_HPP
+#define METEORSHOWERSMGR_HPP
 
 #include <QNetworkReply>
+#include <QNetworkAccessManager>
 
 #include "StelGuiItems.hpp"
 #include "StelTextureMgr.hpp"
 #include "StelObjectModule.hpp"
-#include "StelLocation.hpp"
+#include "StelLocationMgr.hpp"
 
 #define MS_CATALOG_VERSION 1
 #define MS_CONFIG_PREFIX QString("MeteorShowers")
@@ -277,7 +278,8 @@ public slots:
 
 private slots:
 	void checkForUpdates();
-	void updateFinished(QNetworkReply* reply);
+	void updateDownloadProgress(qint64 bytesReceived, qint64 bytesTotal);
+	void downloadComplete(QNetworkReply * reply);
 	void locationChanged(StelLocation location);
 
 private:
@@ -314,13 +316,17 @@ private:
 	QString m_url;
 	QDateTime m_lastUpdate;
 	DownloadStatus m_statusOfLastUpdate;
-    QNetworkAccessManager* m_downloadMgr;
+	QNetworkAccessManager * m_networkManager;
+	QNetworkReply * m_downloadReply;
 	class StelProgressController* m_progressBar;
 
 	void createActions();
 	void loadConfig();
 	void loadTextures();
 	bool loadCatalog(const QString& jsonPath);
+
+	void startDownload(QString url);
+	void deleteDownloadProgressBar();
 
 	//! Enable/disable the Meteor Showers plugin.
 	//! It'll be triggered by a StelAction! So, it should NOT be called directly!
@@ -342,4 +348,4 @@ public:
 	virtual QObjectList getExtensionList() const { return QObjectList(); }
 };
 
-#endif /*METEORSHOWERSMGR_HPP_*/
+#endif /*METEORSHOWERSMGR_HPP*/

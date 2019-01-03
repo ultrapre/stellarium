@@ -571,7 +571,7 @@ void MpcImportWindow::startDownload(QString urlString)
 	}
 
 	QUrl url(urlString);
-	if (!url.isValid() || url.isRelative() || !url.scheme().contains("http"))
+	if (!url.isValid() || url.isRelative() || !url.scheme().startsWith("http", Qt::CaseInsensitive))
 	{
 		qWarning() << "Invalid URL:" << urlString;
 		return;
@@ -590,7 +590,13 @@ void MpcImportWindow::startDownload(QString urlString)
 	ui->pushButtonAbortDownload->setVisible(true);
 
 	connect(networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(downloadComplete(QNetworkReply*)));
-	downloadReply = networkManager->get(QNetworkRequest(url));
+	QNetworkRequest request;
+	request.setUrl(QUrl(url));
+	request.setRawHeader("User-Agent", StelUtils::getUserAgentString().toUtf8());
+	#if QT_VERSION >= 0x050600
+	request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
+	#endif
+	downloadReply = networkManager->get(request);
 	connect(downloadReply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(updateDownloadProgress(qint64,qint64)));
 }
 
@@ -697,7 +703,7 @@ void MpcImportWindow::deleteDownloadProgressBar()
 
 void MpcImportWindow::sendQuery()
 {
-	if (queryReply != 0)
+	if (queryReply != Q_NULLPTR)
 		return;
 
 	query = ui->lineEditQuery->text().trimmed();
@@ -755,11 +761,16 @@ void MpcImportWindow::sendQueryToUrl(QUrl url)
 	q.addQueryItem("js", "f");
 	url.setQuery(q);
 
-	QNetworkRequest request(url);
+	QNetworkRequest request;
+	request.setUrl(QUrl(url));
+	request.setRawHeader("User-Agent", StelUtils::getUserAgentString().toUtf8());
 	request.setHeader(QNetworkRequest::ContentTypeHeader,
 	                  "application/x-www-form-urlencoded");//Is this really necessary?
 	request.setHeader(QNetworkRequest::ContentLengthHeader,
 	                  url.query(QUrl::FullyEncoded).length());
+	#if QT_VERSION >= 0x050600
+	request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
+	#endif
 
 	connect(networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(receiveQueryReply(QNetworkReply*)));
 	queryReply = networkManager->post(request, url.query(QUrl::FullyEncoded).toUtf8());	
@@ -768,7 +779,7 @@ void MpcImportWindow::sendQueryToUrl(QUrl url)
 
 void MpcImportWindow::abortQuery()
 {
-	if (queryReply == 0)
+	if (queryReply == Q_NULLPTR)
 		return;
 
 	disconnect(networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(receiveQueryReply(QNetworkReply*)));
@@ -776,7 +787,7 @@ void MpcImportWindow::abortQuery()
 
 	queryReply->abort();
 	queryReply->deleteLater();
-	queryReply = 0;
+	queryReply = Q_NULLPTR;
 
 	//resetCountdown();
 	enableInterface(true);
@@ -785,7 +796,7 @@ void MpcImportWindow::abortQuery()
 
 void MpcImportWindow::receiveQueryReply(QNetworkReply *reply)
 {
-	if (reply == 0)
+	if (reply == Q_NULLPTR)
 		return;
 
 	disconnect(networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(receiveQueryReply(QNetworkReply*)));
@@ -800,7 +811,7 @@ void MpcImportWindow::receiveQueryReply(QNetworkReply *reply)
 		//TODO: Add counter and cycle check.
 
 		reply->deleteLater();
-		queryReply = 0;
+		queryReply = Q_NULLPTR;
 		sendQueryToUrl(redirectUrl);
 		return;
 	}
@@ -821,7 +832,7 @@ void MpcImportWindow::receiveQueryReply(QNetworkReply *reply)
 		enableInterface(true);
 
 		reply->deleteLater();
-		queryReply = 0;
+		queryReply = Q_NULLPTR;
 		return;
 	}
 
@@ -840,7 +851,7 @@ void MpcImportWindow::receiveQueryReply(QNetworkReply *reply)
 	}
 
 	reply->deleteLater();
-	queryReply = 0;
+	queryReply = Q_NULLPTR;
 }
 
 void MpcImportWindow::readQueryReply(QNetworkReply * reply)
@@ -929,7 +940,7 @@ void MpcImportWindow::resetCountdown()
 		countdownTimer->stop();
 
 		//If the query is still active, kill it
-		if (queryReply != 0 && queryReply->isRunning())
+		if (queryReply != Q_NULLPTR && queryReply->isRunning())
 		{
 			abortQuery();
                         ui->labelQueryMessage->setText("The query timed out. You can try again, now or later.");
@@ -953,7 +964,7 @@ void MpcImportWindow::updateCountdown()
 		resetCountdown();
 	}
 	//If there has been an answer
-	else if (countdown > 50 && queryReply == 0)
+	else if (countdown > 50 && queryReply == Q_NULLPTR)
 	{
 		resetCountdown();
 	}
@@ -976,15 +987,25 @@ void MpcImportWindow::loadBookmarks()
 		QFile bookmarksFile(bookmarksFilePath);
 		if (bookmarksFile.open(QFile::ReadOnly | QFile::Text))
 		{
-			QVariantMap jsonRoot = StelJsonParser::parse(bookmarksFile.readAll()).toMap();
+			QVariantMap jsonRoot;
+			QString fileVersion = "0.0.0";
+			try
+			{
+				jsonRoot = StelJsonParser::parse(bookmarksFile.readAll()).toMap();
+				bookmarksFile.close();
 
-			QString fileVersion = jsonRoot.value("version").toString();
-			if (fileVersion.isEmpty())
-				fileVersion = "0.0.0";
-			loadBookmarksGroup(jsonRoot.value("mpcMinorPlanets").toMap(), bookmarks[MpcMinorPlanets]);
-			loadBookmarksGroup(jsonRoot.value("mpcComets").toMap(), bookmarks[MpcComets]);
+				fileVersion = jsonRoot.value("version").toString();
+				if (fileVersion.isEmpty())
+					fileVersion = "0.0.0";
 
-			bookmarksFile.close();
+				loadBookmarksGroup(jsonRoot.value("mpcMinorPlanets").toMap(), bookmarks[MpcMinorPlanets]);
+				loadBookmarksGroup(jsonRoot.value("mpcComets").toMap(), bookmarks[MpcComets]);
+			}
+			catch (std::runtime_error &e)
+			{
+				qDebug() << "File format is wrong! Error: " << e.what();
+				outdated = true;
+			}
 
 			if (StelUtils::compareVersions(fileVersion, SOLARSYSTEMEDITOR_PLUGIN_VERSION)<0)
 				outdated = true; // Oops... the list is outdated!
@@ -1001,7 +1022,7 @@ void MpcImportWindow::loadBookmarks()
 		qDebug() << "Bookmarks file can't be read. Hard-coded bookmarks will be used.";
 
 	//Initialize with hard-coded values
-	bookmarks[MpcMinorPlanets].insert("MPC's list of bright minor planets at opposition in 2017", "https://www.minorplanetcenter.net/iau/Ephemerides/Bright/2017/Soft00Bright.txt");
+	bookmarks[MpcMinorPlanets].insert("MPC's list of bright minor planets at opposition in 2018", "https://www.minorplanetcenter.net/iau/Ephemerides/Bright/2018/Soft00Bright.txt");
 	bookmarks[MpcMinorPlanets].insert("MPC's list of observable critical-list numbered minor planets", "https://www.minorplanetcenter.net/iau/Ephemerides/CritList/Soft00CritList.txt");
 	bookmarks[MpcMinorPlanets].insert("MPC's list of observable distant minor planets", "https://www.minorplanetcenter.net/iau/Ephemerides/Distant/Soft00Distant.txt");
 	bookmarks[MpcMinorPlanets].insert("MPC's list of observable unusual minor planets", "https://www.minorplanetcenter.net/iau/Ephemerides/Unusual/Soft00Unusual.txt");
@@ -1013,7 +1034,23 @@ void MpcImportWindow::loadBookmarks()
 	bookmarks[MpcMinorPlanets].insert("MPCORB: elements of NEAs for current epochs (today)", "https://www.minorplanetcenter.net/iau/MPCORB/NEAm00.txt");
 	bookmarks[MpcMinorPlanets].insert("MPCAT: Unusual minor planets (including NEOs)", "https://www.minorplanetcenter.net/iau/ECS/MPCAT/unusual.txt");
 	bookmarks[MpcMinorPlanets].insert("MPCAT: Distant minor planets (Centaurs and transneptunians)", "https://www.minorplanetcenter.net/iau/ECS/MPCAT/distant.txt");
-	bookmarks[MpcMinorPlanets].insert("MPCAT: Numbered objects", "https://www.minorplanetcenter.net/iau/ECS/MPCAT/mpn.txt");
+	int start = 0;
+	int finish = 52;
+	QString limits, idx;
+	for (int i=start; i<=finish; i++)
+	{
+		limits = QString("%1%2%3").arg(QString::number(i*10000), QChar(0x2014), QString::number(i*10000 + 9999));
+		if (i==start)
+			limits = QString("%1%2%3").arg(QString::number(1), QChar(0x2014), QString::number(9999));
+		else if (i==finish)
+			limits = QString("%1...").arg(QString::number(i*10000));
+
+		if ((i+1)<10)
+			idx = QString("0%1").arg(i+1);
+		else
+			idx = QString::number(i+1);
+		bookmarks[MpcMinorPlanets].insert(QString("MPCAT: Numbered objects (%1)").arg(limits), QString("http://dss.stellarium.org/MPC/mpn-%1.txt").arg(idx));
+	}
 	bookmarks[MpcComets].insert("MPC's list of observable comets", "https://www.minorplanetcenter.net/iau/Ephemerides/Comets/Soft00Cmt.txt");
 	bookmarks[MpcComets].insert("MPCORB: comets", "https://www.minorplanetcenter.net/iau/MPCORB/CometEls.txt");
 

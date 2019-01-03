@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
 */
  
-#ifndef _STELDIALOGLOGBOOK_HPP_
-#define _STELDIALOGLOGBOOK_HPP_
+#ifndef STELDIALOGLOGBOOK_HPP
+#define STELDIALOGLOGBOOK_HPP
 
 #include <QObject>
 
@@ -51,4 +51,4 @@ protected:
 	CustomProxy* proxy;
 };
 
-#endif // _STELDIALOGLOGBOOK_HPP_
+#endif // STELDIALOGLOGBOOK_HPP

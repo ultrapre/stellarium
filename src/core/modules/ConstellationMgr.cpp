@@ -143,6 +143,9 @@ void ConstellationMgr::init()
 	addAction("actionShow_Constellation_Boundaries", displayGroup, N_("Constellation boundaries"), "boundariesDisplayed", "B");
 	addAction("actionShow_Constellation_Isolated", displayGroup, N_("Select single constellation"), "isolateSelected"); // no shortcut, sync with GUI
 	addAction("actionShow_Constellation_Deselect", displayGroup, N_("Remove selection of constellations"), this, "deselectConstellations()", "W");
+	addAction("actionShow_Constellation_Select", displayGroup, N_("Select all constellations"), this, "selectAllConstellations()", "Alt+W");
+	// Reload the current sky culture
+	addAction("actionShow_Starlore_Reload", displayGroup, N_("Reload the sky culture"), this, "reloadSkyCulture()", "Ctrl+Alt+I");
 }
 
 /*************************************************************************
@@ -153,6 +156,11 @@ double ConstellationMgr::getCallOrder(StelModuleActionName actionName) const
 	if (actionName==StelModule::ActionDraw)
 		return StelApp::getInstance().getModuleMgr().getModule("GridLinesMgr")->getCallOrder(actionName)+10;
 	return 0;
+}
+
+void ConstellationMgr::reloadSkyCulture()
+{
+	updateSkyCulture(StelApp::getInstance().getSkyCultureMgr().getCurrentSkyCultureID());
 }
 
 void ConstellationMgr::updateSkyCulture(const QString& skyCultureDir)
@@ -266,24 +274,54 @@ void ConstellationMgr::selectedObjectChange(StelModule::StelModuleSelectAction a
 
 void ConstellationMgr::deselectConstellations(void)
 {
-	selected.clear();
 	StelObjectMgr* omgr = GETSTELMODULE(StelObjectMgr);
 	Q_ASSERT(omgr);
-	const QList<StelObjectP> currSelection = omgr->getSelectedObject();
-	if (currSelection.empty())
+	if (getFlagIsolateSelected())
 	{
-		return;
+		// The list of selected constellations is empty, but...
+		if (selected.size()==0)
+		{
+			// ...let's unselect all constellations for guarantee
+			for (auto* constellation : constellations)
+			{
+				constellation->setFlagLines(false);
+				constellation->setFlagLabels(false);
+				constellation->setFlagArt(false);
+				constellation->setFlagBoundaries(false);
+			}
+		}
+
+		// If any constellation is selected at the moment, then let's do not touch to it!
+		if (omgr->getWasSelected())
+			selected.pop_back();
+
+		// Let's hide all previously selected constellations
+		for (auto* constellation : selected)
+		{
+			constellation->setFlagLines(false);
+			constellation->setFlagLabels(false);
+			constellation->setFlagArt(false);
+			constellation->setFlagBoundaries(false);
+		}
+		selected.clear();
+	}
+	else
+	{
+		const QList<StelObjectP> newSelectedConst = omgr->getSelectedObject("Constellation");
+		if (!newSelectedConst.empty())
+			omgr->unSelect();
+
+		selected.clear();
 	}
 
-	QList<StelObjectP> newSelection;
-	for (const auto& obj : currSelection)
+}
+
+void ConstellationMgr::selectAllConstellations()
+{
+	for (auto* constellation : constellations)
 	{
-		if (obj->getType() != "Constellation")
-		{
-			newSelection.push_back(obj);
-		}
+		setSelectedConst(constellation);
 	}
-	omgr->setSelectedObject(newSelection, StelModule::ReplaceSelection);
 }
 
 void ConstellationMgr::setLinesColor(const Vec3f& color)
@@ -687,6 +725,8 @@ void ConstellationMgr::loadNames(const QString& namesFile)
 		return;
 	}
 
+	constellationsEnglishNames.clear();
+
 	// Now parse the file
 	// lines to ignore which start with a # or are empty
 	QRegExp commentRx("^(\\s*#.*|\\s*)$");
@@ -743,6 +783,8 @@ void ConstellationMgr::loadNames(const QString& namesFile)
 				// Some skycultures already have empty nativeNames. Fill those.
 				if (aster->nativeName.isEmpty())
 					aster->nativeName=aster->englishName;
+
+				constellationsEnglishNames << aster->englishName;
 			}
 			else
 			{
@@ -752,6 +794,11 @@ void ConstellationMgr::loadNames(const QString& namesFile)
 	}
 	commonNameFile.close();
 	qDebug() << "Loaded" << readOk << "/" << totalRecords << "constellation names";
+}
+
+QStringList ConstellationMgr::getConstellationsEnglishNames()
+{
+	return  constellationsEnglishNames;
 }
 
 void ConstellationMgr::loadSeasonalRules(const QString& rulesFile)

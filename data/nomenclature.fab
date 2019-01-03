@@ -1679,8 +1679,18 @@ Mercury	3750	_("Matisse","crater")	AA	-23.831681	269.949817	189.041
 Mercury	3881	_("Michelangelo","crater")	AA	-44.918224	250.216784	229.715
 # TRANSLATORS: Claude; French painter (1840-1926).
 Mercury	3964	_("Monet","crater")	AA	44.229787	350.232544	203
+# TRANSLATORS: Pamela Lyndon (born Helen Lyndon Goff); Australian-born British writer best known for Mary Poppins series of children’s books (1899-1996).
+Mercury	15773	_("Travers","crater")	AA	-28.000000	30.900000	164
 # TRANSLATORS: John; English poet (1608-1674).
 Mercury	3906	_("Milton","crater")	AA	-26.098301	184.971769	180.846
+# TRANSLATORS: William; Irish writer (1794-1869).
+Mercury	15774	_("Carleton","crater")	AA	-52.200000	56.600000	177
+# TRANSLATORS: Japanese; Kainan Maru, ship of Nobu Shirase Antarctic exploration, 1910-1912.
+Mercury	15775	_("Kainan Rupēs","rupes")	RU	-29.800000	29.200000	325
+# TRANSLATORS: German; expedition on Meteor ship explored the South Atlantic Ocean, 1925-1927.
+Mercury	15776	_("Meteor Rupēs","rupes")	RU	-47.700000	14.300000	990
+# TRANSLATORS: Antonio, marchese d’Ischia; Italian sculptor (1757-1822).
+Mercury	15772	_("Canova","crater")	AA	25.600000	356.290000	46
 # TRANSLATORS: Alecksandr Sergeyevich; Russian poet (1799-1837).
 Mercury	4877	_("Pushkin","crater")	AA	-65.785499	339.270164	232
 # TRANSLATORS: Francois; French writer (c. 1483-1553).
@@ -5006,13 +5016,13 @@ Mars	2222	_("Gordii Dorsum","dorsum")	DO	4.106911	215.857815	481.561
 # TRANSLATORS: Claudius; Greco-Egyptian astronomer (c. A.D. 90-160).
 Mars	4861	_("Ptolemaeus","crater")	AA	-45.876193	202.398737	165.182
 # TRANSLATORS: Town in Poland.
-Mars	4867	_("Pulawy","crater")	AA	-36.405800	283.381000	51.8436
+Mars	4867	_("Puławy","crater")	AA	-36.405800	283.381000	51.8436
 # TRANSLATORS: Classical albedo feature name.
 Mars	1358	_("Cyane Fossae","fossa")	FO	31.253801	238.828579	913.172
 # TRANSLATORS: Town in Greece.
 Mars	4882	_("Pylos","crater")	AA	16.790263	329.915492	18.938
 # TRANSLATORS: Town in Poland.
-Mars	4888	_("Púnsk","crater")	AA	20.619968	318.869979	11.2411
+Mars	4888	_("Puńsk","crater")	AA	20.619968	318.869979	11.2411
 # TRANSLATORS: From albedo feature at 26N, 182W.
 Mars	1821	_("Erebus Montes","mons")	MO	35.661262	185.022896	811.667
 # TRANSLATORS: Town in Saudi Arabia.
@@ -6395,6 +6405,26 @@ Mars	228	_("Amenthes Planum","planum")	PM	3.400000	105.920000	953
 Mars	14157	_("Olympia Cavi","cavus")	CB	85.060000	182.230000	342.783
 # TRANSLATORS: Classical albedo feature name.
 Mars	15761	_("Aeolis Chaos","chaos")	CH	-7.130000	150.600000	201
+# TRANSLATORS: Town in Taiwan.
+Mars	15764	_("Wulai","crater")	AA	10.240000	0.990000	50.5
+# TRANSLATORS: Town in Mexico.
+Mars	15769	_("Izamal","crater")	AA	3.780000	1.620000	57.5
+# TRANSLATORS: Town in China.
+Mars	15777	_("Kalpin","crater")	AA	8.930000	141.270000	52
+# TRANSLATORS: Town in Cuba.
+Mars	15765	_("Banes","crater")	AA	10.760000	355.680000	41
+# TRANSLATORS: Town in Japan.
+Mars	15766	_("Sera","crater")	AA	8.840000	358.950000	28
+# TRANSLATORS: Town in Taiwan.
+Mars	15767	_("Jiji","crater")	AA	8.770000	358.260000	21
+# TRANSLATORS: Town in Niue.
+Mars	15771	_("Alofi","crater")	AA	9.840000	359.980000	43
+# TRANSLATORS: Town in Malawi.
+Mars	15768	_("Kaporo","crater")	AA	-0.120000	14.350000	42.7
+# TRANSLATORS: Town in Mexico.
+Mars	15770	_("Yelapa","crater")	AA	3.830000	1.130000	29
+# TRANSLATORS: Town in Italy.
+Mars	15778	_("Cagli","crater")	AA	4.730000	356.450000	28.162
 # TRANSLATORS: Classical martian albedo feature, Coprates.
 Mars	15438	_("Coprates Mensa","mensa")	MN	-12.200393	288.836480	240
 # TRANSLATORS: Town in Vietnam.
@@ -7889,9 +7919,9 @@ Moon	9223	_("Franklin H","satellite feature")	SF	37.120188	43.744716	5.15161
 Moon	9226	_("Fraunhofer A","satellite feature")	SF	-39.580608	61.610226	29.172
 # TRANSLATORS: Karl Friedrich; German mathematician (1777-1855).
 Moon	9391	_("Gauss A","satellite feature")	SF	36.538288	82.767115	20.704
-# TRANSLATORS: Furner, Georges; French mathematician (unkn-fl. 1643).
+# TRANSLATORS: Fournier, Georges: French mathematician (1595-1652).
 Moon	9271	_("Furnerius V","satellite feature")	SF	-35.715113	65.499017	59.1807
-# TRANSLATORS: Furner, Georges; French mathematician (unkn-fl. 1643).
+# TRANSLATORS: Fournier, Georges: French mathematician (1595-1652).
 Moon	9258	_("Furnerius F","satellite feature")	SF	-36.100387	64.121924	52.0555
 # TRANSLATORS: Galileo; Italian astronomer, physicist (1564-1642).
 Moon	9292	_("Galilaei G","satellite feature")	SF	12.652528	292.744147	0.808777
@@ -9737,7 +9767,7 @@ Moon	2031	_("Frost","crater")	AA	37.407188	241.099047	78.2977
 Moon	2030	_("Froelich","crater")	AA	80.001431	248.368407	56.7327
 # TRANSLATORS: Roald Hilding; American geologist (1934-1974).
 Moon	2033	_("Fryxell","crater")	AA	-21.254362	258.347700	17.6226
-# TRANSLATORS: Furner, Georges; French mathematician (unkn-fl. 1643).
+# TRANSLATORS: Fournier, Georges: French mathematician (1595-1652).
 Moon	2043	_("Furnerius","crater")	AA	-36.003764	60.538280	135.029
 # TRANSLATORS: Gyula; Hungarian astronomer (1845-1927).
 Moon	2045	_("Fényi","crater")	AA	-44.940615	254.941381	43.3074
@@ -16219,53 +16249,53 @@ Moon	9250	_("Freundlich R","satellite feature")	SF	23.873389	168.137042	21.8217
 Moon	9251	_("Froelich M","satellite feature")	SF	77.319569	249.128792	30.0968
 # TRANSLATORS: Edwin Brant; American astronomer (1866-1935).
 Moon	9252	_("Frost N","satellite feature")	SF	34.722956	240.444955	45.2658
-# TRANSLATORS: Furner, Georges; French mathematician (unkn-fl. 1643).
+# TRANSLATORS: Fournier, Georges: French mathematician (1595-1652).
 Moon	9255	_("Furnerius C","satellite feature")	SF	-33.740394	57.724539	21.1725
-# TRANSLATORS: Furner, Georges; French mathematician (unkn-fl. 1643).
+# TRANSLATORS: Fournier, Georges: French mathematician (1595-1652).
 Moon	9253	_("Furnerius A","satellite feature")	SF	-33.539960	59.025752	11.2101
-# TRANSLATORS: Furner, Georges; French mathematician (unkn-fl. 1643).
+# TRANSLATORS: Fournier, Georges: French mathematician (1595-1652).
 Moon	9254	_("Furnerius B","satellite feature")	SF	-35.435339	59.942365	21.7464
-# TRANSLATORS: Furner, Georges; French mathematician (unkn-fl. 1643).
+# TRANSLATORS: Fournier, Georges: French mathematician (1595-1652).
 Moon	9256	_("Furnerius D","satellite feature")	SF	-37.064863	55.871992	16.3892
-# TRANSLATORS: Furner, Georges; French mathematician (unkn-fl. 1643).
+# TRANSLATORS: Fournier, Georges: French mathematician (1595-1652).
 Moon	9257	_("Furnerius E","satellite feature")	SF	-34.780547	57.240472	22.2716
-# TRANSLATORS: Furner, Georges; French mathematician (unkn-fl. 1643).
+# TRANSLATORS: Fournier, Georges: French mathematician (1595-1652).
 Moon	9261	_("Furnerius J","satellite feature")	SF	-34.843801	63.876954	26.8003
-# TRANSLATORS: Furner, Georges; French mathematician (unkn-fl. 1643).
+# TRANSLATORS: Fournier, Georges: French mathematician (1595-1652).
 Moon	9259	_("Furnerius G","satellite feature")	SF	-38.143241	65.362396	33.7229
-# TRANSLATORS: Furner, Georges; French mathematician (unkn-fl. 1643).
+# TRANSLATORS: Fournier, Georges: French mathematician (1595-1652).
 Moon	9260	_("Furnerius H","satellite feature")	SF	-37.589808	69.620425	44.0119
-# TRANSLATORS: Furner, Georges; French mathematician (unkn-fl. 1643).
+# TRANSLATORS: Fournier, Georges: French mathematician (1595-1652).
 Moon	9262	_("Furnerius K","satellite feature")	SF	-38.119651	67.950056	36.1859
-# TRANSLATORS: Furner, Georges; French mathematician (unkn-fl. 1643).
+# TRANSLATORS: Fournier, Georges: French mathematician (1595-1652).
 Moon	9263	_("Furnerius L","satellite feature")	SF	-38.599671	69.904787	13.9774
-# TRANSLATORS: Furner, Georges; French mathematician (unkn-fl. 1643).
+# TRANSLATORS: Fournier, Georges: French mathematician (1595-1652).
 Moon	9264	_("Furnerius N","satellite feature")	SF	-33.567396	60.941833	9.97104
 # TRANSLATORS: Kiyotsugu; Japanese astronomer (1874-1943); Shin; Japanese astronomer (1867-1945).
 Moon	10003	_("Hirayama G","satellite feature")	SF	-6.435954	96.769570	18.036
-# TRANSLATORS: Furner, Georges; French mathematician (unkn-fl. 1643).
+# TRANSLATORS: Fournier, Georges: French mathematician (1595-1652).
 Moon	9265	_("Furnerius P","satellite feature")	SF	-37.919720	61.704627	17.559
-# TRANSLATORS: Furner, Georges; French mathematician (unkn-fl. 1643).
+# TRANSLATORS: Fournier, Georges: French mathematician (1595-1652).
 Moon	9266	_("Furnerius Q","satellite feature")	SF	-39.488459	67.242774	30.6368
 # TRANSLATORS: Johann; German astronomer, mathematician (1518-1562).
 Moon	10052	_("Hommel X","satellite feature")	SF	-60.890476	32.165587	5.40718
-# TRANSLATORS: Furner, Georges; French mathematician (unkn-fl. 1643).
+# TRANSLATORS: Fournier, Georges: French mathematician (1595-1652).
 Moon	9267	_("Furnerius R","satellite feature")	SF	-39.940044	68.968040	15.7457
-# TRANSLATORS: Furner, Georges; French mathematician (unkn-fl. 1643).
+# TRANSLATORS: Fournier, Georges: French mathematician (1595-1652).
 Moon	9268	_("Furnerius S","satellite feature")	SF	-39.126795	67.909777	16.9567
 # TRANSLATORS: Johann; German astronomer, mathematician (1518-1562).
 Moon	10053	_("Hommel Y","satellite feature")	SF	-60.476250	30.855739	3.79497
-# TRANSLATORS: Furner, Georges; French mathematician (unkn-fl. 1643).
+# TRANSLATORS: Fournier, Georges: French mathematician (1595-1652).
 Moon	9269	_("Furnerius T","satellite feature")	SF	-37.881282	62.926400	10.1879
-# TRANSLATORS: Furner, Georges; French mathematician (unkn-fl. 1643).
+# TRANSLATORS: Fournier, Georges: French mathematician (1595-1652).
 Moon	9270	_("Furnerius U","satellite feature")	SF	-35.752536	68.289671	17.4959
-# TRANSLATORS: Furner, Georges; French mathematician (unkn-fl. 1643).
+# TRANSLATORS: Fournier, Georges: French mathematician (1595-1652).
 Moon	9272	_("Furnerius W","satellite feature")	SF	-37.298053	70.988614	19.96
-# TRANSLATORS: Furner, Georges; French mathematician (unkn-fl. 1643).
+# TRANSLATORS: Fournier, Georges: French mathematician (1595-1652).
 Moon	9273	_("Furnerius X","satellite feature")	SF	-33.875586	63.459312	8.83583
-# TRANSLATORS: Furner, Georges; French mathematician (unkn-fl. 1643).
+# TRANSLATORS: Fournier, Georges: French mathematician (1595-1652).
 Moon	9274	_("Furnerius Y","satellite feature")	SF	-34.204063	65.010630	11.7758
-# TRANSLATORS: Furner, Georges; French mathematician (unkn-fl. 1643).
+# TRANSLATORS: Fournier, Georges: French mathematician (1595-1652).
 Moon	9275	_("Furnerius Z","satellite feature")	SF	-33.489787	62.937531	8.70179
 # TRANSLATORS: George Philip; American astronomer (1826-1865).
 Moon	9276	_("G. Bond A","satellite feature")	SF	31.584375	36.869895	9.18825
@@ -16397,8 +16427,8 @@ Moon	9583	_("Gruemberger F","satellite feature")	SF	-63.031253	353.571015	6.5557
 Moon	9339	_("Ganskiy (Hansky) K","satellite feature")	SF	-12.574611	98.400962	11.7842
 # TRANSLATORS: Joseph Louis; French physicist (1778-1850).
 Moon	9411	_("Gay-Lussac N","satellite feature")	SF	12.621262	339.080314	2.35703
-# TRANSLATORS: Aleksey Pavlovich; Russian astronomer (1870-1908).
-Moon	9340	_("Ganskiy (Hansky) M","satellite feature")	SF	-12.024855	97.093180	12.5243
+# TRANSLATORS: Crater visible in the iconic “Earthrise” colour photograph, taken aboard Apollo 8 by W. A. Anders on December 24, 1968, symbolizes the safe return to Earth of Apollo 8. The crater was previously designated Ganskiy (Hansky) M.
+Moon	9340	_("8 Homeward","satellite feature")	SF	-12.024855	97.093180	12.5243
 # TRANSLATORS: Aleksey Pavlovich; Russian astronomer (1870-1908).
 Moon	9341	_("Ganskiy (Hansky) S","satellite feature")	SF	-10.162665	94.744691	20.6451
 # TRANSLATORS: Julio Garavito Armero; Colombian astronomer (1865-1920).
@@ -20551,8 +20581,8 @@ Moon	11510	_("Mutus F","satellite feature")	SF	-66.272685	34.184468	41.6748
 Moon	11511	_("Mutus G","satellite feature")	SF	-67.238014	34.848368	17.7453
 # TRANSLATORS: Vincente Mut, or Muth; Spanish astronomer (unkn-1673).
 Moon	11512	_("Mutus H","satellite feature")	SF	-63.676073	24.113906	20.496
-# TRANSLATORS: Louis; French chemist, microbiologist (1822-1895).
-Moon	11867	_("Pasteur T","satellite feature")	SF	-11.729742	100.465132	40.1511
+# TRANSLATORS: Crater visible in the foreground of the iconic “Earthrise” colour photograph, taken aboard Apollo 8 by W. A. Anders on December 24, 1968, showing the Earth and part of the Moon’s surface. The crater was previously designated Pasteur T.
+Moon	11867	_("Anders' Earthrise","satellite feature")	SF	-11.729742	100.465132	40.1511
 # TRANSLATORS: Louis; French chemist, microbiologist (1822-1895).
 Moon	11868	_("Pasteur U","satellite feature")	SF	-9.991114	101.985142	37.8839
 # TRANSLATORS: Vincente Mut, or Muth; Spanish astronomer (unkn-1673).
@@ -25679,6 +25709,10 @@ Moon	15477	_("Hildegard K","satellite feature")	SF	-51.034241	125.490784	33
 Moon	15475	_("Poincaré E","satellite feature")	SF	-56.585083	171.061523	60
 # TRANSLATORS: Hildegard von Bingen; German writer, composer, mystic and visionary. In Germany she is considered the founder of the scientific study of natural history (1098- 1179).
 Moon	15476	_("Hildegard","crater")	AA	-51.679688	127.744629	122
+# TRANSLATORS: Charles Tyson; American benefactor (1837-1905).
+Moon	15762	_("Yerkes V","satellite feature")	SF	15.240000	50.490000	3.7
+# TRANSLATORS: Anders Severin; Finnish astronomer (1854-1938).
+Moon	15763	_("Donner M","satellite feature")	SF	-32.170000	97.960000	8
 # TRANSLATORS: Ernst J., Estonian astronomer (1893-1985).
 Phobos	14865	_("Öpik","crater")	AA	-7.000000	63.000000	2
 # TRANSLATORS: Secretary for Private Affairs in Lilliput; Gulliver's friend in Jonathan Swift's novel "Gulliver's Travels."
@@ -30569,7 +30603,7 @@ Ceres	15401	_("Piuku","crater")	AA	-15.369873	36.986572	31
 Ceres	15642	_("Binayo","crater")	AA	86.400000	145.200000	16
 # TRANSLATORS: German corn spirit.
 Ceres	15643	_("Bilwis","crater")	AA	86.200000	79.600000	7
-# TRANSLATORS: Origin: Ancient Armenian god of fertility and vegetation.
+# TRANSLATORS: Ancient Armenian god of fertility and vegetation.
 Ceres	15645	_("Zatik","crater")	AA	69.900000	114.000000	4
 # TRANSLATORS: Greek goddess of the cornfield and of crops.
 Ceres	15647	_("Damia","crater")	AA	81.700000	315.500000	7
@@ -30577,6 +30611,8 @@ Ceres	15647	_("Damia","crater")	AA	81.700000	315.500000	7
 Ceres	15646	_("Enkimdu","crater")	AA	78.900000	259.100000	9
 # TRANSLATORS: Atabapo and Inirida tribes’ (Upper Orinoco River region, Venezuela) vegetation god who ripens the crops and controls the seasons.
 Ceres	15641	_("Cachimana","crater")	AA	85.300000	213.200000	18
+# TRANSLATORS: Celtic harvest festival, traditionally celebrated on August 1.
+Ceres	15779	_("Lughnasa Tholus","tholus")	TH	20.200000	326.300000	35.868
 # TRANSLATORS: Dikhan baba; Kazakh preislamic deity of farming.
 Ceres	15644	_("Dikhan","crater")	AA	81.800000	78.100000	21
 # TRANSLATORS: Incan goddess of potato, “Potato-mother.”

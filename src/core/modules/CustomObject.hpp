@@ -16,8 +16,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _CUSTOMOBJECT_HPP_
-#define _CUSTOMOBJECT_HPP_ 1
+#ifndef CUSTOMOBJECT_HPP
+#define CUSTOMOBJECT_HPP
 
 #include <QVariant>
 #include <QString>
@@ -84,6 +84,7 @@ private:
 	StelTextureSP markerTexture;
 	static Vec3f markerColor;
 	static float markerSize;
+	static float selectPriority;
 
 	void draw(StelCore* core, StelPainter *painter);
 
@@ -93,4 +94,4 @@ private:
 	LinearFader labelsFader;
 };
 
-#endif // _CUSTOMOBJECT_HPP_
+#endif // CUSTOMOBJECT_HPP

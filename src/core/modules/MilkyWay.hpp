@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _MILKYWAY_HPP_
-#define _MILKYWAY_HPP_
+#ifndef MILKYWAY_HPP
+#define MILKYWAY_HPP
 
 #include "StelModule.hpp"
 #include "VecMath.hpp"
@@ -41,6 +41,9 @@ class MilkyWay : public StelModule
 		   READ getColor
 		   WRITE setColor
 		   NOTIFY colorChanged)
+	Q_PROPERTY(double saturation
+		   MEMBER saturation
+		   NOTIFY saturationChanged)
 public:
 	MilkyWay();
 	virtual ~MilkyWay();
@@ -89,6 +92,7 @@ public slots:
 signals:
 	void milkyWayDisplayedChanged(const bool displayed);
 	void intensityChanged(double intensity);
+	void saturationChanged(double saturation);
 	void colorChanged(Vec3f color);
 
 private:
@@ -99,8 +103,9 @@ private:
 	float intensityMinFov;
 	float intensityMaxFov;
 	class LinearFader* fader;
+	double saturation = 1.0;
 
 	struct StelVertexArray* vertexArray;
 };
 
-#endif // _MILKYWAY_HPP_
+#endif // MILKYWAY_HPP

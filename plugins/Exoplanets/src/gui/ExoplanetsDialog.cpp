@@ -84,12 +84,14 @@ void ExoplanetsDialog::createDialogContent()
 	connect(&StelApp::getInstance(), SIGNAL(languageChanged()),
 		this, SLOT(retranslate()));
 
-#ifdef Q_OS_WIN
-	//Kinetic scrolling for tablet pc and pc
-	QList<QWidget *> addscroll;
-	addscroll << ui->aboutTextBrowser << ui->infoTextBrowser << ui->websitesTextBrowser;
-	installKineticScrolling(addscroll);
-#endif
+	// Kinetic scrolling
+	kineticScrollingList << ui->aboutTextBrowser << ui->infoTextBrowser << ui->websitesTextBrowser;
+	StelGui* gui= dynamic_cast<StelGui*>(StelApp::getInstance().getGui());
+	if (gui)
+	{
+		enableKineticScrolling(gui->getFlagUseKineticScrolling());
+		connect(gui, SIGNAL(flagUseKineticScrollingChanged(bool)), this, SLOT(enableKineticScrolling(bool)));
+	}
 
 	// Settings tab / updates group
 	ui->displayAtStartupCheckBox->setChecked(ep->getEnableAtStartup());
@@ -107,18 +109,14 @@ void ExoplanetsDialog::createDialogContent()
 	connect(ui->internetUpdatesCheckbox, SIGNAL(stateChanged(int)), this, SLOT(setUpdatesEnabled(int)));
 	connect(ui->updateButton, SIGNAL(clicked()), this, SLOT(updateJSON()));
 	connect(ep, SIGNAL(updateStateChanged(Exoplanets::UpdateState)), this, SLOT(updateStateReceiver(Exoplanets::UpdateState)));
-	connect(ep, SIGNAL(jsonUpdateComplete(void)), this, SLOT(updateCompleteReceiver(void)));
-	connect(ep, SIGNAL(jsonUpdateComplete(void)), ep, SLOT(reloadCatalog()));
+	connect(ep, SIGNAL(jsonUpdateComplete(void)), this, SLOT(updateCompleteReceiver(void)));	
 	connect(ui->updateFrequencySpinBox, SIGNAL(valueChanged(int)), this, SLOT(setUpdateValues(int)));
 	refreshUpdateValues(); // fetch values for last updated and so on
 	// if the state didn't change, setUpdatesEnabled will not be called, so we force it
 	setUpdatesEnabled(ui->internetUpdatesCheckbox->checkState());
 
-	colorButton(ui->exoplanetMarkerColor,		ep->getMarkerColor(false));
-	colorButton(ui->habitableExoplanetMarkerColor,	ep->getMarkerColor(true));
-
-	connect(ui->exoplanetMarkerColor,		SIGNAL(released()), this, SLOT(askExoplanetsMarkerColor()));
-	connect(ui->habitableExoplanetMarkerColor,	SIGNAL(released()), this, SLOT(askHabitableExoplanetsMarkerColor()));
+	connectColorButton(ui->exoplanetMarkerColor,		"Exoplanets.markerColor",    "Exoplanets/exoplanet_marker_color");
+	connectColorButton(ui->habitableExoplanetMarkerColor,	"Exoplanets.habitableColor", "Exoplanets/habitable_exoplanet_marker_color");
 
 	updateTimer = new QTimer(this);
 	connect(updateTimer, SIGNAL(timeout()), this, SLOT(refreshUpdateValues()));
@@ -145,7 +143,6 @@ void ExoplanetsDialog::createDialogContent()
 	setAboutHtml();
 	setInfoHtml();
 	setWebsitesHtml();
-	StelGui* gui = dynamic_cast<StelGui*>(StelApp::getInstance().getGui());
 	if(gui!=Q_NULLPTR)
 	{
 		ui->aboutTextBrowser->document()->setDefaultStyleSheet(QString(gui->getStelStyle().htmlStyleSheet));
@@ -323,6 +320,7 @@ void ExoplanetsDialog::setWebsitesHtml(void)
 
 void ExoplanetsDialog::refreshUpdateValues(void)
 {
+	QString nextUpdate = q_("Next update");
 	ui->lastUpdateDateTimeEdit->setDateTime(ep->getLastUpdate());
 	ui->updateFrequencySpinBox->setValue(ep->getUpdateFrequencyHours());
 	int secondsToUpdate = ep->getSecondsToUpdate();
@@ -332,16 +330,18 @@ void ExoplanetsDialog::refreshUpdateValues(void)
 	else if (ep->getUpdateState() == Exoplanets::Updating)
 		ui->nextUpdateLabel->setText(q_("Updating now..."));
 	else if (secondsToUpdate <= 60)
-		ui->nextUpdateLabel->setText(q_("Next update: < 1 minute"));
+		ui->nextUpdateLabel->setText(QString("%1: %2").arg(nextUpdate, q_("< 1 minute")));
 	else if (secondsToUpdate < 3600)
 	{
 		int n = (secondsToUpdate/60)+1;
-		ui->nextUpdateLabel->setText(qn_("Next update: %1 minute(s)", n).arg(n));
+		// TRANSLATORS: minutes.
+		ui->nextUpdateLabel->setText(QString("%1: %2 %3").arg(nextUpdate, QString::number(n), qc_("m", "time")));
 	}
 	else
 	{
 		int n = (secondsToUpdate/3600)+1;
-		ui->nextUpdateLabel->setText(qn_("Next update: %1 hour(s)", n).arg(n));
+		// TRANSLATORS: hours.
+		ui->nextUpdateLabel->setText(QString("%1: %2 %3").arg(nextUpdate, QString::number(n), qc_("h", "time")));
 	}
 }
 
@@ -402,7 +402,6 @@ void ExoplanetsDialog::setUpdatesEnabled(int checkState)
 
 void ExoplanetsDialog::updateStateReceiver(Exoplanets::UpdateState state)
 {
-	//qDebug() << "ExoplanetsDialog::updateStateReceiver got a signal";
 	if (state==Exoplanets::Updating)
 		ui->nextUpdateLabel->setText(q_("Updating now..."));
 	else if (state==Exoplanets::DownloadError || state==Exoplanets::OtherError)
@@ -414,7 +413,6 @@ void ExoplanetsDialog::updateStateReceiver(Exoplanets::UpdateState state)
 
 void ExoplanetsDialog::updateCompleteReceiver(void)
 {
-	qDebug() << "[Exoplanets] Updating of catalog is complete";
         ui->nextUpdateLabel->setText(QString(q_("Exoplanets is updated")));
 	// display the status for another full interval before refreshing status
 	updateTimer->start();
@@ -487,7 +485,7 @@ void ExoplanetsDialog::drawDiagram()
 	if (!ui->maxY->text().isEmpty())
 		maxY = ui->maxY->text().toDouble();
 
-	ui->customPlot->addGraph();
+	ui->customPlot->addGraph();	
 	ui->customPlot->graph(0)->setData(x, y);
 	ui->customPlot->graph(0)->setPen(QPen(Qt::blue));
 	ui->customPlot->graph(0)->setLineStyle(QCPGraph::lsNone);
@@ -521,6 +519,21 @@ void ExoplanetsDialog::populateDiagramsList()
 {
 	Q_ASSERT(ui->comboAxisX);
 	Q_ASSERT(ui->comboAxisY);
+
+	QColor axisColor(Qt::white);
+	QPen axisPen(axisColor, 1);
+
+	ui->customPlot->setBackground(QBrush(QColor(86, 87, 90)));
+	ui->customPlot->xAxis->setLabelColor(axisColor);
+	ui->customPlot->xAxis->setTickLabelColor(axisColor);
+	ui->customPlot->xAxis->setBasePen(axisPen);
+	ui->customPlot->xAxis->setTickPen(axisPen);
+	ui->customPlot->xAxis->setSubTickPen(axisPen);
+	ui->customPlot->yAxis->setLabelColor(axisColor);
+	ui->customPlot->yAxis->setTickLabelColor(axisColor);
+	ui->customPlot->yAxis->setBasePen(axisPen);
+	ui->customPlot->yAxis->setTickPen(axisPen);
+	ui->customPlot->yAxis->setSubTickPen(axisPen);
 
 	QComboBox* axisX = ui->comboAxisX;
 	QComboBox* axisY = ui->comboAxisY;
@@ -569,43 +582,6 @@ void ExoplanetsDialog::populateDiagramsList()
 	axisY->setCurrentIndex(indexY);
 	axisX->blockSignals(false);
 	axisY->blockSignals(false);
-}
-
-void ExoplanetsDialog::askExoplanetsMarkerColor()
-{
-	Vec3f vColor = ep->getMarkerColor(false);
-	QColor color(0,0,0);
-	color.setRgbF(vColor.v[0], vColor.v[1], vColor.v[2]);
-	QColor c = QColorDialog::getColor(color, Q_NULLPTR, q_(ui->exoplanetMarkerColor->toolTip()));
-	if (c.isValid())
-	{
-		vColor = Vec3f(c.redF(), c.greenF(), c.blueF());
-		ep->setMarkerColor(vColor, false);
-		ui->exoplanetMarkerColor->setStyleSheet("QToolButton { background-color:" + c.name() + "; }");
-	}
-}
-
-void ExoplanetsDialog::askHabitableExoplanetsMarkerColor()
-{
-	Vec3f vColor = ep->getMarkerColor(true);
-	QColor color(0,0,0);
-	color.setRgbF(vColor.v[0], vColor.v[1], vColor.v[2]);
-	QColor c = QColorDialog::getColor(color, Q_NULLPTR, q_(ui->habitableExoplanetMarkerColor->toolTip()));
-	if (c.isValid())
-	{
-		vColor = Vec3f(c.redF(), c.greenF(), c.blueF());
-		ep->setMarkerColor(vColor, true);
-		ui->habitableExoplanetMarkerColor->setStyleSheet("QToolButton { background-color:" + c.name() + "; }");
-	}
-}
-
-void ExoplanetsDialog::colorButton(QToolButton* toolButton, Vec3f vColor)
-{
-	QColor color(0,0,0);
-	color.setRgbF(vColor.v[0], vColor.v[1], vColor.v[2]);
-	// Use style sheet for create a nice buttons :)
-	toolButton->setStyleSheet("QToolButton { background-color:" + color.name() + "; }");
-	toolButton->setFixedSize(QSize(18, 18));
 }
 
 void ExoplanetsDialog::populateTemperatureScales()

@@ -66,6 +66,7 @@ void LocationDialog::retranslate()
 		populatePlanetList();
 		populateCountryList();
 		populateTimeZonesList();
+		populateTooltips();
 	}
 }
 
@@ -112,12 +113,14 @@ void LocationDialog::createDialogContent()
 	proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
 	ui->citiesListView->setModel(proxyModel);
 
-#if defined(Q_OS_WIN) || defined(Q_OS_ANDROID)
-	//Kinetic scrolling for tablet pc and pc
-	QList<QWidget *> addscroll;
-	addscroll << ui->citiesListView;
-	installKineticScrolling(addscroll);
-#endif
+	// Kinetic scrolling
+	kineticScrollingList << ui->citiesListView;
+	StelGui* gui= dynamic_cast<StelGui*>(StelApp::getInstance().getGui());
+	if (gui)
+	{
+		enableKineticScrolling(gui->getFlagUseKineticScrolling());
+		connect(gui, SIGNAL(flagUseKineticScrollingChanged(bool)), this, SLOT(enableKineticScrolling(bool)));
+	}
 
 	populatePlanetList();
 	populateCountryList();
@@ -148,13 +151,17 @@ void LocationDialog::createDialogContent()
 	}
 	updateDefaultLocationControls(b);
 
-	customTimeZone = conf->value("localization/time_zone", "").toString();
-	if (!customTimeZone.isEmpty())
-		ui->useCustomTimeZoneCheckBox->setChecked(true);
-	else
-		ui->timeZoneNameComboBox->setEnabled(false);
-
 	setFieldsFromLocation(currentLocation);
+	if (currentLocation.ianaTimeZone != core->getCurrentTimeZone())
+	{
+		setTimezone(core->getCurrentTimeZone());
+	}
+	else
+	{
+		ui->timeZoneNameComboBox->setEnabled(false);
+		// TODO Maybe also:
+		// StelApp::getInstance().getSettings()->remove("localization/time_zone");
+	}
 
 #ifdef ENABLE_GPS
 	connect(ui->gpsToolButton, SIGNAL(toggled(bool)), this, SLOT(gpsEnableQueryLocation(bool)));
@@ -168,11 +175,14 @@ void LocationDialog::createDialogContent()
 	connect(ui->useAsDefaultLocationCheckBox, SIGNAL(clicked(bool)), this, SLOT(setDefaultLocation(bool)));
 	connect(ui->pushButtonReturnToDefault, SIGNAL(clicked()), core, SLOT(returnToDefaultLocation()));
 	connect(ui->useCustomTimeZoneCheckBox, SIGNAL(clicked(bool)), this, SLOT(updateTimeZoneControls(bool)));
+	connect(core, SIGNAL(currentTimeZoneChanged(QString)), this, SLOT(setTimezone(QString)));
 
 	ui->dstCheckBox->setChecked(core->getUseDST());
 	connect(ui->dstCheckBox, SIGNAL(clicked(bool)), core, SLOT(setUseDST(bool)));
 
 	connectEditSignals();
+
+	populateTooltips();
 
 	connect(core, SIGNAL(locationChanged(StelLocation)), this, SLOT(updateFromProgram(StelLocation)));
 
@@ -190,6 +200,12 @@ void LocationDialog::handleDialogSizeChanged(QSizeF size)
 void LocationDialog::reloadLocations()
 {
 	allModel->setStringList(StelApp::getInstance().getLocationMgr().getAllMap().keys());
+}
+
+void LocationDialog::populateTooltips()
+{
+	ui->resetListPushButton->setToolTip(q_("Reset location list to show all known locations"));
+	ui->gpsToolButton->setToolTip(QString("<p>%1</p>").arg(q_("Toggle fetching GPS location. (Does not change time zone!) When satisfied, toggle off to let other programs access the GPS device.")));
 }
 
 // Update the widget to make sure it is synchrone if the location is changed programmatically
@@ -252,7 +268,7 @@ void LocationDialog::setFieldsFromLocation(const StelLocation& loc)
 	if (idx==-1)
 	{
 		// Use France as default
-		ui->countryNameComboBox->findData(QVariant("France"), Qt::UserRole, Qt::MatchCaseSensitive);
+		idx = ui->countryNameComboBox->findData(QVariant("France"), Qt::UserRole, Qt::MatchCaseSensitive);
 	}
 	ui->countryNameComboBox->setCurrentIndex(idx);
 
@@ -296,7 +312,7 @@ void LocationDialog::setFieldsFromLocation(const StelLocation& loc)
 	SolarSystem* ssm = GETSTELMODULE(SolarSystem);
 	PlanetP p = ssm->searchByEnglishName(loc.planetName);
 	StelModule* ls = StelApp::getInstance().getModule("LandscapeMgr");
-	if (ls->property("flagAtmosphereAutoEnable").toBool())
+	if (ls->property("flagEnvironmentAutoEnable").toBool())
 	{
 		if (loc.planetName != StelApp::getInstance().getCore()->getCurrentLocation().planetName)
 		{
@@ -498,8 +514,8 @@ void LocationDialog::setPositionFromMap(double longitude, double latitude)
 	StelApp::getInstance().getCore()->moveObserverTo(loc, 0.);
 	if (customTimeZone.isEmpty())
 		ui->timeZoneNameComboBox->setCurrentIndex(ui->timeZoneNameComboBox->findData("LMST", Qt::UserRole, Qt::MatchCaseSensitive));
-	// GZ: Filter location list for nearby sites. I assume Earth locations are better known. With only few locations on other planets in the list, 30 degrees seem OK.
-	LocationMap results = StelApp::getInstance().getLocationMgr().pickLocationsNearby(loc.planetName, longitude, latitude, loc.planetName=="Earth" ? 3.0f: 30.0f);
+	// Filter location list for nearby sites. I assume Earth locations are better known. With only few locations on other planets in the list, 30 degrees seem OK.
+	LocationMap results = StelApp::getInstance().getLocationMgr().pickLocationsNearby(loc.planetName, longitude, latitude, loc.planetName=="Earth" ? 5.0f: 30.0f);
 	pickedModel->setStringList(results.keys());
 	proxyModel->setSourceModel(pickedModel);
 	proxyModel->sort(0, Qt::AscendingOrder);
@@ -573,6 +589,25 @@ void LocationDialog::saveTimeZone()
 		StelApp::getInstance().getSettings()->setValue("localization/time_zone", tz);
 		core->setUseCustomTimeZone(true);
 	}
+}
+
+void LocationDialog::setTimezone(QString tz)
+{
+	disconnectEditSignals();
+
+	ui->useCustomTimeZoneCheckBox->setChecked(true);
+	int idx=ui->timeZoneNameComboBox->findData(tz, Qt::UserRole, Qt::MatchCaseSensitive);
+	if (idx>=0)
+	{
+		ui->timeZoneNameComboBox->setEnabled(true);
+		ui->timeZoneNameComboBox->setCurrentIndex(idx);
+	}
+	else
+	{
+		qWarning() << "LocationDialog::setTimezone(): invalid name:" << tz;
+	}
+
+	connectEditSignals();
 }
 
 void LocationDialog::reportEdit()
@@ -739,7 +774,7 @@ void LocationDialog::gpsEnableQueryLocation(bool running)
 		StelApp::getInstance().getLocationMgr().locationFromGPS(0);
 		ui->gpsToolButton->setText(q_("GPS disconnecting..."));
 		QTimer::singleShot(1500, this, SLOT(resetGPSbuttonLabel()));
-	}
+	}	
 }
 
 void LocationDialog::gpsReturn(bool success)
@@ -752,7 +787,8 @@ void LocationDialog::gpsReturn(bool success)
 		ui->gpsToolButton->setText(QString("%1 %2").arg(q_("GPS location fix")).arg(gpsCount));
 		ui->useAsDefaultLocationCheckBox->setChecked(false);
 		ui->pushButtonReturnToDefault->setEnabled(true);
-		ui->useCustomTimeZoneCheckBox->setChecked(true);
+		ui->useCustomTimeZoneCheckBox->setChecked(true);		
+		ui->useIpQueryCheckBox->setChecked(false); // Disable IP query option when GPS is used!
 		resetCompleteList(); // in case we come back from Moon/Mars, we must get list back to show all (earth) locations...
 		updateTimeZoneControls(true);
 		StelLocation loc=core->getCurrentLocation();
@@ -765,6 +801,9 @@ void LocationDialog::gpsReturn(bool success)
 		{
 			ui->gpsToolButton->setStyleSheet(QString("QToolButton{ background: green; }"));
 		}
+		QSettings* conf = StelApp::getInstance().getSettings();
+		conf->setValue("init_location/location", loc.getID());
+		conf->setValue("init_location/last_location", QString("%1, %2, %3").arg(loc.latitude).arg(loc.longitude).arg(loc.altitude));
 	}
 	else
 	{

@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
 */
 
-#ifndef _STELDIALOG_HPP_
-#define _STELDIALOG_HPP_
+#ifndef STELDIALOG_HPP
+#define STELDIALOG_HPP
 
 #include <QObject>
 #include <QGraphicsProxyWidget>
@@ -34,6 +34,7 @@ class QLineEdit;
 class QDoubleSpinBox;
 class QSlider;
 class StelAction;
+class QToolButton;
 
 //! Base class for all the GUI windows in Stellarium.
 //! 
@@ -103,7 +104,7 @@ public slots:
 	//! When a subclass needs a size-dependent update, implement such update in the subclass version,
 	//! but call StelDialog::handleDialogSizeChanged() first.
 	virtual void handleDialogSizeChanged(QSizeF size);
-	QString getDialogName(){return dialogName;}
+	QString getDialogName() const {return dialogName;}
 signals:
 	void visibleChanged(bool);
 
@@ -158,6 +159,14 @@ protected:
 	//! to the required datatype, the application will crash
 	static void connectBoolProperty(QAbstractButton* checkBox, const QString& propName);
 
+	//! Prepare a QToolButton so that it can receive and handle askColor() connections properly.
+	//! @param toolButton the QToolButton which shows the color
+	//! @param propertyName a StelProperty name which must represent a color (coded as Vec3f)
+	//! @param iniName the associated entry for config.ini, in the form group/name. Usually "color/some_feature_name_color".
+	//! @warning If the action with \c propName is invalid/unregistered, or cannot be converted
+	//! to the required datatype, the application will crash
+	void connectColorButton(QToolButton* button, QString propertyName, QString iniName);
+
 	//! The main dialog
 	QWidget* dialog;
 	class CustomProxy;
@@ -165,11 +174,20 @@ protected:
 	//! The name should be set in derived classes' constructors and can be used to store and retrieve the panel locations.
 	QString dialogName;
 
-#if defined(Q_OS_WIN) || defined(Q_OS_ANDROID)
-	//! Kinetic scrolling for lists.
-	//! @note This has been temporarily disabled (since 0.13.2) due to a bug in Qt.
-	void installKineticScrolling(QList<QWidget *> addscroll);
-#endif
+protected slots:
+	//! To be called by a connected QToolButton with a color background.
+	//! This QToolButton needs properties "propName" and "iniName" which should be prepared using connectColorButton().
+	void askColor();
+	//! enable kinetic scrolling. This should be connected to StelApp's StelGui signal flagUseKineticScrollingChanged.
+	void enableKineticScrolling(bool b);
+	//! connect from StelApp to handle font and font size changes.
+	void handleFontChanged();
+
+
+protected:
+	//! A list of widgets where kinetic scrolling can be activated or deactivated
+	//! The list must be filled once, in the constructor or init() of fillDialog() etc. functions.
+	QList<QWidget *> kineticScrollingList;
 
 private slots:
 	void updateNightModeProperty();
@@ -195,4 +213,4 @@ protected:
 private:
 	StelDialog* dialog;
 };
-#endif // _STELDIALOG_HPP_
+#endif // STELDIALOG_HPP

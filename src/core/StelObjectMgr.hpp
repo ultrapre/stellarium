@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _STELOBJECTMGR_HPP_
-#define _STELOBJECTMGR_HPP_
+#ifndef STELOBJECTMGR_HPP
+#define STELOBJECTMGR_HPP
 
 #include "VecMath.hpp"
 #include "StelModule.hpp"
@@ -112,12 +112,12 @@ public:
 
 	//! Return the list objects of type "withType" which was recently selected by the user.
 	//! @param type return only objects of the given type
-	QList<StelObjectP> getSelectedObject(const QString& type);
+	QList<StelObjectP> getSelectedObject(const QString& type) const;
 
 	//! Set whether a pointer is to be drawn over selected object.
 	void setFlagSelectedObjectPointer(bool b) {objectPointerVisibility=b;}
 	//! Get whether a pointer is to be drawn over selected object.
-	bool getFlagSelectedObjectPointer(void) {return objectPointerVisibility;}
+	bool getFlagSelectedObjectPointer(void) const {return objectPointerVisibility;}
 
 	//! Find any kind of object by its translated name.
 	StelObjectP searchByNameI18n(const QString &name) const;
@@ -175,4 +175,4 @@ private:
 	float distanceWeight;
 };
 
-#endif // _SELECTIONMGR_HPP_
+#endif // _SELECTIONMGR_HPP

@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _CONSTELLATIONMGR_HPP_
-#define _CONSTELLATIONMGR_HPP_
+#ifndef CONSTELLATIONMGR_HPP
+#define CONSTELLATIONMGR_HPP
 
 #include "StelObjectType.hpp"
 #include "StelObjectModule.hpp"
@@ -272,6 +272,12 @@ public slots:
 	//! Remove constellations from selected objects
 	void deselectConstellations(void);
 
+	//! Select all constellations
+	void selectAllConstellations(void);
+
+	//! Get the list of English names of all constellations for loaded sky culture
+	QStringList getConstellationsEnglishNames();
+
 signals:
 	void artDisplayedChanged(const bool displayed) const;
 	void artFadeDurationChanged(const float duration) const;
@@ -303,6 +309,8 @@ private slots:
 	//! The translation is done using gettext with translated strings defined
 	//! in translations.h
 	void updateI18n();
+
+	void reloadSkyCulture(void);
 
 private:
 	//! Read constellation names from the given file.
@@ -377,6 +385,8 @@ private:
 
 	QString lastLoadedSkyCulture;	// Store the last loaded sky culture directory name
 
+	QStringList constellationsEnglishNames;
+
 	//! this controls how constellations (and also star names) are printed: Abbreviated/as-given/translated
 	ConstellationDisplayStyle constellationDisplayStyle;
 
@@ -394,4 +404,4 @@ private:
 	int constellationLineThickness;
 };
 
-#endif // _CONSTELLATIONMGR_HPP_
+#endif // CONSTELLATIONMGR_HPP

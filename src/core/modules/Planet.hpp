@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _PLANET_HPP_
-#define _PLANET_HPP_
+#ifndef PLANET_HPP
+#define PLANET_HPP
 
 #include "StelObject.hpp"
 #include "StelProjector.hpp"
@@ -97,26 +97,27 @@ public:
 	// GZ: Until 0.13 QStrings were used for types.
 	// GZ: Enums are slightly faster than string comparisons in time-critical comparisons.
 	// GZ: If other types are introduced, add here and the string in init().
-	// GZ TODO for 0.16: Preferably convert this into a bitfield and allow several bits set:
+	// GZ TODO for 0.19: Preferably convert this into a bitfield and allow several bits set:
 	// Cubewanos, SDO, OCO, Sednoids are Asteroids, Pluto is a Plutino and DwarfPlanet, Ceres is Asteroid and DwarfPlanet etc.!
 	// Maybe even add queries like Planet::isAsteroid() { return (planetType & Planet::isAsteroid);}
 	enum PlanetType
 	{
-		isStar,		// ssystem.ini: type="star"
-		isPlanet,		// ssystem.ini: type="planet"
-		isMoon,		// ssystem.ini: type="moon"
-		isObserver,	// ssystem.ini: type="observer"
-		isArtificial,		// Used in transitions from planet to planet.
-		isAsteroid,		// ssystem.ini: type="asteroid". all types >= isAsteroid are "Minor Bodies".
-					// Put other things (spacecraft etc) before isAsteroid.
-		isPlutino,		// ssystem.ini: type="plutino"
-		isComet,		// ssystem.ini: type="comet"
-		isDwarfPlanet,	// ssystem.ini: type="dwarf planet"
-		isCubewano,	// ssystem.ini: type="cubewano"
-		isSDO,		// ssystem.ini: type="scattered disc object"
-		isOCO,		// ssystem.ini: type="oco"
-		isSednoid,		// ssystem.ini: type="sednoid"
-		isUNDEFINED	// ssystem.ini: type=<anything else>. THIS IS ONLY IN CASE OF ERROR!
+		isStar,         // ssystem.ini: type="star"
+		isPlanet,       // ssystem.ini: type="planet"
+		isMoon,         // ssystem.ini: type="moon"
+		isObserver,     // ssystem.ini: type="observer"
+		isArtificial,   // Used in transitions from planet to planet.
+		isAsteroid,     // ssystem.ini: type="asteroid". all types >= isAsteroid are "Minor Bodies".
+				// Put other things (spacecraft etc) before isAsteroid.
+		isPlutino,      // ssystem.ini: type="plutino"
+		isComet,        // ssystem.ini: type="comet"
+		isDwarfPlanet,  // ssystem.ini: type="dwarf planet"
+		isCubewano,     // ssystem.ini: type="cubewano"
+		isSDO,          // ssystem.ini: type="scattered disc object"
+		isOCO,          // ssystem.ini: type="oco"
+		isSednoid,      // ssystem.ini: type="sednoid"
+		isInterstellar, // ssystem.ini: type="interstellar object"
+		isUNDEFINED     // ssystem.ini: type=<anything else>. THIS IS ONLY IN CASE OF ERROR!
 	};
 
 	enum PlanetOrbitColorStyle
@@ -128,12 +129,12 @@ public:
 
 	enum ApparentMagnitudeAlgorithm
 	{
-		Mueller_1893,				// G. Mueller, based on visual observations 1877-91. [Explanatory Supplement to the Astronomical Almanac, 1961]
-		AstronomicalAlmanac_1984,	// Astronomical Almanac 1984 and later. These give V (instrumental) magnitudes (allegedly from D.L. Harris, but this is wrong!)
-		ExplanatorySupplement_1992,	// Algorithm provided by Pere Planesas (Observatorio Astronomico Nacional) (Was called "Planesas")
-		ExplanatorySupplement_2013,	// Explanatory Supplement to the Astronomical Almanac, 3rd edition 2013
+		Mueller_1893,               // G. Mueller, based on visual observations 1877-91. [Explanatory Supplement to the Astronomical Almanac, 1961]
+		AstronomicalAlmanac_1984,   // Astronomical Almanac 1984 and later. These give V (instrumental) magnitudes (allegedly from D.L. Harris, but this is wrong!)
+		ExplanatorySupplement_1992, // Algorithm provided by Pere Planesas (Observatorio Astronomico Nacional) (Was called "Planesas")
+		ExplanatorySupplement_2013, // Explanatory Supplement to the Astronomical Almanac, 3rd edition 2013
 		UndefinedAlgorithm,
-		Generic			// Visual magnitude based on phase angle and albedo. The formula source for this is totally unknown!
+		Generic                     // Visual magnitude based on phase angle and albedo. The formula source for this is totally unknown!
 	};
 
 
@@ -400,6 +401,10 @@ public:
 	static void setSednoidOrbitColor(const Vec3f& oc) { orbitSednoidsColor = oc;}
 	static const Vec3f& getSednoidOrbitColor() {return orbitSednoidsColor;}
 
+	static Vec3f orbitInterstellarColor;
+	static void setInterstellarOrbitColor(const Vec3f& oc) { orbitInterstellarColor = oc;}
+	static const Vec3f& getInterstellarOrbitColor() {return orbitInterstellarColor;}
+
 	static Vec3f orbitMercuryColor;
 	static void setMercuryOrbitColor(const Vec3f& oc) { orbitMercuryColor = oc;}
 	static const Vec3f& getMercuryOrbitColor() {return orbitMercuryColor;}
@@ -607,6 +612,7 @@ private:
 
 		// Moon-specific variables
 		int earthShadow;
+		int eclipsePush; // apparent brightness push for partial Lunar Eclipse (make bright rim overbright)
 		int normalMap;
 
 		// Rings-specific variables
@@ -678,5 +684,5 @@ private:
 						  const QMap<QByteArray,int>& fixedAttributeLocations=QMap<QByteArray,int>());
 };
 
-#endif // _PLANET_HPP_
+#endif // PLANET_HPP
 

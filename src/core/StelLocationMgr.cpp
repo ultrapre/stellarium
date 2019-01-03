@@ -204,8 +204,8 @@ void LibGPSLookupHelper::query()
 	loc.isUserLocation=true;
 	loc.planetName="Earth";
 	loc.name=QString("GPS %1%2 %3%4")
-			.arg(loc.longitude<0?"W":"E").arg(floor(loc.longitude))
-			.arg(loc.latitude<0?"S":"N").arg(floor(loc.latitude));
+			.arg(loc.latitude<0?"S":"N").arg(floor(loc.latitude))
+			.arg(loc.longitude<0?"W":"E").arg(floor(loc.longitude));
 	emit queryFinished(loc);
 }
 
@@ -487,7 +487,7 @@ void StelLocationMgr::setLocations(const LocationList &locations)
 
 void StelLocationMgr::generateBinaryLocationFile(const QString& fileName, bool isUserLocation, const QString& binFilePath) const
 {
-	qWarning() << "Generating a locations list...";
+	qDebug() << "Generating a locations list...";
 	const QMap<QString, StelLocation>& cities = loadCities(fileName, isUserLocation);
 	QFile binfile(StelFileMgr::findFile(binFilePath, StelFileMgr::New));
 	if(binfile.open(QIODevice::WriteOnly))
@@ -498,6 +498,7 @@ void StelLocationMgr::generateBinaryLocationFile(const QString& fileName, bool i
 		binfile.flush();
 		binfile.close();
 	}
+	qDebug() << "[...] Please use 'gzip -nc base_locations.bin > base_locations.bin.gz' to pack a locations list.";
 }
 
 LocationMap StelLocationMgr::loadCitiesBin(const QString& fileName)
@@ -649,8 +650,24 @@ const StelLocation StelLocationMgr::locationForString(const QString& s) const
 		return iter.value();
 	}
 	StelLocation ret;
-	// Maybe it is a coordinate set ? (e.g. GPS 25.107363,121.558807 )
-	QRegExp reg("(?:(.+)\\s+)?(.+),(.+)");
+	// Maybe it is a coordinate set with elevation?
+	QRegExp csreg("(.+),\\s*(.+),\\s*(.+)");
+	if (csreg.exactMatch(s))
+	{
+		bool ok;
+		// We have a set of coordinates
+		ret.latitude = parseAngle(csreg.capturedTexts()[1].trimmed(), &ok);
+		if (!ok) ret.role = '!';
+		ret.longitude = parseAngle(csreg.capturedTexts()[2].trimmed(), &ok);
+		if (!ok) ret.role = '!';
+		ret.altitude = csreg.capturedTexts()[3].trimmed().toInt(&ok);
+		if (!ok) ret.role = '!';
+		ret.name = QString("%1, %2").arg(QString::number(ret.latitude, 'f', 2), QString::number(ret.longitude, 'f', 2));
+		ret.planetName = "Earth";
+		return ret;
+	}
+	// Maybe it is a coordinate set without elevation? (e.g. GPS 25.107363,121.558807 )
+	QRegExp reg("(?:(.+)\\s+)?(.+),\\s*(.+)"); // FIXME: Seems regexp is not very good
 	if (reg.exactMatch(s))
 	{
 		bool ok;
@@ -804,7 +821,8 @@ bool StelLocationMgr::deleteUserLocation(const QString& id)
 // lookup location from IP address.
 void StelLocationMgr::locationFromIP()
 {
-	QNetworkRequest req( QUrl( QString("http://freegeoip.net/json/") ) );
+	QSettings* conf = StelApp::getInstance().getSettings();
+	QNetworkRequest req( QUrl( conf->value("main/geoip_api_url", "https://freegeoip.stellarium.org/json/").toString() ) );
 	req.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::PreferCache);
 	req.setRawHeader("User-Agent", StelUtils::getUserAgentString().toLatin1());
 	QNetworkReply* networkReply=StelApp::getInstance().getNetworkAccessManager()->get(req);
@@ -943,10 +961,14 @@ void StelLocationMgr::changeLocationFromNetworkLookup()
 			QVariantMap locMap = StelJsonParser::parse(networkReply->readAll()).toMap();
 
 			QString ipRegion = locMap.value("region_name").toString();
+			if (ipRegion.isEmpty())
+				ipRegion = locMap.value("region").toString();
 			QString ipCity = locMap.value("city").toString();
 			QString ipCountry = locMap.value("country_name").toString(); // NOTE: Got a short name of country
 			QString ipCountryCode = locMap.value("country_code").toString();
 			QString ipTimeZone = locMap.value("time_zone").toString();
+			if (ipTimeZone.isEmpty())
+				ipTimeZone = locMap.value("timezone").toString();
 			float latitude=locMap.value("latitude").toFloat();
 			float longitude=locMap.value("longitude").toFloat();
 
@@ -969,7 +991,7 @@ void StelLocationMgr::changeLocationFromNetworkLookup()
 			core->setCurrentTimeZone(ipTimeZone.isEmpty() ? "LMST" : ipTimeZone);
 			core->moveObserverTo(loc, 0.0f, 0.0f);
 			QSettings* conf = StelApp::getInstance().getSettings();
-			conf->setValue("init_location/last_location", QString("%1,%2").arg(latitude).arg(longitude));
+			conf->setValue("init_location/last_location", QString("%1, %2").arg(latitude).arg(longitude));
 		}
 		catch (std::runtime_error)
 		{
@@ -1048,4 +1070,21 @@ QString StelLocationMgr::sanitizeTimezoneStringFromLocationDB(QString dbString)
 	if ( res != "---")
 		return QString(res);
 	return dbString;
+}
+
+QStringList StelLocationMgr::getAllTimezoneNames() const
+{
+	QStringList ret;
+
+	QMapIterator<QString, StelLocation> iter(locations);
+	while (iter.hasNext())
+	{
+		iter.next();
+		const StelLocation *loc=&iter.value();
+		QString tz(loc->ianaTimeZone);
+		if (!ret.contains(tz))
+			ret.append(tz);
+	}
+	ret.sort();
+	return ret;
 }

@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
 */
  
-#ifndef _LOCATIONDIALOG_HPP_
-#define _LOCATIONDIALOG_HPP_
+#ifndef LOCATIONDIALOG_HPP
+#define LOCATIONDIALOG_HPP
 
 #include <QObject>
 #include "StelDialog.hpp"
@@ -83,6 +83,9 @@ private:
 	//! The original names are kept in the user data field of each QComboBox
 	//! item.
 	void populateTimeZonesList();
+
+	//! Populates tooltips for GUI elements.
+	void populateTooltips();
 	
 private slots:
 	//! Called whenever the StelLocationMgr is updated
@@ -92,6 +95,10 @@ private slots:
 	void reportEdit();
 
 	void saveTimeZone();
+
+	//! Set timezone (to be connected to a signal from StelCore)
+	//! This has to do some GUI element juggling.
+	void setTimezone(QString tz);
 	
 	//! Update the widget to make sure it is synchrone if the location is changed programmatically
 	//! This function should be called repeatidly with e.g. a timer
@@ -169,4 +176,4 @@ private:
 
 };
 
-#endif // _LOCATIONDIALOG_HPP_
+#endif // _LOCATIONDIALOG_HPP

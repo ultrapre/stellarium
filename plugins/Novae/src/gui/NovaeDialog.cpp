@@ -74,19 +74,21 @@ void NovaeDialog::createDialogContent()
 	connect(&StelApp::getInstance(), SIGNAL(languageChanged()),
 		this, SLOT(retranslate()));
 
-#ifdef Q_OS_WIN
-	//Kinetic scrolling for tablet pc and pc
-	QList<QWidget *> addscroll;
-	addscroll << ui->aboutTextBrowser;
-	installKineticScrolling(addscroll);
-#endif
+	// Kinetic scrolling
+	kineticScrollingList << ui->aboutTextBrowser;
+	StelGui* gui= dynamic_cast<StelGui*>(StelApp::getInstance().getGui());
+	if (gui)
+	{
+		enableKineticScrolling(gui->getFlagUseKineticScrolling());
+		connect(gui, SIGNAL(flagUseKineticScrollingChanged(bool)), this, SLOT(enableKineticScrolling(bool)));
+	}
+
 
 	// Settings tab / updates group
 	connect(ui->internetUpdatesCheckbox, SIGNAL(stateChanged(int)), this, SLOT(setUpdatesEnabled(int)));
 	connect(ui->updateButton, SIGNAL(clicked()), this, SLOT(updateJSON()));
 	connect(nova, SIGNAL(updateStateChanged(Novae::UpdateState)), this, SLOT(updateStateReceiver(Novae::UpdateState)));
-	connect(nova, SIGNAL(jsonUpdateComplete(void)), this, SLOT(updateCompleteReceiver(void)));
-	connect(nova, SIGNAL(jsonUpdateComplete(void)), nova, SLOT(reloadCatalog()));
+	connect(nova, SIGNAL(jsonUpdateComplete(void)), this, SLOT(updateCompleteReceiver(void)));	
 	connect(ui->updateFrequencySpinBox, SIGNAL(valueChanged(int)), this, SLOT(setUpdateValues(int)));
 	refreshUpdateValues(); // fetch values for last updated and so on
 	// if the state didn't change, setUpdatesEnabled will not be called, so we force it
@@ -156,6 +158,7 @@ void NovaeDialog::setAboutHtml(void)
 
 void NovaeDialog::refreshUpdateValues(void)
 {
+	QString nextUpdate = q_("Next update");
 	ui->lastUpdateDateTimeEdit->setDateTime(nova->getLastUpdate());
 	ui->updateFrequencySpinBox->setValue(nova->getUpdateFrequencyDays());
 	int secondsToUpdate = nova->getSecondsToUpdate();
@@ -165,21 +168,24 @@ void NovaeDialog::refreshUpdateValues(void)
 	else if (nova->getUpdateState() == Novae::Updating)
 		ui->nextUpdateLabel->setText(q_("Updating now..."));
 	else if (secondsToUpdate <= 60)
-		ui->nextUpdateLabel->setText(q_("Next update: < 1 minute"));
+		ui->nextUpdateLabel->setText(QString("%1: %2").arg(nextUpdate, q_("< 1 minute")));
 	else if (secondsToUpdate < 3600)
 	{
 		int n = (secondsToUpdate/60)+1;
-		ui->nextUpdateLabel->setText(qn_("Next update: %1 minute(s)", n).arg(n));
+		// TRANSLATORS: minutes.
+		ui->nextUpdateLabel->setText(QString("%1: %2 %3").arg(nextUpdate, QString::number(n), qc_("m", "time")));
 	}
 	else if (secondsToUpdate < 86400)
 	{
 		int n = (secondsToUpdate/3600)+1;
-		ui->nextUpdateLabel->setText(qn_("Next update: %1 hour(s)", n).arg(n));
+		// TRANSLATORS: hours.
+		ui->nextUpdateLabel->setText(QString("%1: %2 %3").arg(nextUpdate, QString::number(n), qc_("h", "time")));
 	}
 	else
 	{
 		int n = (secondsToUpdate/86400)+1;
-		ui->nextUpdateLabel->setText(qn_("Next update: %1 day(s)", n).arg(n));
+		// TRANSLATORS: days.
+		ui->nextUpdateLabel->setText(QString("%1: %2 %3").arg(nextUpdate, QString::number(n), qc_("d", "time")));
 	}
 }
 

@@ -16,8 +16,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _NOVAE_HPP_
-#define _NOVAE_HPP_
+#ifndef NOVAE_HPP
+#define NOVAE_HPP
 
 #include "StelObjectModule.hpp"
 #include "StelObject.hpp"
@@ -30,9 +30,9 @@
 #include <QList>
 #include <QSharedPointer>
 #include <QHash>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 
-class QNetworkAccessManager;
-class QNetworkReply;
 class QSettings;
 class QTimer;
 class NovaeDialog;
@@ -92,10 +92,10 @@ public:
 	///////////////////////////////////////////////////////////////////////////
 	// Methods defined in StelObjectManager class
 	//! Used to get a list of objects which are near to some position.
-	//! @param v a vector representing the position in th sky around which to search for nebulae.
-	//! @param limitFov the field of view around the position v in which to search for satellites.
+	//! @param v a vector representing the position in th sky around which to search for novae.
+	//! @param limitFov the field of view around the position v in which to search for novae.
 	//! @param core the StelCore to use for computations.
-	//! @return an list containing the satellites located inside the limitFov circle around position v.
+	//! @return an list containing the novae located inside the limitFov circle around position v.
 	virtual QList<StelObjectP> searchAround(const Vec3d& v, double limitFov, const StelCore* core) const;
 
 	//! Return the matching satellite object's pointer if exists or Q_NULLPTR.
@@ -188,6 +188,8 @@ public slots:
 
 	void reloadCatalog(void);
 
+	//! Connect this to StelApp font size.
+	void setFontSize(int s){font.setPixelSize(s);}
 private:
 	// Font used for displaying our text
 	QFont font;
@@ -230,7 +232,8 @@ private:
 
 	// variables and functions for the updater
 	UpdateState updateState;
-	QNetworkAccessManager* downloadMgr;
+	QNetworkAccessManager * networkManager;
+	QNetworkReply * downloadReply;
 	QString updateUrl;
 	class StelProgressController* progressBar;
 	QTimer* updateTimer;
@@ -238,6 +241,9 @@ private:
 	bool updatesEnabled;
 	QDateTime lastUpdate;
 	int updateFrequencyDays;
+
+	void startDownload(QString url);
+	void deleteDownloadProgressBar();
 
 	QSettings* conf;
 
@@ -249,7 +255,9 @@ private slots:
 	//! if the last update was longer than updateFrequencyHours ago then the update is
 	//! done.
 	void checkForUpdate(void);
-	void updateDownloadComplete(QNetworkReply* reply);
+
+	void updateDownloadProgress(qint64 bytesReceived, qint64 bytesTotal);
+	void downloadComplete(QNetworkReply * reply);
 
 };
 
@@ -269,4 +277,4 @@ public:
 	virtual QObjectList getExtensionList() const { return QObjectList(); }
 };
 
-#endif /*_NOVAE_HPP_*/
+#endif /*NOVAE_HPP*/

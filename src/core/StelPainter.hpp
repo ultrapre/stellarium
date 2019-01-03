@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _STELPAINTER_HPP_
-#define _STELPAINTER_HPP_
+#ifndef STELPAINTER_HPP
+#define STELPAINTER_HPP
 
 #include "StelOpenGL.hpp"
 #include "VecMath.hpp"
@@ -260,6 +260,9 @@ public:
 	//! Sets the line width. Default is 1.0f.
 	void setLineWidth(float width);
 
+	//! Sets the color saturation effect value, from 0 (grayscale) to 1 (no effect).
+	void setSaturation(float v) { saturation = v; }
+
 	//! Create the OpenGL shaders programs used by the StelPainter.
 	//! This method needs to be called once at init.
 	static void initGLShaders();
@@ -346,7 +349,7 @@ private:
 
 	// From text-use-opengl-buffer
 	static QCache<QByteArray, struct StringTexture> texCache;
-	struct StringTexture* getTexTexture(const QString& str, int pixelSize);
+	struct StringTexture* getTexTexture(const QString& str, int pixelSize) const;
 
 	//! Struct describing one opengl array
 	typedef struct ArrayDesc
@@ -394,7 +397,9 @@ private:
 	QFont currentFont;
 
 	Vec4f currentColor;
-	
+	//! Saturation effect adjustment.
+	float saturation = 1.f;
+
 	static QOpenGLShaderProgram* basicShaderProgram;
 	struct BasicShaderVars {
 		int projectionMatrix;
@@ -426,6 +431,7 @@ private:
 		int texture;
 		int bayerPattern;
 		int rgbMaxValue;
+		int saturation;
 	};
 	static TexturesColorShaderVars texturesColorShaderVars;
 
@@ -445,5 +451,5 @@ private:
 
 Q_DECLARE_METATYPE(StelPainter::DitheringMode)
 
-#endif // _STELPAINTER_HPP_
+#endif // STELPAINTER_HPP
 

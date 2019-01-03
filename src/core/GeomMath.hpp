@@ -22,8 +22,8 @@
 //! This header contains useful classes for common geometric operations that are
 //! useful for 3D rendering, such as AABB, and other vector math helpers.
 
-#ifndef _GEOMMATH_HPP_
-#define _GEOMMATH_HPP_
+#ifndef GEOMMATH_HPP
+#define GEOMMATH_HPP
 
 #include "VecMath.hpp"
 
@@ -109,7 +109,7 @@ public:
 
 	//! Gets the point that lies on the line according to the
 	//! equation \p startPoint + \p val * \p direction
-	Vec3f getPoint(float val);
+	Vec3f getPoint(float val) const;
 };
 
 #endif

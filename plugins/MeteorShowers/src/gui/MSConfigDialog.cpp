@@ -50,12 +50,14 @@ void MSConfigDialog::createDialogContent()
 	m_ui->setupUi(dialog);
 	m_ui->tabs->setCurrentIndex(0);
 
-#ifdef Q_OS_WIN
-	// Kinetic scrolling for tablet pc and pc
-	QList<QWidget *> addscroll;
-	addscroll << m_ui->about;
-	installKineticScrolling(addscroll);
-#endif
+	// Kinetic scrolling
+	kineticScrollingList << m_ui->about;
+	StelGui* gui= dynamic_cast<StelGui*>(StelApp::getInstance().getGui());
+	if (gui)
+	{
+		enableKineticScrolling(gui->getFlagUseKineticScrolling());
+		connect(gui, SIGNAL(flagUseKineticScrollingChanged(bool)), this, SLOT(enableKineticScrolling(bool)));
+	}
 
 	connect(&StelApp::getInstance(), SIGNAL(languageChanged()), this, SLOT(retranslate()));
 	connect(m_ui->closeStelWindow, SIGNAL(clicked()), this, SLOT(close()));
@@ -89,7 +91,6 @@ void MSConfigDialog::createDialogContent()
 
 	// About tab
 	setAboutHtml();
-	StelGui* gui = dynamic_cast<StelGui*>(StelApp::getInstance().getGui());
 	if (gui)
 	{
 		m_ui->about->document()->setDefaultStyleSheet(QString(gui->getStelStyle().htmlStyleSheet));
@@ -150,15 +151,15 @@ void MSConfigDialog::refreshUpdateTab()
 void MSConfigDialog::refreshMarkersColor()
 {
 	Vec3f c = m_mgr->getColorARG();
-	QColor color(c[0], c[1], c[2]);
+	QColor color(QColor::fromRgbF(c[0], c[1], c[2]));
 	m_ui->setColorARG->setStyleSheet("background-color:" + color.name() + ";");
 
 	c = m_mgr->getColorARC();
-	color = QColor(c[0], c[1], c[2]);
+	color = QColor(QColor::fromRgbF(c[0], c[1], c[2]));
 	m_ui->setColorARC->setStyleSheet("background-color:" + color.name() + ";");
 
 	c = m_mgr->getColorIR();
-	color = QColor(c[0], c[1], c[2]);
+	color = QColor(QColor::fromRgbF(c[0], c[1], c[2]));
 	m_ui->setColorIR->setStyleSheet("background-color:" + color.name() + ";");
 }
 

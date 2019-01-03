@@ -16,8 +16,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _SUPERNOVA_HPP_
-#define _SUPERNOVA_HPP_ 1
+#ifndef SUPERNOVA_HPP
+#define SUPERNOVA_HPP
 
 #include <QVariant>
 #include <QString>
@@ -92,6 +92,9 @@ public:
 
 	void update(double deltaTime);
 
+protected:
+	virtual QString getMagnitudeInfoString(const StelCore *core, const InfoStringGroup& flags, const double alt_app, const int decimals=1) const;
+
 private:
 	bool initialized;
 
@@ -116,4 +119,4 @@ private:
 	QString getMaxBrightnessDate(const double JD) const;
 };
 
-#endif // _SUPERNOVA_HPP_
+#endif // SUPERNOVA_HPP

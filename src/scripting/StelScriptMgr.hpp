@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _STELSCRIPTMGR_HPP_
-#define _STELSCRIPTMGR_HPP_
+#ifndef STELSCRIPTMGR_HPP
+#define STELSCRIPTMGR_HPP
 
 #include <QObject>
 #include <QStringList>
@@ -49,15 +49,15 @@ public:
 	StelScriptMgr(QObject *parent=Q_NULLPTR);
 	~StelScriptMgr();
 
-	QStringList getScriptList();
+	QStringList getScriptList() const;
 
 	//! Find out if a script is running
 	//! @return true if a script is running, else false
-	bool scriptIsRunning();
+	bool scriptIsRunning() const;
 	//! Get the ID (usually filename) of the currently running script
 	//! @return Empty string if no script is running, else the 
 	//! ID of the script which is running.
-	QString runningScriptId();
+	QString runningScriptId() const;
 
 	// Pre-processor functions
 	//! Preprocess script, esp. process include instructions.
@@ -179,7 +179,7 @@ public slots:
 	
 	//! Get the rate at which the script is running as a multiple of the normal
 	//! execution rate.
-	double getScriptRate();
+	double getScriptRate() const;
 
 	//! cause the emission of the scriptDebug signal. This is so that functions in
 	//! StelMainScriptAPI can explicitly send information to the ScriptConsole
@@ -246,4 +246,4 @@ private:
 	StelScriptEngineAgent *agent;
 };
 
-#endif // _STELSCRIPTMGR_HPP_
+#endif // STELSCRIPTMGR_HPP

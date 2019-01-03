@@ -19,8 +19,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
 */
  
-#ifndef _SATELLITESDIALOG_HPP_
-#define _SATELLITESDIALOG_HPP_
+#ifndef _SATELLITESDIALOG_HPP
+#define _SATELLITESDIALOG_HPP
 
 #include <QObject>
 #include <QModelIndex>
@@ -115,6 +115,15 @@ private slots:
 
 	void setFlagRealisticMode(bool state);
 
+	void searchSatellitesClear();
+
+	// change selection's color
+	void askSatColor();
+
+	// change description text
+	void descriptionTextChanged();
+
+
 private:
 	//! @todo find out if this is really necessary... --BM
 	void enableSatelliteDataForm(bool enabled);
@@ -156,6 +165,9 @@ private:
 
 	QString delimiter, acEndl;
 	QStringList iridiumFlaresHeader;
+
+	// colorpickerbutton's color
+	QColor buttonColor;
 };
 
 // Reimplements the QTreeWidgetItem class to fix the sorting bug
@@ -183,4 +195,4 @@ private:
 	}
 };
 
-#endif // _SATELLITESDIALOG_HPP_
+#endif // _SATELLITESDIALOG_HPP

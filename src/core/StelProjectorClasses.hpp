@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _STELPROJECTIONS_HPP_
-#define _STELPROJECTIONS_HPP_
+#ifndef STELPROJECTIONS_HPP
+#define STELPROJECTIONS_HPP
 
 #include "StelProjector.hpp"
 
@@ -172,7 +172,7 @@ protected:
 		static const SphericalCap cap2(-1,0,0);
 		static const SphericalCap cap3(0,0,-1);
 		SphericalCap cap(capN, capD);
-		return cap.intersects(cap1) && cap.intersects(cap2) && cap.intersects(cap2);
+		return cap.intersects(cap1) && cap.intersects(cap2) && cap.intersects(cap3);
 	}
 };
 
@@ -200,7 +200,7 @@ protected:
 		static const SphericalCap cap2(-1,0,0);
 		static const SphericalCap cap3(0,0,-1);
 		SphericalCap cap(capN, capD);
-		return cap.intersects(cap1) && cap.intersects(cap2) && cap.intersects(cap2);
+		return cap.intersects(cap1) && cap.intersects(cap2) && cap.intersects(cap3);
 	}
 };
 
@@ -262,5 +262,5 @@ protected:
 	virtual void computeBoundingCap() {;}
 };
 
-#endif // _STELPROJECTIONS_HPP_
+#endif // STELPROJECTIONS_HPP
 

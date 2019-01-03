@@ -24,6 +24,7 @@
 #include "LabelMgr.hpp"
 #include "ConstellationMgr.hpp"
 #include "AsterismMgr.hpp"
+#include "MilkyWay.hpp"
 #include "SkyGui.hpp"
 #include "StelActionMgr.hpp"
 #include "StelApp.hpp"
@@ -97,83 +98,87 @@ StelPluginInfo OcularsStelPluginInterface::getPluginInfo() const
 #pragma mark Instance Methods
 #endif
 /* ****************************************************************************************************************** */
-Oculars::Oculars():
-	selectedCCDIndex(-1),
-	selectedOcularIndex(-1),
-	selectedTelescopeIndex(-1),
-	selectedLensIndex(-1),
-	selectedCCDRotationAngle(0.0),
-	arrowButtonScale(1.5),
-	flagShowCCD(false),
-	flagShowOculars(false),
-	flagShowCrosshairs(false),
-	flagShowTelrad(false),
-	usageMessageLabelID(-1),
-	flagCardinalPointsMain(false),
-	flagAdaptationMain(false),
-	flagLimitStarsMain(false),
-	magLimitStarsMain(0.0),
-	flagLimitDSOsMain(false),
-	magLimitDSOsMain(0.0),
-	flagLimitPlanetsMain(false),
-	magLimitPlanetsMain(0.0),
-	relativeStarScaleMain(1.0),
-	absoluteStarScaleMain(1.0),
-	relativeStarScaleOculars(1.0),
-	absoluteStarScaleOculars(1.0),
-	relativeStarScaleCCD(1.0),
-	absoluteStarScaleCCD(1.0),
-	flagMoonScaleMain(false),
-	flagMinorBodiesScaleMain(false),
-	maxEyepieceAngle(0.0),
-	flagRequireSelection(true),
-	flagLimitMagnitude(false),
-	flagScaleImageCircle(true),
-	flagGuiPanelEnabled(false),
-	flagDMSDegrees(false),
-	flagSemiTransparency(false),
-	flagHideGridsLines(false),
-	flagGridLinesDisplayedMain(true),
-	flagConstellationLinesMain(true),
-	flagConstellationBoundariesMain(true),
-	flagAsterismLinesMain(true),
-	flagRayHelpersLinesMain(true),
-	flipVertMain(false),
-	flipHorzMain(false),
-	ccdRotationSignalMapper(Q_NULLPTR),
-	ccdsSignalMapper(Q_NULLPTR),
-	ocularsSignalMapper(Q_NULLPTR),
-	telescopesSignalMapper(Q_NULLPTR),
-	lensesSignalMapper(Q_NULLPTR),
-	pxmapGlow(Q_NULLPTR),
-	pxmapOnIcon(Q_NULLPTR),
-	pxmapOffIcon(Q_NULLPTR),
-	toolbarButton(Q_NULLPTR),
-	ocularDialog(Q_NULLPTR),
-	ready(false),
-	actionShowOcular(Q_NULLPTR),
-	actionShowCrosshairs(Q_NULLPTR),
-	actionShowSensor(Q_NULLPTR),
-	actionShowTelrad(Q_NULLPTR),
-	actionConfiguration(Q_NULLPTR),
-	actionMenu(Q_NULLPTR),
-	actionTelescopeIncrement(Q_NULLPTR),
-	actionTelescopeDecrement(Q_NULLPTR),
-	actionOcularIncrement(Q_NULLPTR),
-	actionOcularDecrement(Q_NULLPTR),
-	guiPanel(Q_NULLPTR),
-	actualFOV(0.),
-	initialFOV(0.),
-	flagInitFOVUsage(false),
-	flagInitDirectionUsage(false),
-	flagAutosetMountForCCD(false),
-	flagScalingFOVForTelrad(false),
-	flagShowResolutionCriterions(false),
-	equatorialMountEnabledMain(false),
-	reticleRotation(0.)
+Oculars::Oculars()
+	: selectedCCDIndex(-1)
+	, selectedOcularIndex(-1)
+	, selectedTelescopeIndex(-1)
+	, selectedLensIndex(-1)
+	, selectedCCDRotationAngle(0.0)
+	, arrowButtonScale(1.5)
+	, flagShowCCD(false)
+	, flagShowOculars(false)
+	, flagShowCrosshairs(false)
+	, flagShowTelrad(false)
+	, usageMessageLabelID(-1)
+	, flagCardinalPointsMain(false)
+	, flagAdaptationMain(false)
+	, flagLimitStarsMain(false)
+	, magLimitStarsMain(0.0)
+	, flagLimitDSOsMain(false)
+	, magLimitDSOsMain(0.0)
+	, flagLimitPlanetsMain(false)
+	, magLimitPlanetsMain(0.0)
+	, relativeStarScaleMain(1.0)
+	, absoluteStarScaleMain(1.0)
+	, relativeStarScaleOculars(1.0)
+	, absoluteStarScaleOculars(1.0)
+	, relativeStarScaleCCD(1.0)
+	, absoluteStarScaleCCD(1.0)
+	, flagMoonScaleMain(false)
+	, flagMinorBodiesScaleMain(false)
+	, milkyWaySaturation(1.0)
+	, maxEyepieceAngle(0.0)
+	, flagRequireSelection(true)
+	, flagLimitMagnitude(false)
+	, flagScaleImageCircle(true)
+	, flagGuiPanelEnabled(false)
+	, flagDMSDegrees(false)
+	, flagSemiTransparency(false)
+	, flagHideGridsLines(false)
+	, flagGridLinesDisplayedMain(true)
+	, flagConstellationLinesMain(true)
+	, flagConstellationBoundariesMain(true)
+	, flagAsterismLinesMain(true)
+	, flagRayHelpersLinesMain(true)
+	, flipVertMain(false)
+	, flipHorzMain(false)
+	, ccdRotationSignalMapper(Q_NULLPTR)
+	, ccdsSignalMapper(Q_NULLPTR)
+	, ocularsSignalMapper(Q_NULLPTR)
+	, telescopesSignalMapper(Q_NULLPTR)
+	, lensesSignalMapper(Q_NULLPTR)
+	, pxmapGlow(Q_NULLPTR)
+	, pxmapOnIcon(Q_NULLPTR)
+	, pxmapOffIcon(Q_NULLPTR)
+	, toolbarButton(Q_NULLPTR)
+	, flagShowOcularsButton(false)
+	, ocularDialog(Q_NULLPTR)
+	, ready(false)
+	, actionShowOcular(Q_NULLPTR)
+	, actionShowCrosshairs(Q_NULLPTR)
+	, actionShowSensor(Q_NULLPTR)
+	, actionShowTelrad(Q_NULLPTR)
+	, actionConfiguration(Q_NULLPTR)
+	, actionMenu(Q_NULLPTR)
+	, actionTelescopeIncrement(Q_NULLPTR)
+	, actionTelescopeDecrement(Q_NULLPTR)
+	, actionOcularIncrement(Q_NULLPTR)
+	, actionOcularDecrement(Q_NULLPTR)
+	, guiPanel(Q_NULLPTR)
+	, guiPanelFontSize(12)
+	, actualFOV(0.)
+	, initialFOV(0.)
+	, flagInitFOVUsage(false)
+	, flagInitDirectionUsage(false)
+	, flagAutosetMountForCCD(false)
+	, flagScalingFOVForTelrad(false)
+	, flagShowResolutionCriterions(false)
+	, equatorialMountEnabledMain(false)
+	, reticleRotation(0.)
 {
-	// Font size is 14
-	font.setPixelSize(StelApp::getInstance().getBaseFontSize()+1);
+	// Design font size is 14, based on default app fontsize 13.
+	setFontSizeFromApp(StelApp::getInstance().getScreenFontSize());
+	connect(&StelApp::getInstance(), SIGNAL(screenFontSizeChanged(int)), this, SLOT(setFontSizeFromApp(int)));
 
 	ccds = QList<CCD *>();
 	oculars = QList<Ocular *>();
@@ -274,6 +279,10 @@ void Oculars::deinit()
 	settings->setValue("telescope_count", telescopes.count());
 	settings->setValue("ccd_count", ccds.count());
 	settings->setValue("lens_count", lenses.count());
+	settings->setValue("ocular_index", selectedOcularIndex);
+	settings->setValue("telescope_index", selectedTelescopeIndex);
+	settings->setValue("ccd_index", selectedCCDIndex);
+	settings->setValue("lens_index", selectedLensIndex);
 
 	StelCore *core = StelApp::getInstance().getCore();
 	StelSkyDrawer *skyDrawer = core->getSkyDrawer();
@@ -590,8 +599,8 @@ void Oculars::init()
 		// assume all is well
 		ready = true;
 
-		setFlagRequireSelection(settings->value("require_selection_to_zoom", 1.0).toBool());
-		flagScaleImageCircle = settings->value("use_max_exit_circle", 0.0).toBool();
+		setFlagRequireSelection(settings->value("require_selection_to_zoom", true).toBool());
+		flagScaleImageCircle = settings->value("use_max_exit_circle", false).toBool();
 		int ocularCount = settings->value("ocular_count", 0).toInt();
 		int actualOcularCount = ocularCount;
 		for (int index = 0; index < ocularCount; index++)
@@ -620,7 +629,7 @@ void Oculars::init()
 		}
 		else
 		{
-			selectedOcularIndex = 0;
+			selectedOcularIndex = qMin(settings->value("ocular_index", 0).toInt(), actualOcularCount-1);
 		}
 
 		int ccdCount = settings->value("ccd_count", 0).toInt();
@@ -642,6 +651,7 @@ void Oculars::init()
 			qWarning() << "The Oculars ini file appears to be corrupt; delete it.";
 			ready = false;
 		}
+		selectedCCDIndex = qMin(settings->value("ccd_index", 0).toInt(), actualCcdCount-1);
 
 		int telescopeCount = settings->value("telescope_count", 0).toInt();
 		int actualTelescopeCount = telescopeCount;
@@ -671,7 +681,7 @@ void Oculars::init()
 		}
 		else
 		{
-			selectedTelescopeIndex = 0;
+			selectedTelescopeIndex = qMin(settings->value("telescope_index", 0).toInt(), actualTelescopeCount-1);
 		}
 
 		int lensCount = settings->value("lens_count", 0).toInt();
@@ -692,12 +702,22 @@ void Oculars::init()
 		{
 			qWarning() << "The Oculars ini file appears to be corrupt; delete it.";
 		}
+		selectedLensIndex=qMin(settings->value("lens_index", -1).toInt(), actualLensCount-1); // Lens is not selected by default!
+
+		pxmapGlow = new QPixmap(":/graphicGui/glow32x32.png");
+		pxmapOnIcon = new QPixmap(":/ocular/bt_ocular_on.png");
+		pxmapOffIcon = new QPixmap(":/ocular/bt_ocular_off.png");
 
 		ocularDialog = new OcularDialog(this, &ccds, &oculars, &telescopes, &lenses);
 		initializeActivationActions();
 		determineMaxEyepieceAngle();
-		
+
+		guiPanelFontSize=settings->value("gui_panel_fontsize", 12).toInt();
 		enableGuiPanel(settings->value("enable_control_panel", true).toBool());
+
+		// This must come ahead of setFlagAutosetMountForCCD (GH #505)
+		StelPropertyMgr* propMgr=StelApp::getInstance().getStelPropertyManager();
+		equatorialMountEnabledMain = propMgr->getStelPropertyValue("StelMovementMgr.equatorialMount").toBool();
 
 		// For historical reasons, name of .ini entry and description of checkbox (and therefore flag name) are reversed.
 		setFlagDMSDegrees( ! settings->value("use_decimal_degrees", false).toBool());
@@ -710,13 +730,12 @@ void Oculars::init()
 		setFlagScalingFOVForTelrad(settings->value("use_telrad_fov_scaling", true).toBool());
 		setFlagShowResolutionCriterions(settings->value("show_resolution_criterions", false).toBool());
 		setArrowButtonScale(settings->value("arrow_scale", 1.5).toDouble());
+		setFlagShowOcularsButton(settings->value("show_toolbar_button", false).toBool());
 		relativeStarScaleOculars=settings->value("stars_scale_relative", 1.0).toDouble();
 		absoluteStarScaleOculars=settings->value("stars_scale_absolute", 1.0).toDouble();
 		relativeStarScaleCCD=settings->value("stars_scale_relative_ccd", 1.0).toDouble();
 		absoluteStarScaleCCD=settings->value("stars_scale_absolute_ccd", 1.0).toDouble();
 
-		StelPropertyMgr* propMgr=StelApp::getInstance().getStelPropertyManager();
-		equatorialMountEnabledMain = propMgr->getStelPropertyValue("actionSwitch_Equatorial_Mount").toBool();
 	}
 	catch (std::runtime_error& e)
 	{
@@ -778,6 +797,8 @@ void Oculars::setFlagScaleImageCircle(bool state)
 		determineMaxEyepieceAngle();
 	}
 	flagScaleImageCircle = state;
+	settings->setValue("use_max_exit_circle", state);
+	settings->sync();
 	emit flagScaleImageCircleChanged(state);
 }
 
@@ -822,7 +843,7 @@ void Oculars::enableGuiPanel(bool enable)
 		{
 			guiPanel->hide();
 			delete guiPanel;
-			guiPanel = 0;
+			guiPanel = Q_NULLPTR;
 		}
 	}
 	flagGuiPanelEnabled = enable;
@@ -840,7 +861,7 @@ void Oculars::retranslateGui()
 		// Delete and re-create the panel to retranslate its trings
 		guiPanel->hide();
 		delete guiPanel;
-		guiPanel = 0;
+		guiPanel = Q_NULLPTR;
 		
 		StelApp& app = StelApp::getInstance();
 		StelGui* gui = dynamic_cast<StelGui*>(app.getGui());
@@ -1435,7 +1456,7 @@ void Oculars::toggleCCD(bool show)
 		if (getFlagAutosetMountForCCD())
 		{
 			StelPropertyMgr* propMgr=StelApp::getInstance().getStelPropertyManager();
-			propMgr->setStelPropertyValue("actionSwitch_Equatorial_Mount", equatorialMountEnabledMain);
+			propMgr->setStelPropertyValue("StelMovementMgr.equatorialMount", equatorialMountEnabledMain);
 		}
 
 		if (guiPanel)
@@ -1505,21 +1526,7 @@ void Oculars::initializeActivationActions()
 	Q_ASSERT(gui);
 
 	QString ocularsGroup = N_("Oculars");
-	actionShowOcular = addAction("actionShow_Ocular", ocularsGroup, N_("Ocular view"), "enableOcular", "Ctrl+O");
-	// Make a toolbar button
-	try
-	{
-		pxmapGlow = new QPixmap(":/graphicGui/glow32x32.png");
-		pxmapOnIcon = new QPixmap(":/ocular/bt_ocular_on.png");
-		pxmapOffIcon = new QPixmap(":/ocular/bt_ocular_off.png");
-		toolbarButton = new StelButton(Q_NULLPTR, *pxmapOnIcon, *pxmapOffIcon, *pxmapGlow, "actionShow_Ocular");
-		gui->getButtonBar()->addButton(toolbarButton, "065-pluginsGroup");
-	}
-	catch (std::runtime_error& e)
-	{
-		qWarning() << "WARNING: unable create toolbar button for Oculars plugin: " << e.what();
-	}
-
+	actionShowOcular     = addAction("actionShow_Ocular",                ocularsGroup, N_("Ocular view"), "enableOcular", "Ctrl+O");
 	actionMenu           = addAction("actionShow_Ocular_Menu",           ocularsGroup, N_("Oculars popup menu"), "displayPopupMenu()", "Alt+O");
 	actionShowCrosshairs = addAction("actionShow_Ocular_Crosshairs",     ocularsGroup, N_("Show crosshairs"),    "enableCrosshairs", "Alt+C");
 	actionShowSensor     = addAction("actionShow_Sensor",                ocularsGroup, N_("Image sensor frame"), "enableCCD");
@@ -1569,7 +1576,7 @@ bool Oculars::isBinocularDefined()
 
 void Oculars::paintCCDBounds()
 {
-	int fontSize = StelApp::getInstance().getBaseFontSize();
+	int fontSize = StelApp::getInstance().getScreenFontSize();
 	StelCore *core = StelApp::getInstance().getCore();
 	StelProjector::StelProjectorParams params = core->getCurrentStelProjectorParams();
 	Lens *lens = selectedLensIndex >=0  ? lenses[selectedLensIndex] : Q_NULLPTR;
@@ -1762,10 +1769,8 @@ void Oculars::paintCrosshairs()
 	// Draw the lines
 	StelPainter painter(projector);
 	painter.setColor(0.77f, 0.14f, 0.16f, 1.f);
-	painter.drawLine2d(centerScreen[0], centerScreen[1], centerScreen[0], centerScreen[1] + length);
-	painter.drawLine2d(centerScreen[0], centerScreen[1], centerScreen[0], centerScreen[1] - length);
-	painter.drawLine2d(centerScreen[0], centerScreen[1], centerScreen[0] + length, centerScreen[1]);
-	painter.drawLine2d(centerScreen[0], centerScreen[1], centerScreen[0] - length, centerScreen[1]);
+	painter.drawLine2d(centerScreen[0], centerScreen[1] - length, centerScreen[0], centerScreen[1] + length);
+	painter.drawLine2d(centerScreen[0] - length, centerScreen[1], centerScreen[0] + length, centerScreen[1]);
 }
 
 void Oculars::paintTelrad()
@@ -2134,6 +2139,7 @@ void Oculars::unzoomOcular()
 	if (flagHideGridsLines)
 		toggleLines(true);
 
+	StelApp::getInstance().getStelPropertyManager()->setStelPropertyValue("MilkyWay.saturation", milkyWaySaturation);
 	skyDrawer->setFlagLuminanceAdaptation(flagAdaptationMain);
 	skyDrawer->setFlagStarMagnitudeLimit(flagLimitStarsMain);
 	skyDrawer->setFlagPlanetMagnitudeLimit(flagLimitPlanetsMain);
@@ -2206,6 +2212,8 @@ void Oculars::zoom(bool zoomedIn)
 			flagMoonScaleMain		= propMgr->getStelPropertyValue("SolarSystem.flagMoonScale").toBool();
 			flagMinorBodiesScaleMain	= propMgr->getStelPropertyValue("SolarSystem.flagMinorBodyScale").toBool();
 
+			milkyWaySaturation	= propMgr->getStelPropertyValue("MilkyWay.saturation").toFloat();
+
 			flipHorzMain = core->getFlipHorz();
 			flipVertMain = core->getFlipVert();
 
@@ -2261,6 +2269,7 @@ void Oculars::zoomOcular()
 		toggleLines(false);
 
 	skyDrawer->setFlagLuminanceAdaptation(false);
+	StelApp::getInstance().getStelPropertyManager()->setStelPropertyValue("MilkyWay.saturation", 0.f);
 
 	GETSTELMODULE(SolarSystem)->setFlagMoonScale(false);
 	GETSTELMODULE(SolarSystem)->setFlagMinorBodyScale(false);
@@ -2490,7 +2499,7 @@ void Oculars::setFlagAutosetMountForCCD(const bool b)
 	if (!b)
 	{
 		StelPropertyMgr* propMgr=StelApp::getInstance().getStelPropertyManager();
-		propMgr->setStelPropertyValue("actionSwitch_Equatorial_Mount", equatorialMountEnabledMain);
+		propMgr->setStelPropertyValue("StelMovementMgr.equatorialMount", equatorialMountEnabledMain);
 	}
 	emit flagAutosetMountForCCDChanged(b);
 }
@@ -2622,4 +2631,46 @@ QString Oculars::getDimensionsString(double fovX, double fovY) const
 	}
 
 	return stringFovX + QChar(0x00D7) + stringFovY;
+}
+
+// Define whether the button toggling eyepieces should be visible
+void Oculars::setFlagShowOcularsButton(bool b)
+{
+	StelGui* gui = dynamic_cast<StelGui*>(StelApp::getInstance().getGui());
+	if (gui!=Q_NULLPTR)
+	{
+		if (b==true) {
+			if (toolbarButton==Q_NULLPTR) {
+				// Create the pulsars button
+				toolbarButton = new StelButton(Q_NULLPTR, *pxmapOnIcon, *pxmapOffIcon, *pxmapGlow, "actionShow_Ocular");
+			}
+			gui->getButtonBar()->addButton(toolbarButton, "065-pluginsGroup");
+		} else {
+			gui->getButtonBar()->hideButton("actionShow_Ocular");
+		}
+	}
+	flagShowOcularsButton = b;
+	settings->setValue("show_toolbar_button", b);
+	settings->sync();
+
+	emit flagShowOcularsButtonChanged(b);
+}
+
+
+void Oculars::setGuiPanelFontSize(int size)
+{
+	// This forces a redraw of the panel.
+	if (size!=guiPanelFontSize)
+	{
+		bool guiPanelVisible=guiPanel;
+		if (guiPanelVisible)
+			enableGuiPanel(false);
+		guiPanelFontSize=size;
+		if (guiPanelVisible)
+			enableGuiPanel(true);
+
+		settings->setValue("gui_panel_fontsize", size);
+		settings->sync();
+		emit guiPanelFontSizeChanged(size);
+	}
 }

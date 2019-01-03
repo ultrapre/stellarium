@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _SKYGUI_HPP_
-#define _SKYGUI_HPP_
+#ifndef SKYGUI_HPP
+#define SKYGUI_HPP
 
 #include "StelStyle.hpp"
 #include "StelObject.hpp"
@@ -45,7 +45,7 @@ class InfoPanel : public QGraphicsTextItem
 		void setInfoTextFilters(const StelObject::InfoStringGroup& aflags) {infoTextFilters=aflags;}
 		const StelObject::InfoStringGroup& getInfoTextFilters(void) const {return infoTextFilters;}
 		void setTextFromObjects(const QList<StelObjectP>&);
-		const QString getSelectedText(void);
+		const QString getSelectedText(void) const;
 
 	private:
 		StelObject::InfoStringGroup infoTextFilters;
@@ -82,7 +82,9 @@ private slots:
 	//! Load color scheme from the given ini file and section name
 	void setStelStyle(const QString& style);
 	
+public slots:
 	//! Update the position of the button bars in the main window
+	//! GZ needed this public for interactive GUI scaling
 	void updateBarsPos();
 
 private:
@@ -107,4 +109,4 @@ private:
 	StelGui* stelGui;
 };
 
-#endif // _SKYGUI_HPP_
+#endif // _SKYGUI_HPP

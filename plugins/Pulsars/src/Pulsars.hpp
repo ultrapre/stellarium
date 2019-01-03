@@ -16,8 +16,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _PULSARS_HPP_
-#define _PULSARS_HPP_
+#ifndef PULSARS_HPP
+#define PULSARS_HPP
 
 #include "StelObjectModule.hpp"
 #include "StelObject.hpp"
@@ -29,9 +29,9 @@
 #include <QDateTime>
 #include <QList>
 #include <QSharedPointer>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 
-class QNetworkAccessManager;
-class QNetworkReply;
 class QSettings;
 class QTimer;
 class QPixmap;
@@ -77,8 +77,18 @@ class Pulsars : public StelObjectModule
 		   READ getFlagShowPulsars
 		   WRITE setFlagShowPulsars
 		   NOTIFY flagPulsarsVisibilityChanged
-		   )	
-public:	
+		   )
+	Q_PROPERTY(Vec3f markerColor
+		   READ getMarkerColor
+		   WRITE setMarkerColor
+		   NOTIFY markerColorChanged
+		   )
+	Q_PROPERTY(Vec3f glitchColor
+		   READ getGlitchColor
+		   WRITE setGlitchColor
+		   NOTIFY glitchColorChanged
+		   )
+public:
 	//! @enum UpdateState
 	//! Used for keeping for track of the download/update status
 	enum UpdateState {
@@ -104,10 +114,10 @@ public:
 	///////////////////////////////////////////////////////////////////////////
 	// Methods defined in StelObjectManager class
 	//! Used to get a list of objects which are near to some position.
-	//! @param v a vector representing the position in th sky around which to search for nebulae.
-	//! @param limitFov the field of view around the position v in which to search for satellites.
+	//! @param v a vector representing the position in th sky around which to search for pulsars.
+	//! @param limitFov the field of view around the position v in which to search for pulsars.
 	//! @param core the StelCore to use for computations.
-	//! @return an list containing the satellites located inside the limitFov circle around position v.
+	//! @return an list containing the pulsars located inside the limitFov circle around position v.
 	virtual QList<StelObjectP> searchAround(const Vec3d& v, double limitFov, const StelCore* core) const;
 
 	//! Return the matching satellite object's pointer if exists or Q_NULLPTR.
@@ -184,6 +194,8 @@ signals:
 
 	void flagPulsarsVisibilityChanged(bool b);
 	void flagUsingFilterChanged(bool b);
+	void markerColorChanged(Vec3f);
+	void glitchColorChanged(Vec3f);
 
 public slots:
 	//! Define whether the button toggling pulsars should be visible
@@ -202,25 +214,25 @@ public slots:
 	void setFilteredMode(bool b);
 	//! Get status to usage display filter of pulsars
 	//! @return true if it's visible
-	bool getFilteredMode(void);
+	bool getFilteredMode(void) const;
 
 	//! Set value for filter
 	//! @param v float value
 	void setFilterValue(float v);
 	//! Get value for filter
 	//! @return value
-	float getFilterValue(void);
+	float getFilterValue(void) const;
 
 	//! Get status to display of distribution of pulsars
 	//! @return true if distribution of pulsars is enabled
-	bool getDisplayMode(void);
+	bool getDisplayMode(void) const;
 	//! Enable/disable display of distribution of pulsars
 	//! @param b
 	void setDisplayMode(bool b);
 
 	//! Get status for usage of separate color for pulsars with glitches
 	//! @return true if separate color is used for pulsars with glitches
-	bool getGlitchFlag(void);
+	bool getGlitchFlag(void) const;
 	//! Enable/disable the use of a separate color for pulsars with glitches
 	//! @param boolean flag
 	void setGlitchFlag(bool b);
@@ -228,7 +240,7 @@ public slots:
 	//! Get color for pulsars markers
 	//! @param mtype set false if you want get color of pulsars with glitches
 	//! @return color
-	Vec3f getMarkerColor(bool mtype = true);
+	Vec3f getMarkerColor() const;
 	//! Set color for pulsars markers
 	//! @param c color
 	//! @param mtype set false if you want set color for pulsars with glitches
@@ -236,16 +248,30 @@ public slots:
 	//! // example of usage in scripts
 	//! Pulsars.setMarkerColor(Vec3f(1.0,0.0,0.0), true);
 	//! @endcode
-	void setMarkerColor(const Vec3f& c, bool mtype = true);
+	void setMarkerColor(const Vec3f& c);
+
+	//! Get marker color for pulsars with glitches
+	//! @param mtype set false if you want get color of pulsars with glitches
+	//! @return color
+	Vec3f getGlitchColor() const;
+	//! Set markers color for pulsars with glitches
+	//! @param c color
+	//! @code
+	//! // example of usage in scripts
+	//! Pulsars.setGlitchColor(Vec3f(1.0,0.0,0.0));
+	//! @endcode
+	void setGlitchColor(const Vec3f& c);
 
 	//! Get count of pulsars from catalog
 	//! @return count of pulsars
-	int getCountPulsars(void) {return PsrCount;}
+	int getCountPulsars(void) const {return PsrCount;}
 
 	//! Download JSON from web recources described in the module section of the
 	//! module.ini file and update the local JSON file.
 	void updateJSON(void);
 
+	//! Connect this to StelApp font size.
+	void setFontSize(int s){font.setPixelSize(s);}
 private:
 	// Font used for displaying our text
 	QFont font;
@@ -290,7 +316,8 @@ private:
 
 	// variables and functions for the updater
 	UpdateState updateState;
-	QNetworkAccessManager* downloadMgr;
+	QNetworkAccessManager * networkManager;
+	QNetworkReply * downloadReply;
 	QString updateUrl;	
 	QTimer* updateTimer;
 	QList<int> messageIDs;
@@ -298,6 +325,9 @@ private:
 	QDateTime lastUpdate;
 	int updateFrequencyDays;	
 	bool enableAtStartup;
+
+	void startDownload(QString url);
+	void deleteDownloadProgressBar();
 
 	QSettings* conf;
 
@@ -317,7 +347,9 @@ private slots:
 	//! if the last update was longer than updateFrequencyHours ago then the update is
 	//! done.
 	void checkForUpdate(void);
-	void updateDownloadComplete(QNetworkReply* reply);
+
+	void updateDownloadProgress(qint64 bytesReceived, qint64 bytesTotal);
+	void downloadComplete(QNetworkReply * reply);
 
 	void reloadCatalog(void);
 
@@ -342,4 +374,4 @@ public:
 	virtual QObjectList getExtensionList() const { return QObjectList(); }
 };
 
-#endif /*_PULSARS_HPP_*/
+#endif /* PULSARS_HPP */

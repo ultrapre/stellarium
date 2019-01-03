@@ -21,8 +21,8 @@
 // Use OpenGL compatible ordering ie. you can pass a matrix or vector to
 // openGL functions without changes in the ordering
 
-#ifndef _VECMATH_H_
-#define _VECMATH_H_
+#ifndef VECMATH_HPP
+#define VECMATH_HPP
 
 #include <cmath>
 #include <limits>
@@ -772,8 +772,8 @@ template<class T> T Vector3<T>::dot(const Vector3<T>& b) const
 template<class T> Vector3<T> Vector3<T>::operator^(const Vector3<T>& b) const
 {
 	return Vector3<T>(v[1] * b.v[2] - v[2] * b.v[1],
-					  v[2] * b.v[0] - v[0] * b.v[2],
-					  v[0] * b.v[1] - v[1] * b.v[0]);
+			  v[2] * b.v[0] - v[0] * b.v[2],
+			  v[0] * b.v[1] - v[1] * b.v[0]);
 }
 
 // Angle in radian between two vectors
@@ -1761,4 +1761,4 @@ inline QVector3D operator*(const QMatrix3x3& mat, const QVector3D& vec)
 	return QVector3D(x,y,z);
 }
 
-#endif // _VECMATH_H_
+#endif // VECMATH_HPP

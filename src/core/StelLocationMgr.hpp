@@ -16,8 +16,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _STELLOCATIONMGR_HPP_
-#define _STELLOCATIONMGR_HPP_
+#ifndef STELLOCATIONMGR_HPP
+#define STELLOCATIONMGR_HPP
 
 #include "StelLocation.hpp"
 #include <QString>
@@ -91,6 +91,9 @@ public slots:
 	//! Find location via online lookup of IP address
 	void locationFromIP();
 
+	//! return a QStringList of valid timezone names in Stellarium's location database.
+	QStringList getAllTimezoneNames() const;
+
 #ifdef ENABLE_GPS
 	//! Try to get a location from GPS lookup.
 	//! This prefers GPSD on non-Windows platforms, and uses Qt positioning with a NMEA serial device otherwise
@@ -155,4 +158,4 @@ private:
 	GPSLookupHelper *nmeaHelper,*libGpsHelper;
 };
 
-#endif // _STELLOCATIONMGR_HPP_
+#endif // STELLOCATIONMGR_HPP

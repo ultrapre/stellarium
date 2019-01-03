@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _STELOBJECT_HPP_
-#define _STELOBJECT_HPP_
+#ifndef STELOBJECT_HPP
+#define STELOBJECT_HPP
 
 #include "VecMath.hpp"
 #include "StelObjectType.hpp"
@@ -111,6 +111,7 @@ public:
 	//! - azimuth : apparent azimuth angle in decimal degrees
 	//! - altitude-geometric : geometric altitude angle in decimal degrees
 	//! - azimuth-geometric : geometric azimuth angle in decimal degrees
+	//! - airmass : number of airmasses the object's light had to pass through the atmosphere. For negative altitudes this number may be meaningless.
 	//! - ra : right ascension angle (current date frame) in decimal degrees
 	//! - dec : declination angle (current date frame) in decimal degrees
 	//! - raJ2000 : right ascension angle (J2000 frame) in decimal degrees
@@ -137,6 +138,7 @@ public:
 	//! - set-dhr : time of set in decimal hours
 	//! - name : english name of the object
 	//! - localized-name : localized name	
+	//! @note Coordinate values may need modulo operation to bring them into ranges [0..360].
 	virtual QVariantMap getInfoMap(const StelCore *core) const;
 
 	//! Return object's type. It should be the name of the class.
@@ -246,8 +248,15 @@ public:
 
 protected:
 
-	//! Format the positional info string contain J2000/of date/altaz/hour angle positions and constellation, sidereal time, etc. for the object
+	//! Format the positional info string containing J2000/of date/altaz/hour angle positions and constellation, sidereal time, etc. for the object
 	QString getCommonInfoString(const StelCore *core, const InfoStringGroup& flags) const;
+
+	//! Format the magnitude info string for the object
+	//! @param core
+	//! @param flags
+	//! @param alt_app apparent altitude (for atmosphere-dependent calculations)
+	//! @param decimals significant digits after the comma.
+	virtual QString getMagnitudeInfoString(const StelCore *core, const InfoStringGroup& flags, const double alt_app, const int decimals=1) const;
 
 	//! Apply post processing on the info string
 	void postProcessInfoString(QString& str, const InfoStringGroup& flags) const;
@@ -262,4 +271,4 @@ private:
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(StelObject::InfoStringGroup)
 
-#endif // _STELOBJECT_HPP_
+#endif // STELOBJECT_HPP

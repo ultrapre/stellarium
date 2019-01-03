@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _STELMODULE_HPP_
-#define _STELMODULE_HPP_
+#ifndef STELMODULE_HPP
+#define STELMODULE_HPP
 
 #include <QString>
 #include <QObject>
@@ -82,7 +82,7 @@ public:
 	virtual QString getAuthorName() const {return "Stellarium's Team";}
 
 	//! Get the email adress of the module author
-	virtual QString getAuthorEmail() const {return "http://www.stellarium.org";}
+	virtual QString getAuthorEmail() const {return "stellarium@googlegroups.com";}
 
 	//! Handle mouse clicks. Please note that most of the interactions will be done through the GUI module.
 	//! @return set the event as accepted if it was intercepted
@@ -114,9 +114,9 @@ public:
 		ReplaceSelection,	//!< Set the StelObject as the new list of selected ones.
 		RemoveFromSelection	//!< Subtract the StelObject from the current list of selected ones.
 	};
-#if QT_VERSION >= 0x050500
+	#if QT_VERSION >= 0x050500
 	Q_ENUM(StelModuleSelectAction)
-#endif
+	#endif
 	//! Define the possible action for which an order is defined
 	enum StelModuleActionName
 	{
@@ -126,9 +126,9 @@ public:
 		ActionHandleMouseMoves,  //!< Action associated to the handleMouseMoves() method
 		ActionHandleKeys         //!< Action associated to the handleKeys() method
 	};
-#if QT_VERSION >= 0x050500
+	#if QT_VERSION >= 0x050500
 	Q_ENUM(StelModuleActionName)
-#endif
+	#endif
 	//! Return the value defining the order of call for the given action
 	//! For example if stars.callOrder[ActionDraw] == 10 and constellation.callOrder[ActionDraw] == 11,
 	//! the stars module will be drawn before the constellations
@@ -172,4 +172,4 @@ protected:
 
 Q_DECLARE_METATYPE(StelModule::StelModuleSelectAction)
 
-#endif // _STELMODULE_HPP_
+#endif // STELMODULE_HPP

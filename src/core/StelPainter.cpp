@@ -25,6 +25,7 @@
 #include "StelProjectorClasses.hpp"
 #include "StelUtils.hpp"
 #include "Dithering.hpp"
+#include "SaturationShader.hpp"
 
 #include <QDebug>
 #include <QString>
@@ -625,7 +626,7 @@ struct StringTexture
 	~StringTexture() {delete texture;}
 };
 
-StringTexture* StelPainter::getTexTexture(const QString& str, int pixelSize)
+StringTexture* StelPainter::getTexTexture(const QString& str, int pixelSize) const
 {
 	// Render first the text into a QPixmap, then create a QOpenGLTexture
 	// from it.  We could optimize by directly using a QImage, but for some
@@ -1478,7 +1479,7 @@ public:
 	inline void operator()(const Vec3d* v0, const Vec3d* v1, const Vec3d* v2,
 						   const Vec2f* t0, const Vec2f* t1, const Vec2f* t2,
 						   const Vec3f* c0, const Vec3f* c1, const Vec3f* c2,
-						   unsigned int, unsigned int, unsigned)
+						   unsigned int, unsigned int, unsigned) const
 	{
 		// XXX: we may optimize more by putting the declaration and the test outside of this method.
 		const Vec3d tmpVertex[3] = {*v0, *v1, *v2};
@@ -2088,12 +2089,16 @@ void StelPainter::initGLShaders()
 	QOpenGLShader fshader4(QOpenGLShader::Fragment);
 	const auto fsrc4 =
 		makeDitheringShader()+
+		makeSaturationShader()+
 		"varying mediump vec2 texc;\n"
 		"varying mediump vec4 outColor;\n"
 		"uniform sampler2D tex;\n"
+		"uniform lowp float saturation;\n"
 		"void main(void)\n"
 		"{\n"
 		"    gl_FragColor = dither(texture2D(tex, texc)*outColor);\n"
+		"    if (saturation != 1.0)\n"
+		"        gl_FragColor.rgb = saturate(gl_FragColor.rgb, saturation);\n"
 		"}\n";
 	fshader4.compileSourceCode(fsrc4);
 	if (!fshader4.log().isEmpty()) { qWarning() << "StelPainter: Warnings while compiling fshader4: " << fshader4.log(); }
@@ -2109,6 +2114,7 @@ void StelPainter::initGLShaders()
 	texturesColorShaderVars.texture = texturesColorShaderProgram->uniformLocation("tex");
 	texturesColorShaderVars.bayerPattern = texturesColorShaderProgram->uniformLocation("bayerPattern");
 	texturesColorShaderVars.rgbMaxValue = texturesColorShaderProgram->uniformLocation("rgbMaxValue");
+	texturesColorShaderVars.saturation = texturesColorShaderProgram->uniformLocation("saturation");
 }
 
 
@@ -2215,6 +2221,7 @@ void StelPainter::drawFromArray(DrawingMode mode, int count, int offset, bool do
 		glBindTexture(GL_TEXTURE_2D, bayerPatternTex);
 		pr->setUniformValue(texturesColorShaderVars.bayerPattern, 1);
 		pr->setUniformValue(texturesColorShaderVars.rgbMaxValue, rgbMaxValue[0], rgbMaxValue[1], rgbMaxValue[2]);
+		pr->setUniformValue(texturesColorShaderVars.saturation, saturation);
 	}
 	else if (!texCoordArray.enabled && colorArray.enabled && !normalArray.enabled)
 	{

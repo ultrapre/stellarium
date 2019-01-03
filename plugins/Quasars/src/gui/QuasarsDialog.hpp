@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
 */
  
-#ifndef _QUASARSDIALOG_HPP_
-#define _QUASARSDIALOG_HPP_
+#ifndef QUASARSDIALOG_HPP
+#define QUASARSDIALOG_HPP
 
 #include <QObject>
 #include "StelDialog.hpp"
@@ -60,16 +60,13 @@ private slots:
 	void saveSettings(void);
 	void updateJSON(void);
 
-	void askQuasarsMarkerColor();
-
 private:
 	Ui_quasarsDialog* ui;
 	Quasars* qsr;
 	void setAboutHtml(void);
 	void updateGuiFromSettings(void);
-	void colorButton(QToolButton *toolButton, Vec3f vColor);
 	QTimer* updateTimer;
 
 };
 
-#endif // _QUASARSDIALOG_HPP_
+#endif // QUASARSDIALOG_HPP

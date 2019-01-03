@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
 
-#ifndef _STELSKYCULTUREMGR_HPP_
-#define _STELSKYCULTUREMGR_HPP_
+#ifndef STELSKYCULTUREMGR_HPP
+#define STELSKYCULTUREMGR_HPP
 
 #include <QObject>
 #include <QMap>
@@ -107,14 +107,14 @@ public slots:
 	
 	//! Get a list of sky culture names in English.
 	//! @return A new-line delimited list of English sky culture names.
-	QString getSkyCultureListEnglish(void);
+	QString getSkyCultureListEnglish(void) const;
 	
 	//! Get a list of sky culture names in the current language.
 	//! @return A list of translated sky culture names.
-	QStringList getSkyCultureListI18(void);
+	QStringList getSkyCultureListI18(void) const;
 
 	//! Get a list of sky culture IDs
-	QStringList getSkyCultureListIDs(void);
+	QStringList getSkyCultureListIDs(void) const;
 
 	//! Returns a map from sky culture IDs/folders to sky culture names.
 	QMap<QString, StelSkyCulture> getDirToNameMap() const { return dirToNameEnglish; }
@@ -131,7 +131,7 @@ private:
 	//! Get the culture name in English associated with a specified directory.
 	//! @param directory The directory name.
 	//! @return The English name for the culture associated with directory.
-	QString directoryToSkyCultureEnglish(const QString& directory);
+	QString directoryToSkyCultureEnglish(const QString& directory) const;
 	
 	//! Get the culture name translated to current language associated with 
 	//! a specified directory.
@@ -153,4 +153,4 @@ private:
 	QString defaultSkyCultureID;
 };
 
-#endif // _STELSKYCULTUREMGR_HPP_
+#endif // STELSKYCULTUREMGR_HPP

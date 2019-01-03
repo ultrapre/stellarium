@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
 */
  
-#ifndef _EXOPLANETSDIALOG_HPP_
-#define _EXOPLANETSDIALOG_HPP_
+#ifndef EXOPLANETSDIALOG_HPP
+#define EXOPLANETSDIALOG_HPP
 
 #include <QObject>
 #include "StelDialog.hpp"
@@ -65,9 +65,6 @@ private slots:
 	void drawDiagram(void);
 	void populateDiagramsList();
 
-	void askExoplanetsMarkerColor();
-	void askHabitableExoplanetsMarkerColor();
-
 	void populateTemperatureScales();
 	void setTemperatureScale(int tScaleID);
 
@@ -78,10 +75,9 @@ private:
 	void setInfoHtml(void);
 	void setWebsitesHtml(void);
 	void updateGuiFromSettings(void);
-	void colorButton(QToolButton *toolButton, Vec3f vColor);
 	QTimer* updateTimer;
 
 	typedef QPair<QString, int> axisPair;
 };
 
-#endif // _EXOPLANETSDIALOG_HPP_
+#endif // EXOPLANETSDIALOG_HPP

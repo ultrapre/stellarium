@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
 */
 
-#ifndef _ASTROCALCDIALOG_HPP_
-#define _ASTROCALCDIALOG_HPP_
+#ifndef ASTROCALCDIALOG_HPP
+#define ASTROCALCDIALOG_HPP
 
 #include <QObject>
 #include <QTreeWidget>
@@ -39,6 +39,8 @@
 
 class Ui_astroCalcDialogForm;
 class QListWidgetItem;
+class QSortFilterProxyModel;
+class QStringListModel;
 
 class AstroCalcDialog : public StelDialog
 {
@@ -48,27 +50,27 @@ public:
 	//! Defines the number and the order of the columns in the table that lists celestial bodies positions
 	//! @enum CPositionsColumns
 	enum CPositionsColumns {
-		CColumnName,		//! name of object
-		CColumnRA,		//! right ascension
-		CColumnDec,		//! declination
-		CColumnMagnitude,	//! magnitude
+		CColumnName,			//! name of object
+		CColumnRA,			//! right ascension
+		CColumnDec,			//! declination
+		CColumnMagnitude,		//! magnitude
 		CColumnAngularSize,	//! angular size
-		CColumnExtra,		//! extra data (surface brightness, separation, period, etc.)
+		CColumnExtra,			//! extra data (surface brightness, separation, period, etc.)
 		CColumnTransit,		//! time of transit
-		CColumnType,		//! type of object
-		CColumnCount		//! total number of columns
+		CColumnType,			//! type of object
+		CColumnCount			//! total number of columns
 	};
 
 	//! Defines the number and the order of the columns in the ephemeris table
 	//! @enum EphemerisColumns
 	enum EphemerisColumns {
 		EphemerisDate,		//! date and time of ephemeris
-		EphemerisJD,		//! JD
-		EphemerisRA,		//! right ascension
-		EphemerisDec,		//! declination
+		EphemerisJD,			//! JD
+		EphemerisRA,			//! right ascension
+		EphemerisDec,			//! declination
 		EphemerisMagnitude,	//! magnitude
 		EphemerisPhase,		//! phase
-		EphemerisDistance,	//! distance
+		EphemerisDistance,		//! distance
 		EphemerisElongation,	//! elongation
 		EphemerisCount		//! total number of columns
 	};
@@ -76,23 +78,38 @@ public:
 	//! Defines the number and the order of the columns in the phenomena table
 	//! @enum PhenomenaColumns
 	enum PhenomenaColumns {
-		PhenomenaType,		//! type of phenomena
-		PhenomenaDate,		//! date and time of ephemeris		
-		PhenomenaObject1,	//! first object
-		PhenomenaObject2,	//! second object
-		PhenomenaSeparation,	//! angular separation
-		PhenomenaCount		//! total number of columns
+		PhenomenaType,			//! type of phenomena
+		PhenomenaDate,			//! date and time of ephemeris
+		PhenomenaObject1,			//! first object
+		PhenomenaObject2,			//! second object
+		PhenomenaSeparation,		//! angular separation
+		PhenomenaElongation,		//! elongation (from the Sun)
+		PhenomenaAngularDistance,	//! angular distance (from the Moon)
+		PhenomenaCount			//! total number of columns
+	};
+
+	//! Defines the number and the order of the columns in the WUT tool
+	//! @enum WUTColumns
+	enum WUTColumns {
+		WUTObjectName,		//! object name
+		WUTMagnitude,		//! magnitude
+		WUTRiseTime,			//! rise time
+		WUTTransitTime,		//! transit time
+		WUTSetTime,			//! set time
+		WUTAngularSize,		//! angular size
+		WUTCount			//! total number of columns
 	};
 
 	//! Defines the type of graphs
 	//! @enum GraphsTypes
 	enum GraphsTypes {
 		GraphMagnitudeVsTime	= 1,
-		GraphPhaseVsTime	= 2,
+		GraphPhaseVsTime		= 2,
 		GraphDistanceVsTime	= 3,
 		GraphElongationVsTime	= 4,
 		GraphAngularSizeVsTime	= 5,
-		GraphPhaseAngleVsTime	= 6
+		GraphPhaseAngleVsTime	= 6,
+		GraphHDistanceVsTime	= 7
 	};
 
 	AstroCalcDialog(QObject* parent);
@@ -140,7 +157,7 @@ private slots:
 	void cleanupPhenomena();
 	void selectCurrentPhenomen(const QModelIndex &modelIndex);
 	void savePhenomena();
-	void savePhenomenaAngularSeparation(double v);
+	void savePhenomenaAngularSeparation();
 
 	void savePhenomenaCelestialBody(int index);
 	void savePhenomenaCelestialGroup(int index);
@@ -150,6 +167,12 @@ private slots:
 	void saveFirstCelestialBody(int index);
 	void saveSecondCelestialBody(int index);
 	void computePlanetaryData();
+	void drawDistanceGraph();
+	void mouseOverDistanceGraph(QMouseEvent *event);
+
+	void drawAngularDistanceGraph();
+	void drawAngularDistanceLimitLine();
+	void saveAngularDistanceLimit(int limit);
 
 	//! Draw diagram 'Altitude vs. Time'
 	void drawAltVsTimeDiagram();
@@ -175,14 +198,20 @@ private slots:
 
 	// WUT
 	void saveWutMagnitudeLimit(double mag);
+	void saveWutMinAngularSizeLimit();
+	void saveWutMaxAngularSizeLimit();
+	void saveWutAngularSizeFlag(bool state);
 	void saveWutTimeInterval(int index);
 	void calculateWutObjects();
-	void selectWutObject();
+	void selectWutObject(const QModelIndex& index);
 	void saveWutObjects();
+	void searchWutClear();
 
 	void updateAstroCalcData();
 
 	void changePage(QListWidgetItem *current, QListWidgetItem *previous);
+	void changePCTab(int index);
+	void changeGraphsTab(int index);
 
 	void updateSolarSystemData();
 
@@ -194,9 +223,10 @@ private:
 	class StelObjectMgr* objectMgr;
 	class StelLocaleMgr* localeMgr;
 	class StelMovementMgr* mvMgr;
+	QStringListModel* wutModel;
+	QSortFilterProxyModel *proxyModel;
 	QSettings* conf;
 	QTimer *currentTimeLine;
-	QHash<QString,QString> wutObjects;
 	QHash<QString,int> wutCategories;
 
 	//! Update header names for celestial positions tables
@@ -205,6 +235,8 @@ private:
 	void setEphemerisHeaderNames();
 	//! Update header names for phenomena table
 	void setPhenomenaHeaderNames();
+	//! Update header names for WUT table
+	void setWUTHeaderNames(const bool magnitude = true, const bool separation = false);
 
 	//! Init header and list of celestial positions
 	void initListCelestialPositions();
@@ -212,6 +244,8 @@ private:
 	void initListEphemeris();
 	//! Init header and list of phenomena
 	void initListPhenomena();
+	//! Init header and list of WUT
+	void initListWUT(const bool magnitude = true, const bool separation = false);
 
 	//! Populates the drop-down list of celestial bodies.
 	//! The displayed names are localized in the current interface language.
@@ -228,12 +262,21 @@ private:
 	void prepareAxesAndGraph();
 	void prepareXVsTimeAxesAndGraph();
 	void prepareMonthlyEleveationAxesAndGraph();
+	void prepareDistanceAxesAndGraph();
+	void prepareAngularDistanceAxesAndGraph();
 	//! Populates the drop-down list of time intervals for WUT tool.
 	void populateTimeIntervalsList();
 	//! Populates the list of groups for WUT tool.
 	void populateWutGroups();
 
 	void populateFunctionsList();
+
+	void adjustWUTColumns();
+
+	void fillWUTTable(QString objectName, QString designation, double magnitude, Vec3f RTSTime, double angularSize, bool decimalDegrees = false);
+	void fillCelestialPositionTable(QString objectName, QString RA, QString Dec, double magnitude,
+							  QString angularSize, QString angularSizeToolTip, QString extraData,
+							  QString extraDataToolTip, QString transitTime, QString objectType);
 
 	//! Calculation conjunctions and oppositions.
 	//! @note Ported from KStars, should be improved, because this feature calculate
@@ -254,16 +297,18 @@ private:
 	bool findPrecise(QPair<double, double>* out, PlanetP object1, StelObjectP object2, double JD, double step, int prevSign);
 	void fillPhenomenaTable(const QMap<double, double> list, const PlanetP object1, const StelObjectP object2);
 
-	bool plotAltVsTime, plotAltVsTimeSun, plotAltVsTimeMoon, plotAltVsTimePositive, plotMonthlyElevation, plotMonthlyElevationPositive;
+	bool plotAltVsTime, plotAltVsTimeSun, plotAltVsTimeMoon, plotAltVsTimePositive, plotMonthlyElevation, plotMonthlyElevationPositive, plotDistanceGraph, plotAngularDistanceGraph;
 	QString delimiter, acEndl;
-	QStringList ephemerisHeader, phenomenaHeader, positionsHeader;	
+	QStringList ephemerisHeader, phenomenaHeader, positionsHeader, wutHeader;
 	static float brightLimit;
-	static float minY, maxY, minYme, maxYme, minYsun, maxYsun, minYmoon, maxYmoon, transitX, minY1, maxY1, minY2, maxY2;
+	static double minY, maxY, minYme, maxYme, minYsun, maxYsun, minYmoon, maxYmoon, transitX, minY1, maxY1, minY2, maxY2, minYld, maxYld, minYad, maxYad, minYadm, maxYadm;
 	static QString yAxis1Legend, yAxis2Legend;
 
 	//! Make sure that no tabs icons are outside of the viewport.
 	//! @todo Limit the width to the width of the screen *available to the window*.
 	void updateTabBarListWidgetWidth();
+
+	void enableVisibilityAngularLimits(bool visible);
 };
 
 // Reimplements the QTreeWidgetItem class to fix the sorting bug
@@ -335,7 +380,7 @@ private:
 		{
 			return StelUtils::getDecAngle(text(column)) < StelUtils::getDecAngle(other.text(column));
 		}
-		else if (column == AstroCalcDialog::EphemerisMagnitude || column == AstroCalcDialog::EphemerisJD)
+		else if (column == AstroCalcDialog::EphemerisMagnitude || column == AstroCalcDialog::EphemerisJD || column == AstroCalcDialog::EphemerisDistance)
 		{
 			return text(column).toFloat() < other.text(column).toFloat();
 		}
@@ -360,7 +405,7 @@ private:
 	{
 		int column = treeWidget()->sortColumn();
 
-		if (column == AstroCalcDialog::PhenomenaSeparation)
+		if (column == AstroCalcDialog::PhenomenaSeparation || column == AstroCalcDialog::PhenomenaElongation || column == AstroCalcDialog::PhenomenaAngularDistance)
 		{
 			return StelUtils::getDecAngle(text(column)) < StelUtils::getDecAngle(other.text(column));
 		}
@@ -371,4 +416,51 @@ private:
 	}
 };
 
-#endif // _ASTROCALCDIALOG_HPP_
+// Reimplements the QTreeWidgetItem class to fix the sorting bug
+class WUTTreeWidgetItem : public QTreeWidgetItem
+{
+public:
+	WUTTreeWidgetItem(QTreeWidget* parent)
+		: QTreeWidgetItem(parent)
+	{
+	}
+
+private:
+	bool operator < (const QTreeWidgetItem &other) const
+	{
+		int column = treeWidget()->sortColumn();
+
+		if (column == AstroCalcDialog::WUTObjectName)
+		{
+			QRegExp dso("^(\\w+)\\s*(\\d+)\\s*(.*)$");
+			QRegExp mp("^[(](\\d+)[)]\\s(.+)$");
+			int a = 0, b = 0;
+			if (dso.exactMatch(text(column)))
+				a = dso.capturedTexts().at(2).toInt();
+			if (a==0 && mp.exactMatch(text(column)))
+				a = mp.capturedTexts().at(1).toInt();
+			if (dso.exactMatch(other.text(column)))
+				b = dso.capturedTexts().at(2).toInt();
+			if (b==0 && mp.exactMatch(other.text(column)))
+				b = mp.capturedTexts().at(1).toInt();
+			if (a>0 && b>0)
+				return a < b;
+			else
+				return text(column).toLower() < other.text(column).toLower();
+		}
+		else if (column == AstroCalcDialog::WUTMagnitude)
+		{
+			return text(column).toFloat() < other.text(column).toFloat();
+		}
+		else if (column == AstroCalcDialog::WUTRiseTime || column == AstroCalcDialog::WUTTransitTime || column == AstroCalcDialog::WUTSetTime)
+		{
+			return StelUtils::hmsStrToHours(text(column).append("00s")) < StelUtils::hmsStrToHours(other.text(column).append("00s"));
+		}
+		else
+		{
+			return text(column).toLower() < other.text(column).toLower();
+		}
+	}
+};
+
+#endif // ASTROCALCDIALOG_HPP

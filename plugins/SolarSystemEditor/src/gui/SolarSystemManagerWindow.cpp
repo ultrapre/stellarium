@@ -59,12 +59,14 @@ void SolarSystemManagerWindow::createDialogContent()
 {
 	ui->setupUi(dialog);
 
-#ifdef Q_OS_WIN
-	//Kinetic scrolling for tablet pc and pc
-	QList<QWidget *> addscroll;
-	addscroll << ui->listWidgetObjects;
-	installKineticScrolling(addscroll);
-#endif
+	// Kinetic scrolling
+	kineticScrollingList << ui->listWidgetObjects;
+	StelGui* gui= dynamic_cast<StelGui*>(StelApp::getInstance().getGui());
+	if (gui)
+	{
+		enableKineticScrolling(gui->getFlagUseKineticScrolling());
+		connect(gui, SIGNAL(flagUseKineticScrollingChanged(bool)), this, SLOT(enableKineticScrolling(bool)));
+	}
 
 	//Signals
 	connect(&StelApp::getInstance(), SIGNAL(languageChanged()),
@@ -193,7 +195,9 @@ void SolarSystemManagerWindow::removeObjects()
 
 void SolarSystemManagerWindow::copyConfiguration()
 {
-	QString filePath = QFileDialog::getSaveFileName(0, q_("Save the minor Solar System bodies as..."), QDir::homePath() + "/ssystem_minor.ini");
+	QString filePath = QFileDialog::getSaveFileName(Q_NULLPTR,
+							q_("Save the minor Solar System bodies as..."),
+							QDir::homePath() + "/ssystem_minor.ini");
 	ssEditor->copySolarSystemConfigurationFileTo(filePath);
 }
 
