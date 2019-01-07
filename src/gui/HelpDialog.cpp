@@ -205,7 +205,6 @@ void HelpDialog::downloadComplete(QNetworkReply *reply)
 	downloadReply = Q_NULLPTR;
 
 	emit(checkUpdatesComplete());
-	ui->stackListWidget->setFixedHeight( ui->stackListWidget->sizeHintForRow(0) );
 }
 
 void HelpDialog::showShortcutsWindow()

@@ -278,7 +278,7 @@ QList<StelModuleMgr::PluginDescriptor> StelModuleMgr::getPluginsList()
 		if (!loader.load())
 		{
 			qWarning() << "Couldn't load the dynamic library:" << QDir::toNativeSeparators(moduleFullPath) << ": " << loader.errorString();
-			qWarning() << "Plugin will not be loaded.";
+			qWarning() << "Plugin" << moduleFullPath << "will not be loaded.";
 			continue;
 		}
 
@@ -286,7 +286,7 @@ QList<StelModuleMgr::PluginDescriptor> StelModuleMgr::getPluginsList()
 		if (!obj)
 		{
 			qWarning() << "Couldn't open the dynamic library:" << QDir::toNativeSeparators(moduleFullPath) << ": " << loader.errorString();
-			qWarning() << "Plugin will not be open.";
+			qWarning() << "Plugin" << moduleFullPath << "will not be open.";
 			continue;
 		}
 

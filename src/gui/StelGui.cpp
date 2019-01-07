@@ -268,6 +268,8 @@ void StelGui::init(QGraphicsWidget *atopLevelGraphicsWidget)
 	//// QGraphicsView based GUI
 	///////////////////////////////////////////////////////////////////////////
 
+	setFlagUseKineticScrolling(conf->value("gui/flag_enable_kinetic_scrolling", false).toBool());
+
 	setFlagUseButtonsBackground(conf->value("gui/flag_show_buttons_background", true).toBool());
 	// Add everything
 	QPixmap pxmapDefault;
@@ -728,8 +730,8 @@ void StelGui::setFlagShowFlipButtons(bool b)
 				QPixmap pxmapOff(":/graphicGui/btFlipHorizontal-off.png");
 				flipHoriz = new StelButton(Q_NULLPTR, pxmapOn, pxmapOff, pxmapGlow32x32, "actionHorizontal_Flip");
 			}
-			getButtonBar()->addButton(flipVert, "060-othersGroup", "actionVertical_Flip");
-			getButtonBar()->addButton(flipHoriz, "060-othersGroup", "actionHorizontal_Flip");
+			getButtonBar()->addButton(flipVert, "060-othersGroup", "actionQuit_Global");
+			getButtonBar()->addButton(flipHoriz, "060-othersGroup", "actionVertical_Flip");
 		} else {
 			getButtonBar()->hideButton("actionVertical_Flip");
 			getButtonBar()->hideButton("actionHorizontal_Flip");

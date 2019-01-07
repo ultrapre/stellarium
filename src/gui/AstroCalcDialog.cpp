@@ -53,10 +53,6 @@ using namespace QXlsx;
 #include <QSortFilterProxyModel>
 #include <QStringListModel>
 
-#if !defined(Q_OS_ANDROID)
-	using std::round;
-#endif
-
 QVector<Vec3d> AstroCalcDialog::EphemerisListCoords;
 QVector<QString> AstroCalcDialog::EphemerisListDates;
 QVector<float> AstroCalcDialog::EphemerisListMagnitudes;
@@ -531,13 +527,6 @@ void AstroCalcDialog::setCelestialPositionsHeaderNames()
 	{
 		ui->celestialPositionsTreeWidget->resizeColumnToContents(i);
 	}
-
-	ui->celestialPositionsTreeWidget->headerItem()->setTextAlignment(CColumnRA, Qt::AlignRight);
-	ui->celestialPositionsTreeWidget->headerItem()->setTextAlignment(CColumnDec, Qt::AlignRight);
-	ui->celestialPositionsTreeWidget->headerItem()->setTextAlignment(CColumnMagnitude, Qt::AlignRight);
-	ui->celestialPositionsTreeWidget->headerItem()->setTextAlignment(CColumnAngularSize, Qt::AlignRight);
-	ui->celestialPositionsTreeWidget->headerItem()->setTextAlignment(CColumnExtra, Qt::AlignRight);
-	ui->celestialPositionsTreeWidget->headerItem()->setTextAlignment(CColumnTransit, Qt::AlignRight);
 }
 
 void AstroCalcDialog::onChangedEphemerisPosition(const QModelIndex& modelIndex)
@@ -4196,8 +4185,6 @@ void AstroCalcDialog::updateTabBarListWidgetWidth()
 
 	// Hack to force the window to be resized...
 	ui->stackListWidget->setMinimumWidth(width);
-	
-	ui->stackListWidget->setFixedHeight( ui->stackListWidget->sizeHintForRow(0) );
 }
 
 void AstroCalcDialog::updateSolarSystemData()
@@ -5526,8 +5513,8 @@ void AstroCalcDialog::computePlanetaryData()
 
 	double spcb1 = firstCBId->getSiderealPeriod();
 	double spcb2 = secondCBId->getSiderealPeriod();
-	int cb1 = round(spcb1);
-	int cb2 = round(spcb2);
+	int cb1 = std::round(spcb1);
+	int cb2 = std::round(spcb2);
 	QString orbitalResonance = QChar(0x2014);
 	bool spin = false;
 	QString parentFCBName = "";
@@ -5539,14 +5526,14 @@ void AstroCalcDialog::computePlanetaryData()
 
 	if (firstCelestialBody == parentSCBName)
 	{
-		cb1 = round(secondCBId->getSiderealPeriod());
-		cb2 = round(secondCBId->getSiderealDay());
+		cb1 = std::round(secondCBId->getSiderealPeriod());
+		cb2 = std::round(secondCBId->getSiderealDay());
 		spin = true;
 	}
 	else if (secondCelestialBody == parentFCBName)
 	{
-		cb1 = round(firstCBId->getSiderealPeriod());
-		cb2 = round(firstCBId->getSiderealDay());
+		cb1 = std::round(firstCBId->getSiderealPeriod());
+		cb2 = std::round(firstCBId->getSiderealDay());
 		spin = true;
 	}
 	int gcd = StelUtils::gcd(cb1, cb2);
@@ -5561,7 +5548,7 @@ void AstroCalcDialog::computePlanetaryData()
 
 	if (cb1 > 0 && cb2 > 0)
 	{
-		orbitalResonance = QString("%1:%2").arg(qAbs(round(cb1 / gcd))).arg(qAbs(round(cb2 / gcd))); // Very accurate resonances!
+		orbitalResonance = QString("%1:%2").arg(qAbs(std::round(cb1 / gcd))).arg(qAbs(std::round(cb2 / gcd))); // Very accurate resonances!
 		if (spin)
 			orbitalResonance.append(QString(" (%1)").arg(q_("spin-orbit resonance")));
 	}

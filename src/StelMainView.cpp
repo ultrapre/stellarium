@@ -33,8 +33,6 @@
 #include "StelOpenGLArray.hpp"
 #include "StelProjector.hpp"
 #include "StelMovementMgr.hpp"
-#include "StelObjectMgr.hpp"
-#include "StelDialog.hpp"
 
 #include <QDebug>
 #include <QDir>
@@ -53,7 +51,6 @@
 #include <QFileInfo>
 #include <QIcon>
 #include <QMoveEvent>
-#include <QGestureEvent>
 #include <QPluginLoader>
 #include <QScreen>
 #include <QSettings>
@@ -334,6 +331,7 @@ public:
 		setAcceptTouchEvents(true);
 		grabGesture(Qt::PinchGesture);
 #endif
+
 		setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton | Qt::MiddleButton);
 		previousPaintTime = StelApp::getTotalRunTime();
 	}
@@ -703,36 +701,6 @@ void StelMainView::mouseMoveEvent(QMouseEvent *event)
 	QGraphicsView::mouseMoveEvent(event);
 }
 
-bool StelMainView::event(QEvent *event){
-	if( event->type() == QEvent::KeyPress )
-	{
-		QKeyEvent* key_event = static_cast<QKeyEvent*>( event );
-		
-		if( key_event->key() == Qt::Key_Back )
-		{
-		
-			for( QObject* child : ((QObject*)getGuiWidget())->children() )
-			{
-				StelDialog* dialog = dynamic_cast<StelDialog*>( child );
-				if( dialog && dialog->visible() )
-				{
-					dialog->setVisible( false );
-					event->accept();
-					return true;
-				}
-			}
-		
-			if( stelApp->getStelObjectMgr().getWasSelected() )
-			{
-				stelApp->getStelObjectMgr().unSelect();
-				event->accept();
-				return true;
-			}
-		}
-	}
-	
-	return QGraphicsView::event(event);
-}
 
 void StelMainView::focusSky() {
 	//scene()->setActiveWindow(0);

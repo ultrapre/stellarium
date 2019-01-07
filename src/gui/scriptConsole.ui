@@ -180,7 +180,7 @@
            </size>
           </property>
           <property name="toolTip">
-           <string notr="true">load script from file</string>
+           <string>load script from file</string>
           </property>
           <property name="text">
            <string/>
@@ -190,7 +190,7 @@
             <normaloff>:/graphicGui/folder.png</normaloff>:/graphicGui/folder.png</iconset>
           </property>
           <property name="shortcut">
-           <string>Ctrl+O</string>
+           <string notr="true">Ctrl+O</string>
           </property>
          </widget>
         </item>
@@ -219,7 +219,7 @@
             <normaloff>:/graphicGui/filesave.png</normaloff>:/graphicGui/filesave.png</iconset>
           </property>
           <property name="shortcut">
-           <string>Ctrl+S</string>
+           <string notr="true">Ctrl+S</string>
           </property>
          </widget>
         </item>
@@ -314,7 +314,7 @@
             <normaloff>:/graphicGui/btScriptRun-off.png</normaloff>:/graphicGui/btScriptRun-off.png</iconset>
           </property>
           <property name="shortcut">
-           <string>Ctrl+Return</string>
+           <string notr="true">Ctrl+Return</string>
           </property>
          </widget>
         </item>

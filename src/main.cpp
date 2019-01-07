@@ -62,6 +62,10 @@
 	#include <mmsystem.h>
 #endif //Q_OS_WIN
 
+#if defined(Q_OS_ANDROID)
+	#include <QtAndroid>
+#endif
+
 //! @class CustomQTranslator
 //! Provides custom i18n support.
 class CustomQTranslator : public QTranslator
@@ -186,6 +190,11 @@ int main(int argc, char **argv)
 
 	// Solution for bug: https://bugs.launchpad.net/stellarium/+bug/1498616
 	qputenv("QT_HARFBUZZ", "old");
+
+	#if defined(Q_OS_ANDROID)
+		QtAndroid::requestPermissionsSync( QStringList("android.permission.WRITE_EXTERNAL_STORAGE") );
+		QtAndroid::requestPermissionsSync( QStringList("android.permission.READ_EXTERNAL_STORAGE") );
+	#endif
 
 	// Init the file manager
 	StelFileMgr::init();

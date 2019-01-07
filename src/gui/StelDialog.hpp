@@ -198,10 +198,10 @@ class StelDialog::CustomProxy : public QGraphicsProxyWidget
 private:
 Q_OBJECT
 public:
-	CustomProxy(QGraphicsItem *parent , Qt::WindowFlags wFlags , StelDialog* dialog );
+	CustomProxy(QGraphicsItem *parent , Qt::WindowFlags wFlags );
 
 	//! Reimplement this method to add windows decorations. Currently there are invisible 2 px decorations
-	void paintWindowFrame(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
+	void paintWindowFrame(QPainter*, const QStyleOptionGraphicsItem*, QWidget*) Q_DECL_OVERRIDE;
 
 signals:
 	void sizeChanged(QSizeF);
@@ -209,8 +209,5 @@ signals:
 protected:
 	bool event(QEvent* event) Q_DECL_OVERRIDE;
 	void resizeEvent(QGraphicsSceneResizeEvent *event) Q_DECL_OVERRIDE;
-	
-private:
-	StelDialog* dialog;
 };
 #endif // STELDIALOG_HPP
