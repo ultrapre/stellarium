@@ -354,7 +354,12 @@ bool StelTexture::glLoad(const GLData& data)
 	height = data.height;
 
 	//make sure the correct GL context is bound!
+	
+	//this context switching causes screen flicker on Android
+	#if !defined(Q_OS_ANDROID)
 	StelApp::getInstance().ensureGLContextCurrent();
+	#endif
+	
 	gl = QOpenGLContext::currentContext()->functions();
 
 	//check minimum texture size
