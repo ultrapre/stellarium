@@ -48,8 +48,7 @@ signals:
 protected:
 	bool eventFilter(QObject *obj, QEvent *event);
 	void createDialogContent();
-	class CustomProxy;
-	CustomProxy* proxy;
+	class CustomProxy* proxy;
 	QWidget* dialog;
 	StelModule* evtHandler;
 };

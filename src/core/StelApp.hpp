@@ -22,7 +22,6 @@
 
 #include <QString>
 #include <QObject>
-#include <QFont>
 #include "StelModule.hpp"
 
 // Predeclaration of some classes

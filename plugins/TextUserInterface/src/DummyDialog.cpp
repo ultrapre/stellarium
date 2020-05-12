@@ -28,7 +28,8 @@
 #include <QLineEdit>
 
 // this is adapted from DummyDialog.cpp
-class DummyDialog::CustomProxy : public QGraphicsProxyWidget
+namespace {
+class CustomProxy : public QGraphicsProxyWidget
 {
 	public:
 		CustomProxy(QGraphicsItem *parent = Q_NULLPTR, Qt::WindowFlags wFlags = Qt::WindowFlags()) : QGraphicsProxyWidget(parent, wFlags)
@@ -65,6 +66,7 @@ class DummyDialog::CustomProxy : public QGraphicsProxyWidget
 			return QGraphicsProxyWidget::sceneEvent(event);
 		}
 };
+}
 
 DummyDialog::DummyDialog(StelModule* eventHandler)
 	: proxy(Q_NULLPTR)

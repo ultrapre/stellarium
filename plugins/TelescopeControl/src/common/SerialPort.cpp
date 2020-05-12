@@ -71,7 +71,7 @@ SerialPort::SerialPort(Server &server, const char *serial_device)
 				DCB dcb;
 				memset(&dcb, 0, sizeof(dcb));
 				dcb.DCBlength = sizeof(dcb);
-				if (!BuildCommDCBA("9600,n,8,1", &dcb))
+				if (!BuildCommDCB("9600,n,8,1", &dcb))
 				{
 					*log_file << Now() << "SerialPort::SerialPort(" << serial_device << "): "
 						              "BuildCommDCB() failed: " << GetLastError() << endl;

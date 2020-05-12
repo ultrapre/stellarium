@@ -582,7 +582,6 @@ bool StelScriptMgr::runPreprocessedScript(const QString &preprocessedScript, con
 	emit runningScriptIdChanged(scriptId);
 
 	// run that script in a new context
-	
 	QScriptContext *context = engine->pushContext();
 	//disable for android, for now, until crash fix is found
 	#if !defined(Q_OS_ANDROID)
