@@ -24,8 +24,8 @@ boxes which appear when you hover the mouse cursor over a
 button.\footnote{Unfortunately, on Windows~7 and later, with some NVidia
   and AMD GPUs in OpenGL mode, these tooltips often do not work.}
 
-\newFeature{0.15} You can drag the
-windows around, and the position will be used again when you restart
+You can drag the
+windows around\newFeature{v0.15}, and the position will be used again when you restart
 Stellarium. If this would mean the window is off-screen (because you
 start in windowed mode, or with a different screen), the window will
 be moved so that at least a part is visible.
@@ -72,8 +72,7 @@ show accurately what is (or will be/was) in the sky, you must tell it
 where you are. You only need to do this once -- Stellarium can save your
 location so you won't need to set it again until you move.
 
-\newFeature{v0.13.1}
-After installation, Stellarium uses an online service which tries to
+After installation\newFeature{v0.13.1}, Stellarium uses an online service which tries to
 find your approximate location based on the IP address you are
 using. This seems very practical, but if you feel this causes privacy
 issues, you may want to switch this feature off. You should also consider 
@@ -93,7 +92,7 @@ There are a few ways you can set your location:
 \item Enter a new location using the longitude, latitude and other
   data.
 \item Click on \button{Get Location from GPS} if you have a GPS
-  receiver. \newFeature{0.16/0.18.1} You activate a periodic request
+  receiver. \newFeature{v0.16/0.18.1} You activate a periodic request
   for GPS fixes. After a few seconds, the button should change color
   and give a textual feedback. Green indicates a good position, yellow
   indicates a 2D-fix only, which means altitudes are not
@@ -114,7 +113,42 @@ There are a few ways you can set your location:
 ``use as default'' checkbox, disable ``Get location from Network'',
 and close the location window.
 
+\subsection{Time Zones}
+\label{sec:gui:location:timezones}
+Locations in Stellarium's location database include their respective
+time zone.\newFeature{v0.15.1/0.19.0} When you click on a location in
+the list, the time should be shown in the respective time zone.  If
+daylight time rules exist and you have selected ``Enable daylight
+saving time'', also this civilisatory development is respected. Most
+users will want this setting active.
 
+When you select ``Use custom time zone'', you can select other time zones.
+Those that start with UTC have no daylight time rules.
+
+Time zones were introduced in the 19th century, originally for
+purposes of railway traffic synchronisation. The first such action was
+taken in 1847, and therefore Stellarium by default will present Local
+Mean Solar Time (LMST) for dates before 1847, and ignore all
+configured time zones unless you deliberately activate ``Use custom
+time zone''. The history of time zones and their rules is very
+complicated, though, and Stellarium should not be expected to find the
+exact date when time zone use was introduced at a certain location or
+country. Just be sure to use LMST when replaying historical
+observations before the 20th century.
+
+For even earlier observations, you can also set Local True Solar Time
+(LTST), which is the time given by sundials. Here, 12 o'clock is the
+time when the sun transits the meridian, strictly, daily. The
+difference between LMST and LTST is called \emph{equation of
+  time}. See section~\ref{sec:plugins:EquationOfTime} for more
+information.
+
+When you click on the map to set your location, Stellarium has
+currently no way to guess the timezone of the coordinate pair. In this
+case, Local Mean Solar Time is presented, which only depends on
+longitude and was the ``normal'' time before the development of time
+zones. Either select a city from the list or manually select a time
+zone.
 
 \section{The Configuration Window}
 \label{sec:gui:configuration}
@@ -196,7 +230,7 @@ shortcuts, you can choose your optimal setup. The selection of buttons is stored
   the main tool bar which allow the main view to be mirrored in the
   vertical and horizontal directions. This is useful when observing
   through telecopes which may cause the image to be mirrored.
-\item[Show DSS button] You can toggle display of Digitized Sky Survey with this button.
+\item[Show DSS button] You can toggle display of Digitized Sky Survey with this button (see section~\ref{sec:TOAST}).
 \item[Show HiPS button] You can toggle display of Hierarchical Progressive Surveys with this button (see section \ref{sec:gui:view:surveys}).
 \item[Show bookmarks button] You can enable display of Bookmarks dialog with this button.
 \item[Show fullscreen button] You can toggle display of the fullscreen button.
@@ -270,9 +304,7 @@ The Tools tab (Fig.~\ref{fig:gui:configuration:tools}) contains planetarium opti
   projected onto a dome are always aligned properly.
 \item[Select single constellation] When active, clicking on a star
   that is member in the constellation lines will make the
-  constellation stand out. You can select several constellations, but
-  clicking onto a star which is not member of a constellation line
-  will display all constellations.
+  constellation stand out. See section~\ref{sec:starlore:singleConstellations} for details.
 \item[Auto-enabling for the atmosphere] When changing planet during
   location change, atmosphere will be switched as required.
 \item[Dithering] options to allow select better simulation of sky on different hardware.
@@ -325,7 +357,12 @@ will be stored, and \newFeature{v0.18.1} also whether you want
 screenshots sized like Stellarium's window or some other, likely
 larger size. The maximum possible size depends on your
 hardware. $4096\times4096$ should be possible on most PCs, others may
-even create $16384\times16384$ images.
+even create $16384\times16384$ images. The vertical field of view will be the same as in the current view.
+
+You can also set \newFeature{v0.19.0} the file format. The exact selection depends on
+platform and version of the underlying Qt framework. Notable formats are PNG (lossless), JPG (lossy),
+JPEG (higher quality JPG), BMP (Windows Bitmap), WEBP, TIF (LZW compressed), TIFF (uncompressed),
+PBM, PGM, PPM, XBM, XPM, and ICO (thumbnails).
 
 
 \subsection{The Scripts Tab}
@@ -340,7 +377,7 @@ even create $16384\times16384$ images.
 The Scripts tab (Fig.~\ref{fig:gui:configuration:scripts}) allows the
 selection of pre-assembled scripts bundled with Stellarium that can be
 run (See chapter~\ref{ch:scripting} for an introduction to the
-scripting capabilities and language). This list can be expanded by
+scripting capabilities and language). This list can be expanded with
 your own scripts as required. See
 section~\ref{sec:FilesAndDirectories:DirectoryStructure} where to
 store your own scripts.
@@ -402,8 +439,8 @@ for changing the general appearance of the main sky view and projections. Some h
   for more information.
 \end{description}
 
-Some
-hightlights of stars field:
+\newpage
+Some hightlights of stars field:
 \begin{description}
 \item[Absolute scale] is the size of stars as rendered by
   Stellarium. If you increase this value, all stars will appear larger
@@ -553,8 +590,15 @@ and how to extend it with your own photographs.
 \label{fig:gui:view:markings}
 \end{figure}
 
-The Markings tab of the View window
-(Fig.~\ref{fig:gui:view:markings}) controls plot various grids and lines on celestial sphere.
+\noindent The Markings tab of the View window
+(Fig.~\ref{fig:gui:view:markings}) controls plot various grids and
+lines on celestial sphere. Colors for grids, lines and points can be
+adjusted by clicking on the corresponding colored square.  The central
+column governs lines like equator, ecliptic, meridian etc., where each
+can optionally be fine-tuned to \newFeature{v0.20.0} show partition
+marks and labels. Color settings are stored immediately, all other
+flags need an explicit saving of the settings (see section
+\ref{sec:gui:configuration:main}).
 
 \subsection{The Landscape Tab}
 \label{sec:gui:view:landscape}
@@ -609,7 +653,7 @@ The controls at the bottom right of the window operate as follows:
 \noindent Using the button \menu{Add/remove landscapes\ldots}, you can also
 install new landscapes from ZIP files which you can download e.g.\
 from the Stellarium
-website\footnote{\url{http://stellarium.sourceforge.net/wiki/index.php/Landscapes}}
+website\footnote{\url{https://stellarium.org/landscapes.html}}
 or create yourself (see ch.~\ref{ch:landscapes} Landscapes), or remove
 these custom landscapes.
 
@@ -658,6 +702,33 @@ Western and Inuit), and the rest do not. Configurable options include
 \item[Show asterism labels] Activate display of asterism labels, like \keys{Alt+V}.\newFeature{v0.16.0}
 \end{description}
 
+\subsubsection{Select single constellations}
+\label{sec:starlore:singleConstellations}
+
+Some presenters may want to explain a particular storyline about the
+constellations of a skyculture, which includes showing single
+constellations or showing a sequence of appearing constellations. To
+achieve this, first activate the single constellation mode (see
+section~\ref{fig:gui:configuration:tools}).  Then, click on a star
+which is part of a constellation line set. Click
+another star which is part of another constellation to show that one.
+
+If you explain a skyculture where constellations also have borders
+defined, a click anywhere in the constellation area is enough.  For
+other skycultures, clicking onto a star which is not member of a
+constellation line will display all constellations.
+
+Press \keys{W} to remove all but the last selected constellation.
+If you had deleted selection (right mouse click) before pressing \keys{W},
+all constellations are hidden.
+Press \keys{W} again to also hide the single displayed one, or click
+another star to select the next constellation. If you need to keep the
+single constellation visible, select the currently selected star again
+to select it again.  Press \keys{Alt+W} to show all constellations.
+
+With a little training, you will be able to give inspiring
+constellation tours.
+
 \subsection{The Surveys Tab}
 \label{sec:gui:view:surveys}
 
@@ -667,7 +738,7 @@ Western and Inuit), and the rest do not. Configurable options include
 \label{fig:gui:view:surveys}
 \end{figure}
 
-\newFeature{v0.18.0} The Surveys tab (Fig.~\ref{fig:gui:view:surveys}) allows to toggle the
+The Surveys tab\newFeature{v0.18.0} (Fig.~\ref{fig:gui:view:surveys}) allows to toggle the
 visibility of online sky or solar system surveys (see chapter~\ref{ch:surveys}
 for description of the surveys format).  Currently, only HiPS surveys are
 supported.
@@ -700,6 +771,12 @@ surveys automatically map on the proper body.
 \end{figure}
 
 \begin{figure}[h]
+\centering\includegraphics[width=0.68\textwidth]{search_dialog_simbad.png}
+\caption{The Search Window: SIMBAD}
+\label{fig:gui:search:simbad}
+\end{figure}
+
+\begin{figure}[h]
 \centering\includegraphics[width=0.68\textwidth]{search_dialog_position.png}
 \caption{The Search Window: Positions}
 \label{fig:gui:search:position}
@@ -725,7 +802,7 @@ in the sky. Simply type in the name of an object to find, and press
 As you type, Stellarium will make a list of objects which contains 
 what you have typed so far. The first of the list of matching objects
 will be highlighted. If you press the \key{\tab} key, the selection will change
-to the next item in the list. Hitting the \key{\return} key will go to the
+to the next item in the list. Hitting the \key{\return} key will center on the
 currently highlighted object and close the search dialog.
 
 For example, suppose we want to locate Saturn's moon Mimas. 
@@ -742,13 +819,16 @@ Mimas. We can either press \key{\tab} a few times to highlight Mimas
 and then hit \key{\return}, or we can continue to type the name until
 it is the first/only object in the list.
 
+The SIMBAD tab (Fig.~\ref{fig:gui:search:simbad}) provides a convenient way to fetch and show a set of information for selected object from astronomical database SIMBAD\cite{2000A&AS..143....9W}.
+
+
 The Position tab (Fig.~\ref{fig:gui:search:position}) provides a convenient way to enter a set
 of coordinates.
 
 The List Search tab (Fig.~\ref{fig:gui:search:options}) allows selection of an object from predefined
 sets.  The number of choices is governed by the loaded DSO catalogs and plug-ins. 
 Scroll down the first window to select the type. Click on the name
-and Stellarium will go to that object.
+and Stellarium will center on that object.
 
 The Options tab (Fig.~\ref{fig:gui:search:options}) provides a few settings to fine-tune your search experience.
 When the name of an object to find is typed in the object
@@ -789,24 +869,32 @@ You may also export the list of positions into an XLSX or CSV file.
 \label{sec:gui:AstroCalc:Ephemeris}
 
 Select an object, start and end time, and compute an ephemeris (list of positions and magnitudes evolving over time) for that object. 
-The positions are marked in the sky with yellow circles (Fig.~\ref{fig:gui:AstroCalc:Ephemeris}). 
+The positions are marked in the sky with yellow disks (Fig.~\ref{fig:gui:AstroCalc:Ephemeris}). 
 
-When you click on a date, an orange circle indicates this date and/or magnitude. 
+When you click on a date, an orange disk indicates this date and/or magnitude. 
 Double-clicking sets the respective date and brings the object to focus. 
-Dates and/or magnitudes will show near position markers when \emph{Show dates} and/or \emph{Show magnitudes} checkboxes are active.
+Dates and/or magnitudes will show near position markers when \emph{Show dates} and/or \emph{Show magnitudes} checkboxes are active. \newFeature{v0.19.2} To show a line between markers please tick checkbox \emph{Show line}. You may customize the format of displayed data near markers and their frequency in \emph{Extra options} window (Fig.~\ref{fig:gui:AstroCalc:Ephemeris:Extra}).
 
 You can export the calculated ephemeris into an XLSX or CSV file. 
 
 \begin{figure}[tbp]
-\centering\includegraphics[width=0.98\textwidth]{astrocalc_dialog_ephemeris_tab.png}
+\centering\includegraphics[width=0.87\textwidth]{astrocalc_dialog_ephemeris_tab.png}
 \caption{Astronomical Calculations (AstroCalc): Plot trace of planet}
 \label{fig:gui:AstroCalc:Ephemeris}
+\end{figure}
+
+\begin{figure}[tbp]
+\centering\includegraphics[width=0.98\textwidth]{astrocalc_dialog_ephemeris_extra.png}
+\caption{Astronomical Calculations (AstroCalc): Extra options for ephemeris}
+\label{fig:gui:AstroCalc:Ephemeris:Extra}
 \end{figure}
 
 Another interesting option in this tool: using horizontal coordinates for plotting traces of the Solar system objects. 
 In this mode, the circle marks are not linked to the sky, but to the horizontal coordinate system.
 For example, you can get an analemma of the Sun for any location (Fig.~\ref{fig:gui:AstroCalc:Ephemeris:Analemma} and \ref{fig:gui:AstroCalc:Ephemeris:AnalemmaMars}), 
 or observe the visibility of Mercury, Venus or a comet in the twilight sky.
+
+Since version 0.19.2\newFeature{v0.19.2} you may define the color of markers and enable display markers for all naked-eye visible planets.
 
 \begin{figure}[tbp]
 \centering\includegraphics[width=0.98\textwidth]{astrocalc_dialog_ephemeris_analemma.png}
@@ -820,6 +908,19 @@ or observe the visibility of Mercury, Venus or a comet in the twilight sky.
 \label{fig:gui:AstroCalc:Ephemeris:AnalemmaMars}
 \end{figure}
 
+\subsection{The Transits Tab}
+\label{sec:gui:AstroCalc:Transits}
+
+This \newFeature{v0.19.3} tab allows you to compute transits of selected celestial object (except unnamed stars and artificial satellites) for specific date range. The tool is proposed for planning observations and he suggest the best time and conditions for visual observations or astrophotography (Fig.~\ref{fig:gui:AstroCalc:Transits}).
+
+You may also export the list of transits into an XLSX or CSV file.
+
+\begin{figure}[htbp]
+\centering\includegraphics[width=0.75\textwidth]{astrocalc_dialog_transits_tab.png}
+\caption{Astronomical Calculations (AstroCalc): Transits of selected celestial object}
+\label{fig:gui:AstroCalc:Transits}
+\end{figure}
+
 \newpage
 \subsection{The Phenomena Tab}
 \label{sec:gui:AstroCalc:Phenomena}
@@ -827,6 +928,9 @@ or observe the visibility of Mercury, Venus or a comet in the twilight sky.
 This tab allows you to compute phenomena like conjunctions, oppositions, 
 occultations and eclipses (in special cases) between planetary objects 
 (Fig.~\ref{fig:gui:AstroCalc:Phenomena}). 
+In version 0.19.3\newFeature{v0.19.3} we added computation greatest elongations for inner planets and stationary points for all planets in
+additional to exist phenomena. For all Solar system bodies, except the moons, we also propose compute perihelion and aphelion in addition to other phenomena.
+
 You can export the calculated phenomena into an XLSX or CSV file.
 
 \begin{figure}[htbp]
@@ -835,17 +939,22 @@ You can export the calculated phenomena into an XLSX or CSV file.
 \label{fig:gui:AstroCalc:Phenomena}
 \end{figure}
 
-Two columns in the table \newFeature{v0.18.2/.3} may be helpful for planning observation of phenomena:
+Four columns in the table may be helpful for planning observation of phenomena:
 \begin{description}
-  \item[solar elongation] angular distance from the Sun
-  \item[lunar elongation] angular distance from the Moon
+  \item[solar elongation] angular distance from the Sun\newFeature{v0.18.2/.3}
+  \item[lunar elongation] angular distance from the Moon\newFeature{v0.18.2/.3}
+  \item[mag. 1] magnitude of first object\newFeature{v0.19.3}
+  \item[mag. 2] magnitude of second object\newFeature{v0.19.3}
 \end{description}
 
 
 \subsection{The Graphs Tab}
 \label{sec:gui:AstroCalc:Graphs}
 
-This tab \newFeature{v0.18.3} provides sub-tabs with graphs helpful for monthly observation planning of deep-sky objects.
+This tab\newFeature{v0.18.3} provides on several sub-tabs
+\newFeature{v0.19.0} graphs which are helpful for monthly observation
+planning of deep-sky objects and analysis of changes between objects
+or changes of their positions.
 
 \subsubsection{The ``Altitude vs.\ Time'' Subtab}
 \label{sec:gui:AstroCalc:Graphs:AltVsTime}
@@ -860,6 +969,19 @@ on the currently set date and draw it as a graph (Fig.~\ref{fig:gui:AstroCalc:Gr
 \end{figure}
 
 Optional graphs for the Sun (with lines for civil, nautical and astronomical twilight) and the Moon (dashed) are also available.
+
+
+\subsubsection{The ``Azimuth vs.\ Time'' Subtab}
+\label{sec:gui:AstroCalc:Graphs:AziVsTime}
+  
+On this subtab \newFeature{v0.19.1} you can compute the geometrical azimuth of the currently selected object 
+on the currently set date and draw it as a graph (Fig.~\ref{fig:gui:AstroCalc:Graphs:AziVsTime}).
+    
+\begin{figure}[htbp]
+\centering\includegraphics[width=0.75\textwidth]{astrocalc_dialog_graphs_tab_azivstime.png}
+\caption{Astronomical Calculations (AstroCalc): Graphs / Azimuth vs.\ Time}
+\label{fig:gui:AstroCalc:Graphs:AziVsTime}
+\end{figure}
 
 \subsubsection{The ``Monthly Elevation'' Subtab}
 \label{sec:gui:AstroCalc:Graphs:ME}
@@ -882,8 +1004,10 @@ This tool was introduced for planning yearly observations (Fig.~\ref{fig:gui:Ast
 \label{fig:gui:AstroCalc:Graphs:Graphs}
 \end{figure}
   
-This subtab \newFeature{v0.16.0} can show two functions over time for the current year and draw graphs for them in one screen (Fig.~\ref{fig:gui:AstroCalc:Graphs:Graphs}). 
-You can select from 
+This subtab \newFeature{v0.16.0} can show two functions over time for
+the current year or for up to 30 years\newFeature{v0.19.3} and draw graphs
+for them in one screen (Fig.~\ref{fig:gui:AstroCalc:Graphs:Graphs}).
+You can select from
 \begin{itemize}
 \item Magnitude vs. Time
 \item Phase vs. Time
@@ -892,21 +1016,29 @@ You can select from
 \item Angular size vs. Time
 \item Phase angle vs. Time
 \item Heliocentric distance vs. Time\newFeature{v0.18.2}
+\item Transit altitude vs. Time\newFeature{v0.19.0}
+\item Right ascension vs. Time\newFeature{v0.19.3}
+\item Declination vs. Time\newFeature{v0.19.3}
 \end{itemize}
 
 This tool may be very helpful for educational and statistics purposes.%
 	\footnote{The idea for this tool has been obtained from \program{SkytechX}: \url{http://www.skytechx.eu/}}
 	
-\subsubsection{The ``Angular Distance'' Subtab}
-\label{sec:gui:AstroCalc:Graphs:AD}
+\subsubsection{The ``Lunar Distance'' Subtab}
+\label{sec:gui:AstroCalc:Graphs:LD}
 
 \begin{figure}[htbp]
 \centering\includegraphics[width=0.75\textwidth]{astrocalc_dialog_graphs_tab_ad.png}
-\caption{Astronomical Calculations (AstroCalc): Graphs / Angular Distance}
-\label{fig:gui:AstroCalc:Graphs:AD}
+\caption{Astronomical Calculations (AstroCalc): Graphs / Lunar Distance}
+\label{fig:gui:AstroCalc:Graphs:LD}
 \end{figure}
 
-This subtab \newFeature{v0.18.3} can show ``Angular Distance'' graph --- change of angular distance between the Moon and selected object (for example some deep-sky object) for the nearest 30 days. This tool was introduced for planning monthly observations (Fig.~\ref{fig:gui:AstroCalc:Graphs:AD}).
+This subtab (Fig.~\ref{fig:gui:AstroCalc:Graphs:LD})
+\newFeature{v0.18.3} can show a ``Lunar Distance'' (formerly ``Angular
+Distance'') graph --- the change of angular distance between the Moon
+and the selected object (for example some deep-sky object) for the
+nearest 30 days. This tool was introduced for planning monthly
+observations.
 
 \subsection{The ``What's Up Tonight'' (WUT) Tab}
 \label{sec:gui:AstroCalc:WUT}
@@ -954,9 +1086,11 @@ orbital resonances and orbital velocities.
 \label{fig:gui:AstroCalc:PC:Data}
 \end{figure}
 
-In version 0.18.2 \newFeature{v0.18.2} we enhanced this tool with a new tab (\emph{Graphs}),
-where you may see the change in the linear and angular distances between selected celestial bodies
-over a range of 600 days (centered on the current date) as graphs (Fig.~\ref{fig:gui:AstroCalc:PC:Graphs}).
+In version 0.18.2 \newFeature{v0.18.2} we enhanced this tool with a
+new \emph{Graphs} tab (Fig.~\ref{fig:gui:AstroCalc:PC:Graphs}), where
+you may see the change in the linear and angular distances between
+selected celestial bodies over a range of 600 days (centered on the
+current date) as graphs.
 
 \begin{figure}[htbp]
 \centering\includegraphics[width=0.75\textwidth]{astrocalc_dialog_pc_graphs_tab.png}
@@ -965,7 +1099,7 @@ over a range of 600 days (centered on the current date) as graphs (Fig.~\ref{fig
 \end{figure}
 
 
-\newpage 
+
    
 \section{Help Window}
 \label{sec:gui:help}

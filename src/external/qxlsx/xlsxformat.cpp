@@ -40,12 +40,10 @@ FormatPrivate::FormatPrivate(const FormatPrivate &other)
 	, theme(other.theme)
 	, properties(other.properties)
 {
-
 }
 
 FormatPrivate::~FormatPrivate()
 {
-
 }
 
 /*!
@@ -176,7 +174,6 @@ Format::Format()
 Format::Format(const Format &other)
 	:d(other.d)
 {
-
 }
 
 /*!
@@ -1118,8 +1115,7 @@ bool Format::hasProtectionData() const
 	if (!d)
 		return false;
 
-	if (hasProperty(FormatPrivate::P_Protection_Hidden
-			|| FormatPrivate::P_Protection_Locked)) {
+	if (hasProperty(FormatPrivate::P_Protection_Hidden)	|| hasProperty(FormatPrivate::P_Protection_Locked)) {
 		return true;
 	}
 	return false;

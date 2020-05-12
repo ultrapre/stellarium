@@ -118,22 +118,24 @@ public:
 	virtual double getCallOrder(StelModuleActionName actionName) const;
 
 	///////////////////////////////////////////////////////////////////////////
-	// Methods defined in StelObjectManager class
+	// Methods defined in StelObjectModule class
 	//! Used to get a list of objects which are near to some position.
 	//! @param v a vector representing the position in th sky around which to search for exoplanets.
 	//! @param limitFov the field of view around the position v in which to search for exoplanets.
 	//! @param core the StelCore to use for computations.
-	//! @return an list containing the exoplanets located inside the limitFov circle around position v.
+	//! @return a list containing the exoplanets located inside the limitFov circle around position v.
 	virtual QList<StelObjectP> searchAround(const Vec3d& v, double limitFov, const StelCore* core) const;
 
-	//! Return the matching satellite object's pointer if exists or Q_NULLPTR.
-	//! @param nameI18n The case in-sensistive satellite name
+	//! Return the matching exoplanet system object's pointer if exists or Q_NULLPTR.
+	//! @param nameI18n The case in-sensitive localized exoplanet system name
 	virtual StelObjectP searchByNameI18n(const QString& nameI18n) const;
 
-	//! Return the matching satellite if exists or Q_NULLPTR.
-	//! @param name The case in-sensistive standard program name
+	//! Return the matching exoplanet system if exists or Q_NULLPTR.
+	//! @param name The case in-sensitive english exoplanet system name
 	virtual StelObjectP searchByName(const QString& name) const;
 
+	//! Return the matching exoplanet system if exists or Q_NULLPTR.
+	//! @param id The exoplanet system id
 	virtual StelObjectP searchByID(const QString &id) const;
 
 	//! Find and return the list of at most maxNbItem objects auto-completing the passed object name.
@@ -141,7 +143,7 @@ public:
 	//! @param maxNbItem the maximum number of returned object names
 	//! @param useStartOfWords the autofill mode for returned objects names
 	//! @return a list of matching object name by order of relevance, or an empty list if nothing match
-	virtual QStringList listMatchingObjects(const QString& objPrefix, int maxNbItem=5, bool useStartOfWords=false, bool inEnglish=true) const;
+	virtual QStringList listMatchingObjects(const QString& objPrefix, int maxNbItem=5, bool useStartOfWords=false, bool inEnglish=false) const;
 
 	virtual QStringList listAllObjects(bool inEnglish) const;
 
@@ -196,46 +198,32 @@ public:
 		{
 			case 1:
 				return EPSemiAxisAll;
-				break;
 			case 2:
 				return EPMassAll;
-				break;
 			case 3:
 				return EPRadiusAll;
-				break;
 			case 4:
 				return EPPeriodAll;
-				break;
 			case 5:
 				return EPAngleDistanceAll;
-				break;
 			case 6:
 				return EPEffectiveTempHostStarAll;
-				break;
 			case 7:
 				return EPYearDiscoveryAll;
-				break;
 			case 8:
 				return EPMetallicityHostStarAll;
-				break;
 			case 9:
 				return EPVMagHostStarAll;
-				break;
 			case 10:
 				return EPRAHostStarAll;
-				break;
 			case 11:
 				return EPDecHostStarAll;
-				break;
 			case 12:
 				return EPDistanceHostStarAll;
-				break;
 			case 13:
 				return EPMassHostStarAll;
-				break;
 			case 14:
 				return EPRadiusHostStarAll;
-				break;
 			default:
 				return EPEccentricityAll;
 		}
@@ -346,12 +334,12 @@ public slots:
 	//! Set the temperature scale
 	void setCurrentTemperatureScale(TemperatureScale tscale)
 	{
-		Exoplanet::temperatureScaleID = (int)tscale;
+		Exoplanet::temperatureScaleID = static_cast<int>(tscale);
 	}
 	//! Get the current temperature scale
 	TemperatureScale getCurrentTemperatureScale() const
 	{
-		return (TemperatureScale)Exoplanet::temperatureScaleID;
+		return static_cast<TemperatureScale>(Exoplanet::temperatureScaleID);
 	}
 	//! Get the key of current temperature scale
 	QString getCurrentTemperatureScaleKey(void) const;
@@ -403,10 +391,11 @@ private:
 
 	QString jsonCatalogPath;
 
-	int PSCount;
-	int EPCountAll;
-	int EPCountPH;
+	int PSCount;	// Count of planetary systems
+	int EPCountAll;	// Count of exoplents
+	int EPCountPH;	// Count of exoplanets in habitable zone
 
+	// Lists of various data about exoplanets for quick plot of graphs
 	QList<double> EPEccentricityAll, EPSemiAxisAll, EPMassAll, EPRadiusAll, EPPeriodAll, EPAngleDistanceAll,
 		      EPEffectiveTempHostStarAll, EPYearDiscoveryAll, EPMetallicityHostStarAll, EPVMagHostStarAll,
 		      EPRAHostStarAll, EPDecHostStarAll, EPDistanceHostStarAll, EPMassHostStarAll, EPRadiusHostStarAll;
@@ -449,7 +438,9 @@ private slots:
 	//! Display a message. This is used for plugin-specific warnings and such
 	void displayMessage(const QString& message, const QString hexColor="#999999");
 
-	void reloadCatalog(void);	
+	void reloadCatalog(void);
+	//! Call when button "Save settings" in main GUI are pressed
+	void 	saveSettings() { saveConfiguration(); }
 };
 
 

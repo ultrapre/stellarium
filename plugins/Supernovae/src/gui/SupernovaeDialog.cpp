@@ -25,6 +25,7 @@
 #include <QFileDialog>
 
 #include "StelApp.hpp"
+#include "StelCore.hpp"
 #include "ui_supernovaeDialog.h"
 #include "SupernovaeDialog.hpp"
 #include "Supernovae.hpp"
@@ -110,7 +111,6 @@ void SupernovaeDialog::createDialogContent()
 		ui->aboutTextBrowser->document()->setDefaultStyleSheet(QString(gui->getStelStyle().htmlStyleSheet));
 
 	updateGuiFromSettings();
-
 }
 
 void SupernovaeDialog::setAboutHtml(void)
@@ -233,6 +233,7 @@ void SupernovaeDialog::updateCompleteReceiver(void)
 	ui->lastUpdateDateTimeEdit->setDateTime(sn->getLastUpdate());
 	QTimer *timer = new QTimer(this);
 	connect(timer, SIGNAL(timeout()), this, SLOT(refreshUpdateValues()));
+	setAboutHtml();
 }
 
 void SupernovaeDialog::restoreDefaults(void)

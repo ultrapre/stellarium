@@ -167,7 +167,7 @@ OcularsGuiPanel::OcularsGuiPanel(Oculars* plugin,
 	fieldLensMultipler->setTextWidth(maxWidth);
 
 	// Retrieve value from setting directly, because at this stage the plugin has not parsed it yet.
-	float scale=lineHeight*plugin->appSettings()->value("arrow_scale", 1.5).toDouble();
+	float scale=lineHeight*plugin->getSettings()->value("arrow_scale", 1.5).toDouble();
 	// TODO: change this load-once to interactively editable value of scaling coefficient
 	QPixmap pa(":/graphicGui/btTimeRewind-on.png");
 	QPixmap prevArrow = pa.scaledToHeight(scale, Qt::SmoothTransformation);
@@ -246,12 +246,12 @@ OcularsGuiPanel::OcularsGuiPanel(Oculars* plugin,
 					     "actionToggle_Oculars_Next_Telescope");
 	nextTelescopeButton->setToolTip(q_("Next telescope"));
 
-	connect(nextOcularButton,    SIGNAL(triggered()), ocularsPlugin, SLOT(incrementOcularIndex()));
-	connect(nextCcdButton,       SIGNAL(triggered()), ocularsPlugin, SLOT(incrementCCDIndex()));
-	connect(nextTelescopeButton, SIGNAL(triggered()), ocularsPlugin, SLOT(incrementTelescopeIndex()));
 	connect(prevOcularButton,    SIGNAL(triggered()), ocularsPlugin, SLOT(decrementOcularIndex()));
-	connect(prevCcdButton,       SIGNAL(triggered()), ocularsPlugin, SLOT(decrementCCDIndex()));
+	connect(nextOcularButton,    SIGNAL(triggered()), ocularsPlugin, SLOT(incrementOcularIndex()));
 	connect(prevTelescopeButton, SIGNAL(triggered()), ocularsPlugin, SLOT(decrementTelescopeIndex()));
+	connect(nextTelescopeButton, SIGNAL(triggered()), ocularsPlugin, SLOT(incrementTelescopeIndex()));
+	connect(prevCcdButton,       SIGNAL(triggered()), ocularsPlugin, SLOT(decrementCCDIndex()));
+	connect(nextCcdButton,       SIGNAL(triggered()), ocularsPlugin, SLOT(incrementCCDIndex()));
 	connect(nextLensButton,      SIGNAL(triggered()), ocularsPlugin, SLOT(incrementLensIndex()));
 	connect(prevLensButton,      SIGNAL(triggered()), ocularsPlugin, SLOT(decrementLensIndex()));
 
@@ -414,6 +414,29 @@ OcularsGuiPanel::~OcularsGuiPanel()
 {
 	if (borderPath)
 		delete borderPath;
+
+	delete buttonCrosshairs; buttonCrosshairs = Q_NULLPTR;
+	delete buttonCcd; buttonCcd = Q_NULLPTR;
+	delete buttonTelrad;	buttonTelrad = Q_NULLPTR;
+	delete buttonConfiguration; buttonConfiguration = Q_NULLPTR;
+	delete fieldOcularFl; fieldOcularFl = Q_NULLPTR;
+	delete fieldOcularAfov; fieldOcularAfov = Q_NULLPTR;
+	delete fieldCcdName; fieldCcdName = Q_NULLPTR;
+	delete fieldCcdDimensions; fieldCcdDimensions = Q_NULLPTR;
+	delete fieldCcdHScale; fieldCcdHScale = Q_NULLPTR;
+	delete fieldCcdVScale; fieldCcdVScale = Q_NULLPTR;
+	delete fieldCcdRotation; fieldCcdRotation = Q_NULLPTR;
+	delete fieldTelescopeName; fieldTelescopeName = Q_NULLPTR;
+	delete fieldMagnification; fieldMagnification = Q_NULLPTR;
+	delete fieldExitPupil; fieldExitPupil = Q_NULLPTR;
+	delete fieldFov; fieldFov = Q_NULLPTR;
+	delete fieldRayleighCriterion; fieldRayleighCriterion = Q_NULLPTR;
+	delete fieldDawesCriterion; fieldDawesCriterion = Q_NULLPTR;
+	delete fieldAbbeyCriterion; fieldAbbeyCriterion = Q_NULLPTR;
+	delete fieldSparrowCriterion; fieldSparrowCriterion = Q_NULLPTR;
+	delete fieldVisualResolution; fieldVisualResolution = Q_NULLPTR;
+	delete fieldLensName; fieldLensName = Q_NULLPTR;
+	delete fieldLensMultipler; fieldLensMultipler = Q_NULLPTR;
 }
 
 void OcularsGuiPanel::showOcularGui()
@@ -537,7 +560,7 @@ void OcularsGuiPanel::updateOcularControls()
 		posY += fieldOcularFl->boundingRect().height();
 		widgetHeight += fieldOcularFl->boundingRect().height();
 
-		QString apparentFovString = QString::number(ocular->appearentFOV(), 'f', 2);
+		QString apparentFovString = QString::number(ocular->apparentFOV(), 'f', 2);
 		apparentFovString.append(QChar(0x00B0));// Degree sign
 		QString apparentFovLabel = QString(q_("Ocular aFOV: %1"))
 				.arg(apparentFovString);
@@ -586,7 +609,7 @@ void OcularsGuiPanel::updateLensControls()
 	fieldLensName->setPlainText(fullName);
 	fieldLensMultipler->setPlainText(multiplerString);
 	fieldOcularFl->setToolTip(q_("Focal length of eyepiece"));
-	
+
 	qreal posX = 0.;
 	qreal posY = 0.;
 	qreal widgetWidth = 0.;
@@ -618,7 +641,7 @@ void OcularsGuiPanel::updateLensControls()
 
 	int oindex = ocularsPlugin->selectedOcularIndex;
 	Ocular* ocular = ocularsPlugin->oculars[oindex];
-	if (ocular->isBinoculars())
+	if (ocular->isBinoculars() && ocularsPlugin->flagShowOculars) // Hide the lens info for binoculars in eyepiece mode only
 		setLensControlsVisible(false);
 	else
 		setLensControlsVisible(true);
@@ -840,7 +863,7 @@ void OcularsGuiPanel::updateTelescopeControls()
 		magnificationString.append(QString(" (%1D)").arg(QString::number(mag/telescope->diameter(), 'f', 2)));
 		QString magnificationLabel = QString(q_("Magnification: %1")).arg(magnificationString);
 		fieldMagnification->setPlainText(magnificationLabel);
-		fieldMagnification->setPos(posX, posY);		
+		fieldMagnification->setPos(posX, posY);
 		posY += fieldMagnification->boundingRect().height();
 		widgetHeight += fieldMagnification->boundingRect().height();
 
@@ -882,7 +905,7 @@ void OcularsGuiPanel::updateTelescopeControls()
 	}
 
 	double diameter = telescope->diameter();
-	if (diameter>0.0 && ocularsPlugin->getFlagShowResolutionCriterions())
+	if (diameter>0.0 && ocularsPlugin->getFlagShowResolutionCriteria())
 	{
 		QString rayleighLabel = QString("%1: %2\"").arg(q_("Rayleigh criterion")).arg(QString::number(138/diameter, 'f', 2));
 		fieldRayleighCriterion->setPlainText(rayleighLabel);
@@ -927,7 +950,7 @@ void OcularsGuiPanel::updateTelescopeControls()
 	}
 
 	// Visual resolution
-	if (ocularsPlugin->flagShowOculars && ocularsPlugin->getFlagShowResolutionCriterions() && diameter>0.0)
+	if (ocularsPlugin->flagShowOculars && ocularsPlugin->getFlagShowResolutionCriteria() && diameter>0.0)
 	{
 		float rayleigh = 138/diameter;
 		float vres = 60/mag;
@@ -1101,7 +1124,7 @@ void OcularsGuiPanel::setControlsColor(const QColor& color)
 	Q_ASSERT(fieldSparrowCriterion);
 	Q_ASSERT(fieldVisualResolution);
 	Q_ASSERT(fieldLensName);
-	Q_ASSERT(fieldLensMultipler);	
+	Q_ASSERT(fieldLensMultipler);
 
 	fieldOcularName->setDefaultTextColor(color);
 	fieldOcularFl->setDefaultTextColor(color);

@@ -47,11 +47,11 @@ InfoPanel::InfoPanel(QGraphicsItem* parent) : QGraphicsTextItem("", parent),
 	}
 	else if (objectInfo == "none")
 	{
-		infoTextFilters = StelObject::InfoStringGroup(Q_NULLPTR);
+		infoTextFilters = StelObject::InfoStringGroup(StelObject::None);
 	}
 	else if (objectInfo == "custom")
 	{
-		infoTextFilters = StelObject::InfoStringGroup(Q_NULLPTR);
+		infoTextFilters = StelObject::InfoStringGroup(StelObject::None);
 		
 		conf->beginGroup("custom_selected_info");
 		if (conf->value("flag_show_name", false).toBool())
@@ -74,6 +74,8 @@ InfoPanel::InfoPanel(QGraphicsItem* parent) : QGraphicsTextItem("", parent),
 			infoTextFilters |= StelObject::Distance;
 		if (conf->value("flag_show_velocity", false).toBool())
 			infoTextFilters |= StelObject::Velocity;
+		if (conf->value("flag_show_propermotion", false).toBool())
+			infoTextFilters |= StelObject::ProperMotion;
 		if (conf->value("flag_show_size", false).toBool())
 			infoTextFilters |= StelObject::Size;
 		if (conf->value("flag_show_extra", false).toBool())
@@ -84,6 +86,8 @@ InfoPanel::InfoPanel(QGraphicsItem* parent) : QGraphicsTextItem("", parent),
 			infoTextFilters |= StelObject::GalacticCoord;
 		if (conf->value("flag_show_supergalcoord", false).toBool())
 			infoTextFilters |= StelObject::SupergalacticCoord;
+		if (conf->value("flag_show_othercoord", false).toBool())
+			infoTextFilters |= StelObject::OtherCoord;
 		if (conf->value("flag_show_eclcoordofdate", false).toBool())
 			infoTextFilters |= StelObject::EclipticCoordOfDate;
 		if (conf->value("flag_show_eclcoordj2000", false).toBool())
@@ -137,7 +141,7 @@ QPixmap getInfoPixmap(const QStringList& strList, QFont font, QColor color)
 	titleFont.setPixelSize(font.pixelSize()+7);
 
 	QRect strRect = QFontMetrics(titleFont).boundingRect(strList.at(maxLenIdx));
-	int w = strRect.width()+1+(int)(0.02f*strRect.width());
+	int w = strRect.width()+1+static_cast<int>(0.02f*strRect.width());
 	int h = strRect.height()*strList.count()+8;
 
 	QPixmap strPixmap(w, h);
@@ -176,6 +180,7 @@ void InfoPanel::setTextFromObjects(const QList<StelObjectP>& selected)
 		// Must set lastRTS for currently selected object here...
 		StelCore *core=StelApp::getInstance().getCore();
 		QString s = selected[0]->getInfoString(core, infoTextFilters);
+		selected[0]->removeExtraInfoStrings(StelObject::AllInfo);
 		QFont font;
 		font.setPixelSize(StelApp::getInstance().getScreenFontSize());
 		setFont(font);
@@ -344,12 +349,12 @@ QVariant SkyGui::itemChange(GraphicsItemChange change, const QVariant & value)
 
 int SkyGui::getSkyGuiWidth() const
 {
-	return geometry().width();
+	return static_cast<int>(geometry().width());
 }
 
 int SkyGui::getSkyGuiHeight() const
 {
-	return geometry().height();
+	return static_cast<int>(geometry().height());
 }
 
 //! Update the position of the button bars in the main window
@@ -381,7 +386,7 @@ void SkyGui::updateBarsPos()
 	if (lastButtonbarWidth != buttonBar->boundingRectNoHelpLabel().width())
 	{
 		updatePath = true;
-		lastButtonbarWidth = (int)(buttonBar->boundingRectNoHelpLabel().width());
+		lastButtonbarWidth = static_cast<int>(buttonBar->boundingRectNoHelpLabel().width());
 	}
 
 	if (updatePath)

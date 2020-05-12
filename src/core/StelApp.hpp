@@ -74,6 +74,7 @@ class StelApp : public QObject
 	Q_PROPERTY(bool flagUseAzimuthFromSouth READ getFlagSouthAzimuthUsage   WRITE setFlagSouthAzimuthUsage   NOTIFY flagUseAzimuthFromSouthChanged)
 	Q_PROPERTY(bool flagUseCCSDesignation   READ getFlagUseCCSDesignation   WRITE setFlagUseCCSDesignation   NOTIFY flagUseCCSDesignationChanged)
 	Q_PROPERTY(bool flagUseFormattingOutput READ getFlagUseFormattingOutput WRITE setFlagUseFormattingOutput NOTIFY flagUseFormattingOutputChanged)
+	Q_PROPERTY(bool flagOverwriteInfoColor READ getFlagOverwriteInfoColor WRITE setFlagOverwriteInfoColor NOTIFY flagOverwriteInfoColorChanged)
 	Q_PROPERTY(int  screenFontSize          READ getScreenFontSize          WRITE setScreenFontSize          NOTIFY screenFontSizeChanged)
 	Q_PROPERTY(int  guiFontSize             READ getGuiFontSize             WRITE setGuiFontSize             NOTIFY guiFontSizeChanged)
 
@@ -181,8 +182,8 @@ public:
 
 	//! Get the ratio between real device pixel and "Device Independent Pixel".
 	//! Usually this value is 1, but for a mac with retina screen this will be value 2.
-	float getDevicePixelsPerPixel() const {return devicePixelsPerPixel;}
-	void setDevicePixelsPerPixel(float dppp);
+	qreal getDevicePixelsPerPixel() const {return devicePixelsPerPixel;}
+	void setDevicePixelsPerPixel(qreal dppp);
 	
 	//! Get the scaling ratio to apply on all display elements, like GUI, text etc..
 	//! When this ratio is 1, all pixel sizes used in Stellarium will look OK on a regular
@@ -240,6 +241,11 @@ public slots:
 	void setVisionModeNight(bool);
 	//! Get flag for activating night vision mode.
 	bool getVisionModeNight() const {return flagNightVision;}
+
+	//! Set flag for activating overwrite mode for text color in info panel.
+	void setFlagOverwriteInfoColor(bool);
+	//! Get flag for activating overwrite mode for text color in info panel.
+	bool getFlagOverwriteInfoColor() const {return flagOverwriteInfoColor; }
 
 	//! Set flag for showing decimal degree in various places.
 	void setFlagShowDecimalDegrees(bool b);
@@ -299,6 +305,7 @@ signals:
 	void flagUseAzimuthFromSouthChanged(bool);
 	void flagUseCCSDesignationChanged(bool);
 	void flagUseFormattingOutputChanged(bool);
+	void flagOverwriteInfoColorChanged(bool);
 	void colorSchemeChanged(const QString&);
 	void languageChanged();
 	void screenFontSizeChanged(int);
@@ -311,14 +318,14 @@ signals:
 	void progressBarRemoved(const StelProgressController*);
 	//! Called just before we exit Qt mainloop.
 	void aboutToQuit();
-private:
 
+private:
 	//! Handle mouse clics.
 	void handleClick(class QMouseEvent* event);
 	//! Handle mouse wheel.
 	void handleWheel(class QWheelEvent* event);
 	//! Handle mouse move.
-	bool handleMove(float x, float y, Qt::MouseButtons b);
+	bool handleMove(qreal x, qreal y, Qt::MouseButtons b);
 	//! Handle key press and release.
 	void handleKeys(class QKeyEvent* event);
 	//! Handle pinch on multi touch devices.
@@ -385,13 +392,11 @@ private:
 	StelScriptMgr* scriptMgr;
 #endif
 
-
-
 	StelGuiBase* stelGui;
 	
 	// Store the ratio between real device pixel in "Device Independent Pixel"
 	// Usually this value is 1, but for a mac with retina screen this will be value 2.
-	float devicePixelsPerPixel;
+	qreal devicePixelsPerPixel;
 
 	// The scaling ratio to apply on all display elements, like GUI, text etc..
 	float globalScalingRatio;
@@ -415,12 +420,12 @@ private:
 	bool initialized;
 
 	static qint64 startMSecs;
-	static float animationScale;
+	static double animationScale;
 
 	// Temporary variables used to store the last gl window resize
 	// if the core was not yet initialized
-	int saveProjW;
-	int saveProjH;
+	qreal saveProjW;
+	qreal saveProjH;
 
 	//! Store the number of downloaded files for statistics.
 	int nbDownloadedFiles;
@@ -445,13 +450,13 @@ private:
 	bool flagUseAzimuthFromSouth; // Display calculate azimuth from south towards west (as in some astronomical literature)
 	bool flagUseFormattingOutput; // Use tabular coordinate format for infotext
 	bool flagUseCCSDesignation;   // Use symbols like alpha (RA), delta (declination) for coordinate system labels
+	bool flagOverwriteInfoColor; // Overwrite and use color for text in info panel
 #ifdef 	ENABLE_SPOUT
 	SpoutSender* spoutSender;
 #endif
 
 	// The current main FBO/render target handle, without requiring GL queries. Valid through a draw() call
 	quint32 currentFbo;
-
 };
 
 #endif // STELAPP_HPP

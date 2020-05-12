@@ -444,7 +444,10 @@
               <label title='<?= tr("Hickson Compact Group (Hickson+, 1982)")?>'>
                 <input type="checkbox" value="0x200000" />HCG
               </label>
-			  </div>
+              <label title='<?= tr("Catalogue of southern stars embedded in nebulosity (van den Bergh+, 1975)")?>'>
+                <input type="checkbox" value="0x800000" />VdBH
+              </label>
+            </div>
             <div class="inline-block blocklabel">
               <label title='<?= tr("Caldwell Catalogue")?>'>
                 <input type="checkbox" value="0x0008" />C
@@ -467,8 +470,11 @@
               <label title='<?= tr("A catalogue of Galactic supernova remnants (Green, 2014)")?>'>
                 <input type="checkbox" value="0x80000" />SNR G
               </label>
-              <label title='<?= tr("Abell Catalog of Planetary Nebulae (Abell, 1966)")?>'>
-                <input type="checkbox" value="0x400000" />Abell
+              <label title='<?= tr("A Catalog of Rich Clusters of Galaxies (Abell+, 1989)")?>'>
+                <input type="checkbox" value="0x100000" />Abell
+              </label>
+              <label title='<?= tr("Catalogue and distances of optically visible H II regions (Dickel+, 1969)")?>'>
+                <input type="checkbox" value="0x1000000" />DWB
               </label>
             </div>
             <div class="inline-block blocklabel">
@@ -490,11 +496,11 @@
               <label title='<?= tr("The Catalogue of Galactic Planetary Nebulae (Kohoutek, 2001)")?>'>
                 <input type="checkbox" value="0x20000" />PK
               </label>
-              <label title='<?= tr("A Catalog of Rich Clusters of Galaxies (Abell+, 1989)")?>'>
-                <input type="checkbox" value="0x100000" />ACO
-              </label>
               <label title='<?= tr("ESO/Uppsala Survey of the ESO(B) Atlas (Lauberts, 1982)")?>'>
                 <input type="checkbox" value="0x400000" />ESO
+              </label>
+              <label title='<?= tr("Objects without identifier")?>'>
+                <input type="checkbox" value="0x2000000" /><?= tr("Other")?>
               </label>
             </div>
             <!--div class="stelplugin" data-plugin="Quasars">
@@ -582,22 +588,25 @@
               <tr><td colspan="3"><label><input type="checkbox" class="stelproperty" name="ConstellationMgr.namesDisplayed" /><?= tr("Show labels")?></label></td></tr>
               <tr><td><label><input type="checkbox" class="stelproperty" name="ConstellationMgr.linesDisplayed" /><?= tr("Show lines with thickness")?></label></td>
 			      <td><span class="stelproperty" data-prop="ConstellationMgr.constellationLineThickness" data-numberformat="n0"></span></td>
-				  <td><div id="stars_absoluteScale" class="slider stelproperty flex-expand" data-prop="ConstellationMgr.constellationLineThickness" data-min="1" data-max="5" data-step="1" data-numberformat="n0"></div></td>
+				  <td><div id="skyculture_cstLineThickness" class="slider stelproperty flex-expand" data-prop="ConstellationMgr.constellationLineThickness" data-min="1" data-max="5" data-step="1" data-numberformat="n0"></div></td>
 			  </tr>
               <tr><td colspan="3"><label><input type="checkbox" class="stelproperty" name="AsterismMgr.namesDisplayed" /><?= tr("Show asterism labels")?></label></td></tr>
               <tr><td><label><input type="checkbox" class="stelproperty" name="AsterismMgr.linesDisplayed" /><?= tr("Show asterisms with thickness")?></label></td>
 			      <td><span class="stelproperty" data-prop="AsterismMgr.asterismLineThickness" data-numberformat="n0"></span></td>
-				  <td><div id="stars_absoluteScale" class="slider stelproperty flex-expand" data-prop="AsterismMgr.asterismLineThickness" data-min="1" data-max="5" data-step="1" data-numberformat="n0"></div></td>
+				  <td><div id="skyculture_astLineThickness" class="slider stelproperty flex-expand" data-prop="AsterismMgr.asterismLineThickness" data-min="1" data-max="5" data-step="1" data-numberformat="n0"></div></td>
 			  </tr>
               <tr><td><label><input type="checkbox" class="stelproperty" name="AsterismMgr.rayHelpersDisplayed" /><?= tr("Show ray helpers with thickness")?></label></td>
 			      <td><span class="stelproperty" data-prop="AsterismMgr.rayHelperThickness" data-numberformat="n0"></span></td>
-				  <td><div id="stars_absoluteScale" class="slider stelproperty flex-expand" data-prop="AsterismMgr.rayHelperThickness" data-min="1" data-max="5" data-step="1" data-numberformat="n0"></div></td>
+				  <td><div id="skyculture_rayLineThickness" class="slider stelproperty flex-expand" data-prop="AsterismMgr.rayHelperThickness" data-min="1" data-max="5" data-step="1" data-numberformat="n0"></div></td>
 			  </tr>
               <tr><td><label><input type="checkbox" class="stelproperty" name="ConstellationMgr.artDisplayed" /><?= tr("Show art in brightness")?></label></td>
 			      <td><span class="stelproperty" data-prop="ConstellationMgr.artIntensity" data-numberformat="n2"></span></td>
-				  <td><div id="stars_absoluteScale" class="slider stelproperty flex-expand" data-prop="ConstellationMgr.artIntensity" data-min="0" data-max="1" data-step="0.05" data-numberformat="n2"></div></td>
+				  <td><div id="skyculture_artIntensity" class="slider stelproperty flex-expand" data-prop="ConstellationMgr.artIntensity" data-min="0" data-max="1" data-step="0.05" data-numberformat="n2"></div></td>
 			  </tr>
-			  <tr><td colspan="3"><label><input type="checkbox" class="stelproperty" name="ConstellationMgr.boundariesDisplayed" /><?= tr("Show boundaries")?></label></td></tr>
+			  <tr><td><label><input type="checkbox" class="stelproperty" name="ConstellationMgr.boundariesDisplayed" /><?= tr("Show boundaries with thickness")?></label></td>
+          <td><span class="stelproperty" data-prop="ConstellationMgr.constellationBoundariesThickness" data-numberformat="n0"></span></td>
+          <td><div id="skyculture_cstBoundariesThickness" class="slider stelproperty flex-expand" data-prop="ConstellationMgr.constellationBoundariesThickness" data-min="1" data-max="5" data-step="1" data-numberformat="n0"></div></td>
+        </tr>
               <tr><td colspan="3"><label><input type="checkbox" class="stelproperty" name="SolarSystem.flagNativePlanetNames" /><?= tr("Use native names for planets")?></label></td></tr>
               <tr><td colspan="3"><label><input type="checkbox" class="stelproperty" name="ConstellationMgr.isolateSelected" /><?= tr("Constellation selection isolated")?></label></td></tr>
 		  </table>		

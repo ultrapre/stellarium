@@ -54,6 +54,7 @@ class StelModule : public QObject
 	// load plugins on windows.
 	Q_ENUMS(StelModuleSelectAction)
 	Q_ENUMS(StelModuleActionName)
+
 public:
 	StelModule();
 
@@ -66,6 +67,10 @@ public:
 	//! Called before the module will be delete, and before the openGL context is suppressed.
 	//! Deinitialize all openGL texture in this method.
 	virtual void deinit() {;}
+
+	//! Return module-specific settings. This can be useful mostly by plugins which may want to keep their settings to their own files.
+	//! The default implementation returns a null pointer!
+	virtual QSettings *getSettings() {return Q_NULLPTR;}
 
 	//! Execute all the drawing functions for this module.
 	//! @param core the core to use for the drawing
@@ -143,7 +148,6 @@ public:
 	virtual bool configureGui(bool show=true) {Q_UNUSED(show); return false;}
 
 protected:
-
 	//! convenience methods to add an action (call to slot) to the StelActionMgr object.
 	//! @param id unique identifier. Should be called actionMy_Action. (i.e., start with "action" and then "Capitalize_Underscore" style.)
 	//! @param groupId string to be used in the Help menu. The action will be listed in this group.

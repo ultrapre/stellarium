@@ -32,7 +32,7 @@
 #include "StelTextureTypes.hpp"
 #include "StelSphereGeometry.hpp"
 #include "gSatWrapper.hpp"
-
+#include "SolarSystem.hpp"
 
 class StelPainter;
 class StelLocation;
@@ -102,13 +102,13 @@ public:
 	enum OptStatus
 	{
 		StatusOperational		= 1,
-		StatusNonoperational		= 2,
+		StatusNonoperational	= 2,
 		StatusPartiallyOperational	= 3,
 		StatusStandby			= 4,
 		StatusSpare			= 5,
-		StatusExtendedMission		= 6,
+		StatusExtendedMission	= 6,
 		StatusDecayed			= 7,
-		StatusUnknown			= 0
+		StatusUnknown		= 0
 	};
 
 	//! \param identifier unique identifier (currently the Catalog Number)
@@ -151,6 +151,10 @@ public:
 	//! - height (height in km)
 	//! - subpoint-lat (latitude of subpoint, decimal degrees)
 	//! - subpoint-long (longitude of subpoint, decimal degrees)
+	//! - inclination (decimal degrees)
+	//! - period (minutes)
+	//! - perigee-altitude (height in km)
+	//! - apogee-altitude (height in km)
 	//! - TEME-km-X
 	//! - TEME-km-Y
 	//! - TEME-km-Z
@@ -217,8 +221,8 @@ private:
 	//! returns 0 - 1.0 for the DRAWORBIT_FADE_NUMBER segments at
 	//! each end of an orbit, with 1 in the middle.
 	float calculateOrbitSegmentIntensity(int segNum);
+	Vec2d calculatePerigeeApogeeFromLine2(QString tle) const;
 
-private:
 	bool initialized;
 	//! Flag indicating whether the satellite should be displayed.
 	//! Should not be confused with the pedicted visibility of the 
@@ -265,6 +269,10 @@ private:
 	GroupSet groups;
 	QDateTime lastUpdated;
 
+	bool isISS;
+	PlanetP moon;
+	PlanetP sun;
+
 	static StelTextureSP hintTexture;
 	static SphericalCap  viewportHalfspace;
 	static float hintBrightness;
@@ -273,7 +281,7 @@ private:
 	static int   orbitLineFadeSegments;
 	static int   orbitLineSegmentDuration; //measured in seconds
 	static bool  orbitLinesFlag;
-	static bool  realisticModeFlag;
+	static bool  iconicModeFlag;
 	static bool  hideInvisibleSatellitesFlag;
 	//! Mask controlling which info display flags should be honored.
 	static StelObject::InfoStringGroupFlags flagsMask;
@@ -299,6 +307,7 @@ private:
 	static double sunReflAngle; // for Iridium satellites
 	//static double timeShift; // for Iridium satellites UNUSED
 
+	Vec3f    infoColor;
 	//Satellite Orbit Draw
 	Vec3f    orbitColor;
 	double    lastEpochCompForOrbit; //measured in Julian Days

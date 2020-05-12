@@ -28,6 +28,7 @@
 #include "StelApp.hpp"
 
 class QAbstractButton;
+class QGroupBox;
 class QComboBox;
 class QSpinBox;
 class QLineEdit;
@@ -154,23 +155,35 @@ protected:
 	//! @warning If the action with \c propName is invalid/unregistered, or cannot be converted
 	//! to the required datatype, the application will crash
 	static void connectDoubleProperty(QSlider* slider, const QString& propName, double minValue, double maxValue);
+
+	//! Helper function to connect a QComboBox to an QString StelProperty.
+	//! The property is mapped to the selected string of the combobox.
+	//! Make sure the string is available in the Combobox, else the first element may be chosen.
+	//! @warning If the action with \c propName is invalid/unregistered, or cannot be converted
+	//! to the required datatype, the application will crash
+	static void connectStringProperty(QComboBox *comboBox, const QString &propName);
+
 	//! Helper function to connect a checkbox to a bool StelProperty
 	//! @warning If the action with \c propName is invalid/unregistered, or cannot be converted
 	//! to the required datatype, the application will crash
 	static void connectBoolProperty(QAbstractButton* checkBox, const QString& propName);
+	//! Helper function to connect a groupbox to a bool StelProperty
+	//! @warning If the action with \c propName is invalid/unregistered, or cannot be converted
+	//! to the required datatype, the application will crash
+	static void connectBoolProperty(QGroupBox *checkBox, const QString &propName);
 
 	//! Prepare a QToolButton so that it can receive and handle askColor() connections properly.
 	//! @param toolButton the QToolButton which shows the color
 	//! @param propertyName a StelProperty name which must represent a color (coded as Vec3f)
 	//! @param iniName the associated entry for config.ini, in the form group/name. Usually "color/some_feature_name_color".
+	//! @param moduleName if the iniName is for a module (plugin)-specific ini file, add the module name here. The module needs an implementation of getSettings()
 	//! @warning If the action with \c propName is invalid/unregistered, or cannot be converted
 	//! to the required datatype, the application will crash
-	void connectColorButton(QToolButton* button, QString propertyName, QString iniName);
+	void connectColorButton(QToolButton* button, QString propertyName, QString iniName, QString moduleName="");
 
 	//! The main dialog
 	QWidget* dialog;
-	class CustomProxy;
-	CustomProxy* proxy;
+	class CustomProxy* proxy;
 	//! The name should be set in derived classes' constructors and can be used to store and retrieve the panel locations.
 	QString dialogName;
 
@@ -193,21 +206,51 @@ private slots:
 	void updateNightModeProperty();
 };
 
-class StelDialog::CustomProxy : public QGraphicsProxyWidget
-{
-private:
-Q_OBJECT
-public:
-	CustomProxy(QGraphicsItem *parent , Qt::WindowFlags wFlags );
-
-	//! Reimplement this method to add windows decorations. Currently there are invisible 2 px decorations
-	void paintWindowFrame(QPainter*, const QStyleOptionGraphicsItem*, QWidget*) Q_DECL_OVERRIDE;
-
-signals:
-	void sizeChanged(QSizeF);
-	
-protected:
-	bool event(QEvent* event) Q_DECL_OVERRIDE;
-	void resizeEvent(QGraphicsSceneResizeEvent *event) Q_DECL_OVERRIDE;
+class CustomProxy : public QGraphicsProxyWidget
+{	private:
+	Q_OBJECT
+	public:
+		CustomProxy(QGraphicsItem *parent = Q_NULLPTR, Qt::WindowFlags wFlags = 0) : QGraphicsProxyWidget(parent, wFlags)
+		{
+			setFocusPolicy(Qt::StrongFocus);
+		}
+		//! Reimplement this method to add windows decorations. Currently there are invisible 2 px decorations
+		void paintWindowFrame(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
+		{
+/*			QStyleOptionTitleBar bar;
+			initStyleOption(&bar);
+			bar.subControls = QStyle::SC_TitleBarCloseButton;
+			qWarning() << style()->subControlRect(QStyle::CC_TitleBar, &bar, QStyle::SC_TitleBarCloseButton);
+			QGraphicsProxyWidget::paintWindowFrame(painter, option, widget);*/
+		}
+	signals: void sizeChanged(QSizeF);
+	protected:
+		virtual bool event(QEvent* event)
+		{
+			if (StelApp::getInstance().getSettings()->value("gui/flag_use_window_transparency", true).toBool())
+			{
+				switch (event->type())
+				{
+					case QEvent::WindowDeactivate:
+						widget()->setWindowOpacity(0.4);
+						break;
+					case QEvent::WindowActivate:
+					case QEvent::GrabMouse:
+						widget()->setWindowOpacity(0.9);
+						break;
+					default:
+						break;
+				}
+			}
+			return QGraphicsProxyWidget::event(event);
+		}
+		virtual void resizeEvent(QGraphicsSceneResizeEvent *event)
+		{
+			if (event->newSize() != event->oldSize())
+			{
+				emit sizeChanged(event->newSize());
+			}
+			QGraphicsProxyWidget::resizeEvent(event);
+		}
 };
 #endif // STELDIALOG_HPP

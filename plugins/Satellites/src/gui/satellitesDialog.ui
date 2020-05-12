@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>579</width>
+    <width>750</width>
     <height>491</height>
    </rect>
   </property>
@@ -454,7 +454,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="realisticGroup">
+        <widget class="QGroupBox" name="iconicGroup">
          <property name="title">
           <string>Show artificial satellites as markers</string>
          </property>
@@ -593,6 +593,9 @@
              <property name="toolTip">
               <string>Add more satellites</string>
              </property>
+             <property name="text">
+              <string notr="true">Add</string>
+             </property>
             </widget>
            </item>
            <item>
@@ -606,26 +609,71 @@
              <property name="toolTip">
               <string>Remove the selected satellites</string>
              </property>
+             <property name="text">
+              <string notr="true">Remove</string>
+             </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="commsButton">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
+            <widget class="QPushButton" name="satMarkerColorPickerButton">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
-             <property name="text">
-              <string/>
+             <property name="toolTip">
+              <string>Change markers color for selected satellites</string>
              </property>
-             <property name="checkable">
-              <bool>true</bool>
+             <property name="text">
+              <string notr="true">Marker Color</string>
              </property>
             </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="satOrbitColorPickerButton">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="toolTip">
+              <string>Change orbits color for selected satellites</string>
+             </property>
+             <property name="text">
+              <string notr="true">Orbit Color</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="satInfoColorPickerButton">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="toolTip">
+              <string>Change info color for selected satellites</string>
+             </property>
+             <property name="text">
+              <string notr="true">Info Color</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
            </item>
            <item>
             <widget class="QPushButton" name="saveSatellitesButton">
@@ -642,22 +690,9 @@
               <string>Save changes</string>
              </property>
              <property name="text">
-              <string/>
+              <string notr="true">Save</string>
              </property>
             </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacer_2">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
            </item>
           </layout>
          </item>
@@ -714,9 +749,9 @@
           </layout>
          </item>
          <item>
-          <layout class="QGridLayout" name="flagsCheckBoxesLayout">
-           <property name="verticalSpacing">
-            <number>6</number>
+          <layout class="QGridLayout" name="gridLayout_5">
+           <property name="horizontalSpacing">
+            <number>0</number>
            </property>
            <item row="0" column="0">
             <widget class="QCheckBox" name="displayedCheckbox">
@@ -751,31 +786,6 @@
              </property>
              <property name="text">
               <string>Do not update</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1" alignment="Qt::AlignLeft">
-            <widget class="QPushButton" name="satColorPickerButton">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>18</width>
-               <height>18</height>
-              </size>
-             </property>
-             <property name="toolTip">
-              <string>Change color for selected satellite(s)</string>
-             </property>
-             <property name="layoutDirection">
-              <enum>Qt::LeftToRight</enum>
-             </property>
-             <property name="text">
-              <string notr="true"/>
              </property>
             </widget>
            </item>
@@ -910,7 +920,7 @@
             <string>Add new source</string>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true">Add</string>
            </property>
           </widget>
          </item>
@@ -920,7 +930,7 @@
             <string>Remove selected source</string>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true">Remove</string>
            </property>
           </widget>
          </item>
@@ -1070,7 +1080,7 @@
   <tabstop>tleSecondLineEdit</tabstop>
   <tabstop>addSatellitesButton</tabstop>
   <tabstop>removeSatellitesButton</tabstop>
-  <tabstop>commsButton</tabstop>
+  <tabstop>satMarkerColorPickerButton</tabstop>
   <tabstop>saveSatellitesButton</tabstop>
   <tabstop>sourceList</tabstop>
   <tabstop>sourceEdit</tabstop>

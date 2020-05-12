@@ -128,8 +128,8 @@ signals:
 	void definingAngleChanged(double angle);
 public slots:
 	void setColor(const Vec3f& c);
-	void update(const double deltaTime) {fader.update((int)(deltaTime*1000));}
-	void setFadeDuration(const float duration) {fader.setDuration((int)(duration*1000.f));}
+	void update(const double deltaTime) {fader.update(static_cast<int>(deltaTime*1000));}
+	void setFadeDuration(const float duration) {fader.setDuration(static_cast<int>(duration*1000.f));}
 	void setDisplayed(const bool displayed){fader = displayed;}
 	void setFontSize(const int newSize){font.setPixelSize(newSize);}
 	//! To be connected to StelApp font size. newSize will be enlarged by 1.
@@ -224,6 +224,7 @@ class ArchaeoLines : public StelModule
 	Q_PROPERTY(Vec3f customDeclination1Color      READ getCustomDeclination1Color      WRITE setCustomDeclination1Color      NOTIFY customDeclination1ColorChanged      )
 	Q_PROPERTY(Vec3f customDeclination2Color      READ getCustomDeclination2Color      WRITE setCustomDeclination2Color      NOTIFY customDeclination2ColorChanged      )
 
+	Q_PROPERTY(int lineWidth    READ getLineWidth WRITE setLineWidth NOTIFY lineWidthChanged)
 public:
 	ArchaeoLines();
 	virtual ~ArchaeoLines();
@@ -306,6 +307,7 @@ signals:
 	void customAzimuth2ColorChanged(Vec3f color);
 	void customDeclination1ColorChanged(Vec3f color);
 	void customDeclination2ColorChanged(Vec3f color);
+	void lineWidthChanged(int width);
 
 public slots:
 	void enableArchaeoLines(bool b);
@@ -430,14 +432,18 @@ public slots:
 	void setCustomDeclination1Color(Vec3f color);
 	void setCustomDeclination2Color(Vec3f color);
 
+	int getLineWidth() const {return lineWidth;}
+	void setLineWidth(int width);
+
 
 
 
 private slots:
 	//! a slot connected to core which cares for location changes, updating the geographicLocation lines.
-	void updateObserverLocation(StelLocation loc);
+	void updateObserverLocation(const StelLocation &loc);
 	//! Compute azimuth (from North) towards Target. All angles (args and result) are in degrees.
 	static double getAzimuthForLocation(double longObs, double latObs, double longTarget, double latTarget);
+	static double getAzimuthForLocation(float longObs, float latObs, double longTarget, double latTarget);
 
 private:
 	QFont font;
@@ -445,6 +451,7 @@ private:
 	//bool withDecimalDegree;
 	//bool flagUseDmsFormat;
 	LinearFader lineFader;
+	int lineWidth;
 
 	Vec3f equinoxColor;
 	Vec3f solsticesColor;

@@ -26,6 +26,7 @@
 #include <QColorDialog>
 
 #include "StelApp.hpp"
+#include "StelCore.hpp"
 #include "ui_quasarsDialog.h"
 #include "QuasarsDialog.hpp"
 #include "Quasars.hpp"
@@ -113,7 +114,6 @@ void QuasarsDialog::createDialogContent()
 		ui->aboutTextBrowser->document()->setDefaultStyleSheet(QString(gui->getStelStyle().htmlStyleSheet));
 
 	updateGuiFromSettings();
-
 }
 
 void QuasarsDialog::setAboutHtml(void)
@@ -251,6 +251,7 @@ void QuasarsDialog::updateCompleteReceiver(void)
 	ui->lastUpdateDateTimeEdit->setDateTime(qsr->getLastUpdate());
 	QTimer *timer = new QTimer(this);
 	connect(timer, SIGNAL(timeout()), this, SLOT(refreshUpdateValues()));
+	setAboutHtml();
 }
 
 void QuasarsDialog::restoreDefaults(void)

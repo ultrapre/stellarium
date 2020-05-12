@@ -53,7 +53,7 @@ void HighlightMgr::init()
 	texPointer = StelApp::getInstance().getTextureManager().createTexture(StelFileMgr::getInstallationDir()+"/textures/pointeur2.png");
 
 	// Highlights
-	setHighlightColor(StelUtils::strToVec3f(conf->value("gui/highlight_marker_color", "0.0,1.0,1.0").toString()));
+	setColor(Vec3f(conf->value("gui/highlight_marker_color", "0.0,1.0,1.0").toString()));
 	setMarkersSize(conf->value("gui/highlight_marker_size", 11.f).toFloat());
 
 	GETSTELMODULE(StelObjectMgr)->registerStelObjectMgr(this);
@@ -76,50 +76,50 @@ void HighlightMgr::draw(StelCore* core)
 
 QList<StelObjectP> HighlightMgr::searchAround(const Vec3d& av, double limitFov, const StelCore*) const
 {
-	Q_UNUSED(av);
-	Q_UNUSED(limitFov);
+	Q_UNUSED(av)
+	Q_UNUSED(limitFov)
 	return QList<StelObjectP>();
 }
 
 StelObjectP HighlightMgr::searchByName(const QString& englishName) const
 {
-	Q_UNUSED(englishName);
+	Q_UNUSED(englishName)
 	return Q_NULLPTR;
 }
 
 StelObjectP HighlightMgr::searchByNameI18n(const QString& nameI18n) const
 {
-	Q_UNUSED(nameI18n);
+	Q_UNUSED(nameI18n)
 	return Q_NULLPTR;
 }
 
 StelObjectP HighlightMgr::searchByID(const QString& id) const
 {
-	Q_UNUSED(id);
+	Q_UNUSED(id)
 	return Q_NULLPTR;
 }
 
 QStringList HighlightMgr::listMatchingObjects(const QString& objPrefix, int maxNbItem, bool useStartOfWords, bool inEnglish) const
 {
-	Q_UNUSED(objPrefix);
-	Q_UNUSED(maxNbItem);
-	Q_UNUSED(useStartOfWords);
-	Q_UNUSED(inEnglish);
+	Q_UNUSED(objPrefix)
+	Q_UNUSED(maxNbItem)
+	Q_UNUSED(useStartOfWords)
+	Q_UNUSED(inEnglish)
 	return QStringList();
 }
 
 QStringList HighlightMgr::listAllObjects(bool inEnglish) const
 {
-	Q_UNUSED(inEnglish);
+	Q_UNUSED(inEnglish)
 	return QStringList();
 }
 
-void HighlightMgr::setHighlightColor(const Vec3f& c)
+void HighlightMgr::setColor(const Vec3f& c)
 {
 	hightlightColor = c;
 }
 
-const Vec3f& HighlightMgr::getHighlightColor(void) const
+Vec3f HighlightMgr::getColor(void) const
 {
 	return hightlightColor;
 }
@@ -163,4 +163,38 @@ void HighlightMgr::drawHighlights(StelCore* core, StelPainter& painter)
 			painter.drawSprite2dMode(screenpos[0], screenpos[1], markerSize, StelApp::getInstance().getTotalRunTime()*40.f);
 		}
 	}
+}
+
+void HighlightMgr::addPoint(const QString &ra, const QString &dec)
+{
+	Vec3d J2000;
+	double dRa = StelUtils::getDecAngle(ra);
+	double dDec = StelUtils::getDecAngle(dec);
+	StelUtils::spheToRect(dRa, dDec, J2000);
+
+	highlightList.append(J2000);
+}
+
+void HighlightMgr::addPointRaDec(const QString& ra, const QString& dec)
+{
+	Vec3d aim;
+	double dRa = StelUtils::getDecAngle(ra);
+	double dDec = StelUtils::getDecAngle(dec);
+	StelUtils::spheToRect(dRa, dDec, aim);
+
+	highlightList.append(StelApp::getInstance().getCore()->equinoxEquToJ2000(aim, StelCore::RefractionOff));
+}
+
+void HighlightMgr::addPointAltAzi(const QString &alt, const QString &azi)
+{
+	Vec3d aim;
+	double dAlt = StelUtils::getDecAngle(alt);
+	double dAzi = M_PI - StelUtils::getDecAngle(azi);
+
+	if (StelApp::getInstance().getFlagSouthAzimuthUsage())
+		dAzi -= M_PI;
+
+	StelUtils::spheToRect(dAzi, dAlt, aim);
+
+	highlightList.append(StelApp::getInstance().getCore()->altAzToJ2000(aim, StelCore::RefractionAuto));
 }

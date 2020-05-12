@@ -26,6 +26,7 @@
 #include <QColorDialog>
 
 #include "StelApp.hpp"
+#include "StelCore.hpp"
 #include "ui_pulsarsDialog.h"
 #include "PulsarsDialog.hpp"
 #include "Pulsars.hpp"
@@ -126,7 +127,6 @@ void PulsarsDialog::createDialogContent()
 		ui->aboutTextBrowser->document()->setDefaultStyleSheet(QString(gui->getStelStyle().htmlStyleSheet));
 
 	updateGuiFromSettings();
-
 }
 
 void PulsarsDialog::setAboutHtml(void)
@@ -289,6 +289,7 @@ void PulsarsDialog::updateCompleteReceiver(void)
 	ui->lastUpdateDateTimeEdit->setDateTime(psr->getLastUpdate());
 	QTimer *timer = new QTimer(this);
 	connect(timer, SIGNAL(timeout()), this, SLOT(refreshUpdateValues()));
+	setAboutHtml();
 }
 
 void PulsarsDialog::restoreDefaults(void)

@@ -25,6 +25,7 @@
 #include "StelActionMgr.hpp"
 #include "StelPropertyMgr.hpp"
 #include "StelTranslator.hpp"
+#include "StelModuleMgr.hpp"
 
 #include <QDebug>
 #include <QAbstractButton>
@@ -72,15 +73,14 @@ void StelDialog::setVisible(bool v)
 {
 	if (v)
 	{
-		StelGui* gui = dynamic_cast<StelGui*>(StelApp::getInstance().getGui());
-		Q_ASSERT(gui);
+		StelGui* gui = dynamic_cast<StelGui*>(StelApp::getInstance().getGui());		
 		QSize screenSize = StelMainView::getInstance().size();
 		QSize maxSize = 0.8*screenSize;
 		if (dialog)
 		{
 			// reload stylesheet, in case size changed!
-			dialog->setStyleSheet(gui->getStelStyle().qtStyleSheet);
-
+			if (gui)
+				dialog->setStyleSheet(gui->getStelStyle().qtStyleSheet);
 			dialog->show();
 			StelMainView::getInstance().scene()->setActiveWindow(proxy);
 			// If the main window has been resized, it is possible the dialog
@@ -109,8 +109,8 @@ void StelDialog::setVisible(bool v)
 			//dialog->setAttribute(Qt::WA_OpaquePaintEvent, true);
 			connect(dialog, SIGNAL(rejected()), this, SLOT(close()));
 			createDialogContent();
-			dialog->setStyleSheet(gui->getStelStyle().qtStyleSheet);
-
+			if (gui)
+				dialog->setStyleSheet(gui->getStelStyle().qtStyleSheet);
 			// Ensure that tooltip get rendered in red in night mode.
 			connect(&StelApp::getInstance(), SIGNAL(visionNightModeChanged(bool)), this, SLOT(updateNightModeProperty()));
 			updateNightModeProperty();
@@ -122,7 +122,6 @@ void StelDialog::setVisible(bool v)
 			connect(proxy, SIGNAL(sizeChanged(QSizeF)), this, SLOT(handleDialogSizeChanged(QSizeF)));
 
 			int newX, newY;
-
 			// Retrieve panel locations from config.ini, but shift if required to a visible position.
 			// else centre dialog according to current window size.
 			QSettings *conf=StelApp::getInstance().getSettings();
@@ -130,8 +129,8 @@ void StelDialog::setVisible(bool v)
 			QString confNamePt="DialogPositions/" + dialogName;
 			QString storedPosString=conf->value(confNamePt,
 							    QString("%1,%2")
-							    .arg((int)((screenSize.width()  - size.width() )/2))
-							    .arg((int)((screenSize.height() - size.height())/2)))
+							    .arg(static_cast<int>((screenSize.width()  - size.width() )/2))
+							    .arg(static_cast<int>((screenSize.height() - size.height())/2)))
 					.toString();
 			QStringList posList=storedPosString.split(",");
 			if (posList.length()==2)
@@ -141,8 +140,8 @@ void StelDialog::setVisible(bool v)
 			}
 			else	// in case there is an invalid string?
 			{
-				newX=(int)((screenSize.width()  - size.width() )/2);
-				newY=(int)((screenSize.height() - size.height())/2);
+				newX=static_cast<int>((screenSize.width()  - size.width() )/2);
+				newY=static_cast<int>((screenSize.height() - size.height())/2);
 			}
 
 			if (newX>=screenSize.width())
@@ -175,7 +174,7 @@ void StelDialog::setVisible(bool v)
 			if ( (newX>=proxy->size().width()) || (newY>=proxy->size().height()) )
 			{
 				//qDebug() << confNameSize << ": resize to " << storedSizeString;
-				proxy->resize(qMax((qreal)newX, proxy->size().width()), qMax((qreal)newY, proxy->size().height()));
+				proxy->resize(qMax(static_cast<qreal>(newX), proxy->size().width()), qMax(static_cast<qreal>(newY), proxy->size().height()));
 			}
 			if(proxy->size().width() > maxSize.width() || proxy->size().height() > maxSize.height())
 			{
@@ -184,7 +183,10 @@ void StelDialog::setVisible(bool v)
 			handleDialogSizeChanged(proxy->size()); // This may trigger internal updates in subclasses. E.g. LocationPanel location arrow.
 
 			// The caching is buggy on all platforms with Qt 4.5.2
+			// Disabled on mac for the moment (https://github.com/Stellarium/stellarium/issues/393)
+			#ifndef Q_OS_MAC
 			proxy->setCacheMode(QGraphicsItem::ItemCoordinateCache);
+			#endif
 
 			proxy->setZValue(100);
 			StelMainView::getInstance().scene()->setActiveWindow(proxy);
@@ -204,10 +206,10 @@ void StelDialog::handleFontChanged()
 {
 	if (dialog && dialog->isVisible())
 	{
-		StelGui* gui = dynamic_cast<StelGui*>(StelApp::getInstance().getGui());
-		Q_ASSERT(gui);
 		// reload stylesheet, in case size or font changed!
-		dialog->setStyleSheet(gui->getStelStyle().qtStyleSheet);
+		StelGui* gui = dynamic_cast<StelGui*>(StelApp::getInstance().getGui());
+		if (gui)
+			dialog->setStyleSheet(gui->getStelStyle().qtStyleSheet);
 	}
 }
 
@@ -279,6 +281,15 @@ void StelDialog::connectDoubleProperty(QSlider *slider, const QString &propName,
 	new QSliderStelPropertyConnectionHelper(prop,minValue,maxValue,slider);
 }
 
+void StelDialog::connectStringProperty(QComboBox *comboBox, const QString &propName)
+{
+	StelProperty* prop = StelApp::getInstance().getStelPropertyManager()->getProperty(propName);
+	Q_ASSERT_X(prop,"StelDialog", "StelProperty does not exist");
+
+	//use a proxy for the connection
+	new QComboBoxStelStringPropertyConnectionHelper(prop,comboBox);
+}
+
 void StelDialog::connectBoolProperty(QAbstractButton *checkBox, const QString &propName)
 {
 	StelProperty* prop = StelApp::getInstance().getStelPropertyManager()->getProperty(propName);
@@ -287,13 +298,21 @@ void StelDialog::connectBoolProperty(QAbstractButton *checkBox, const QString &p
 	new QAbstractButtonStelPropertyConnectionHelper(prop,checkBox);
 }
 
-void StelDialog::connectColorButton(QToolButton *toolButton, QString propertyName, QString iniName)
+void StelDialog::connectBoolProperty(QGroupBox *checkBox, const QString &propName)
+{
+	StelProperty* prop = StelApp::getInstance().getStelPropertyManager()->getProperty(propName);
+	Q_ASSERT_X(prop,"StelDialog", "StelProperty does not exist");
+
+	new QGroupBoxStelPropertyConnectionHelper(prop,checkBox);
+}
+
+void StelDialog::connectColorButton(QToolButton *toolButton, QString propertyName, QString iniName, QString moduleName)
 {
 	toolButton->setProperty("propName", propertyName);
 	toolButton->setProperty("iniName", iniName);
+	toolButton->setProperty("moduleName", moduleName);
 	StelProperty* prop = StelApp::getInstance().getStelPropertyManager()->getProperty(propertyName);
-	Vec3f vColor = prop->getValue().value<Vec3f>();
-	QColor color=QColor::fromRgbF(vColor.v[0], vColor.v[1], vColor.v[2]);
+	QColor color=prop->getValue().value<Vec3f>().toQColor();
 	// Use style sheet to create a nice button :)
 	toolButton->setStyleSheet("QToolButton { background-color:" + color.name() + "; }");
 	toolButton->setFixedSize(QSize(18, 18));
@@ -318,20 +337,29 @@ void StelDialog::askColor()
 	}
 	QString propName=sender()->property("propName").toString();
 	QString iniName=sender()->property("iniName").toString();
-	if ((propName.length()==0) || (iniName.length()==0))
+	QString moduleName=sender()->property("moduleName").toString(); // optional
+	if ((propName.isEmpty()) || (iniName.isEmpty()))
 	{
 		qWarning() << "ColorButton not set up properly! Ignoring.";
 		Q_ASSERT(0);
 		return;
 	}
-	Vec3f vColor = StelApp::getInstance().getStelPropertyManager()->getProperty(propName)->getValue().value<Vec3f>();
-	QColor color = QColor::fromRgbF(vColor.v[0], vColor.v[1], vColor.v[2]);
+	Vec3d vColor = StelApp::getInstance().getStelPropertyManager()->getProperty(propName)->getValue().value<Vec3f>().toVec3d();
+	QColor color = vColor.toQColor();
 	QColor c = QColorDialog::getColor(color, Q_NULLPTR, q_(static_cast<QToolButton*>(QObject::sender())->toolTip()));
 	if (c.isValid())
 	{
-		vColor = Vec3f(c.redF(), c.greenF(), c.blueF());
-		StelApp::getInstance().getStelPropertyManager()->setStelPropertyValue(propName, QVariant::fromValue(vColor));
-		StelApp::getInstance().getSettings()->setValue(iniName, StelUtils::vec3fToStr(vColor));
+		vColor = Vec3d(c.redF(), c.greenF(), c.blueF());
+		StelApp::getInstance().getStelPropertyManager()->setStelPropertyValue(propName, QVariant::fromValue(Vec3f(c.redF(), c.greenF(), c.blueF())));
+		if (moduleName.isEmpty())
+			StelApp::getInstance().getSettings()->setValue(iniName, vColor.toStr());
+		else
+		{
+			StelModule *module=StelApp::getInstance().getModuleMgr().getModule(moduleName);
+			QSettings *settings=module->getSettings();
+			Q_ASSERT(settings);
+			settings->setValue(iniName, vColor.toStr());
+		}
 		static_cast<QToolButton*>(QObject::sender())->setStyleSheet("QToolButton { background-color:" + c.name() + "; }");
 	}
 }
@@ -373,7 +401,7 @@ void StelDialog::handleDialogSizeChanged(QSizeF size)
 {
 	QSettings *conf=StelApp::getInstance().getSettings();
 	Q_ASSERT(conf);
-	conf->setValue("DialogSizes/" + dialogName, QString("%1,%2").arg((int)size.width()).arg((int)size.height()));
+	conf->setValue("DialogSizes/" + dialogName, QString("%1,%2").arg(static_cast<int>(size.width())).arg(static_cast<int>(size.height())));
 }
 
 
@@ -400,6 +428,27 @@ void QAbstractButtonStelPropertyConnectionHelper::onPropertyChanged(const QVaria
 	button->blockSignals(b);
 }
 
+QGroupBoxStelPropertyConnectionHelper::QGroupBoxStelPropertyConnectionHelper(StelProperty *prop, QGroupBox *box)
+	:StelPropertyProxy(prop,box), box(box)
+{
+	QVariant val = prop->getValue();
+	bool ok = val.canConvert<bool>();
+	Q_ASSERT_X(ok,"QGroupBoxStelPropertyConnectionHelper","Can not convert to bool datatype");
+	Q_UNUSED(ok);
+	onPropertyChanged(val);
+
+	//in this direction, we can directly connect because Qt supports QVariant slots with the new syntax
+	connect(box, &QGroupBox::toggled, prop, &StelProperty::setValue);
+}
+
+void QGroupBoxStelPropertyConnectionHelper::onPropertyChanged(const QVariant &value)
+{
+	//block signals to prevent sending the valueChanged signal, changing the property again
+	bool b = box->blockSignals(true);
+	box->setChecked(value.toBool());
+	box->blockSignals(b);
+}
+
 QComboBoxStelPropertyConnectionHelper::QComboBoxStelPropertyConnectionHelper(StelProperty *prop, QComboBox *combo)
 	:StelPropertyProxy(prop,combo), combo(combo)
 {
@@ -420,7 +469,26 @@ void QComboBoxStelPropertyConnectionHelper::onPropertyChanged(const QVariant &va
 	combo->setCurrentIndex(value.toInt());
 	combo->blockSignals(b);
 }
+QComboBoxStelStringPropertyConnectionHelper::QComboBoxStelStringPropertyConnectionHelper(StelProperty *prop, QComboBox *combo)
+	:StelPropertyProxy(prop,combo), combo(combo)
+{
+	QVariant val = prop->getValue();
+	bool ok = val.canConvert<QString>();
+	Q_ASSERT_X(ok,"QComboBoxStelStringPropertyConnectionHelper","Can not convert to QString datatype");
+	Q_UNUSED(ok);
+	onPropertyChanged(val);
 
+	//in this direction, we can directly connect because Qt supports QVariant slots with the new syntax
+	connect(combo, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::activated),prop,&StelProperty::setValue);
+}
+
+void QComboBoxStelStringPropertyConnectionHelper::onPropertyChanged(const QVariant &value)
+{
+	//block signals to prevent sending the valueChanged signal, changing the property again
+	bool b = combo->blockSignals(true);
+	combo->setCurrentText(value.toString());
+	combo->blockSignals(b);
+}
 
 QLineEditStelPropertyConnectionHelper::QLineEditStelPropertyConnectionHelper(StelProperty *prop, QLineEdit *edit)
 	:StelPropertyProxy(prop,edit), edit(edit)
@@ -514,7 +582,7 @@ QSliderStelPropertyConnectionHelper::QSliderStelPropertyConnectionHelper(StelPro
 }
 void QSliderStelPropertyConnectionHelper::sliderIntValueChanged(int val)
 {
-	double dVal = ((val - slider->minimum()) / (double)(slider->maximum() - slider->minimum())) * dRange + minValue;
+	double dVal = ((val - slider->minimum()) / static_cast<double>(slider->maximum() - slider->minimum())) * dRange + minValue;
 	prop->setValue(dVal);
 }
 

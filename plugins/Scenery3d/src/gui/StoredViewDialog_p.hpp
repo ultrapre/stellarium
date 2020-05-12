@@ -125,8 +125,7 @@ public:
 		}
 	}
 
-
-	QModelIndex addUserView(StoredView v)
+	QModelIndex addUserView(const StoredView& v)
 	{
 		int idx = global.size() + user.size();
 		beginInsertRows(QModelIndex(),idx,idx);

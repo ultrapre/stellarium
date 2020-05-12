@@ -74,7 +74,7 @@ StelPluginInfo ExoplanetsStelPluginInterface::getPluginInfo() const
 	info.id = "Exoplanets";
 	info.displayedName = N_("Exoplanets");
 	info.authors = "Alexander Wolf";
-	info.contact = "alex.v.wolf@gmail.com";
+	info.contact = "https://github.com/Stellarium/stellarium";
 	info.description = N_("This plugin plots the position of stars with exoplanets. Exoplanets data is derived from the 'Extrasolar Planets Encyclopaedia' at exoplanet.eu");
 	info.version = EXOPLANETS_PLUGIN_VERSION;
 	info.license = EXOPLANETS_PLUGIN_LICENSE;
@@ -161,7 +161,7 @@ void Exoplanets::init()
 		// populate settings from main config file.
 		loadConfiguration();
 
-		jsonCatalogPath = StelFileMgr::findFile("modules/Exoplanets", (StelFileMgr::Flags)(StelFileMgr::Directory|StelFileMgr::Writable)) + "/exoplanets.json";
+		jsonCatalogPath = StelFileMgr::findFile("modules/Exoplanets", static_cast<StelFileMgr::Flags>(StelFileMgr::Directory|StelFileMgr::Writable)) + "/exoplanets.json";
 		if (jsonCatalogPath.isEmpty())
 			return;
 
@@ -209,6 +209,7 @@ void Exoplanets::init()
 	updateTimer->start();
 
 	connect(this, SIGNAL(jsonUpdateComplete(void)), this, SLOT(reloadCatalog()));
+	connect(StelApp::getInstance().getCore(), SIGNAL(configurationDataSaved()), this, SLOT(saveSettings()));
 
 	GETSTELMODULE(StelObjectMgr)->registerStelObjectMgr(this);
 }
@@ -230,7 +231,6 @@ void Exoplanets::draw(StelCore* core)
 
 	if (GETSTELMODULE(StelObjectMgr)->getFlagSelectedObjectPointer())
 		drawPointer(core, painter);
-
 }
 
 void Exoplanets::drawPointer(StelCore* core, StelPainter& painter)
@@ -250,7 +250,7 @@ void Exoplanets::drawPointer(StelCore* core, StelPainter& painter)
 		painter.setColor(c[0],c[1],c[2]);
 		texPointer->bind();
 		painter.setBlending(true);
-		painter.drawSprite2dMode(screenpos[0], screenpos[1], 13.f, StelApp::getInstance().getTotalRunTime()*40.);
+		painter.drawSprite2dMode(static_cast<float>(screenpos[0]), static_cast<float>(screenpos[1]), 13.f, static_cast<float>(StelApp::getInstance().getTotalRunTime())*40.f);
 	}
 }
 
@@ -263,7 +263,7 @@ QList<StelObjectP> Exoplanets::searchAround(const Vec3d& av, double limitFov, co
 
 	Vec3d v(av);
 	v.normalize();
-	double cosLimFov = cos(limitFov * M_PI/180.);
+	const double cosLimFov = cos(limitFov * M_PI/180.);
 	Vec3d equPos;
 
 	for (const auto& eps : ep)
@@ -272,7 +272,7 @@ QList<StelObjectP> Exoplanets::searchAround(const Vec3d& av, double limitFov, co
 		{
 			equPos = eps->XYZ;
 			equPos.normalize();
-			if (equPos[0]*v[0] + equPos[1]*v[1] + equPos[2]*v[2]>=cosLimFov)
+			if (equPos.dot(v) >= cosLimFov)
 			{
 				result.append(qSharedPointerCast<StelObject>(eps));
 			}
@@ -311,7 +311,6 @@ StelObjectP Exoplanets::searchByName(const QString& englishName) const
 					return qSharedPointerCast<StelObject>(eps);
 			}
 		}
-
 	}
 
 	return Q_NULLPTR;
@@ -595,7 +594,6 @@ void Exoplanets::setEPMap(const QVariantMap& map)
 			EPCountAll += eps->getCountExoplanets();
 			EPCountPH += eps->getCountHabitableExoplanets();
 		}
-
 	}
 }
 
@@ -705,8 +703,8 @@ void Exoplanets::loadConfiguration(void)
 	enableAtStartup = conf->value("enable_at_startup", false).toBool();
 	flagShowExoplanetsButton = conf->value("flag_show_exoplanets_button", true).toBool();
 	setFlagShowExoplanetsDesignations(conf->value("flag_show_designations", true).toBool());
-	setMarkerColor(StelUtils::strToVec3f(conf->value("exoplanet_marker_color", "0.4,0.9,0.5").toString()));
-	setHabitableColor(StelUtils::strToVec3f(conf->value("habitable_exoplanet_marker_color", "1.0,0.5,0.0").toString()));
+	setMarkerColor(Vec3f(conf->value("exoplanet_marker_color", "0.4,0.9,0.5").toString()));
+	setHabitableColor(Vec3f(conf->value("habitable_exoplanet_marker_color", "1.0,0.5,0.0").toString()));
 	setCurrentTemperatureScaleKey(conf->value("temperature_scale", "Celsius").toString());
 
 	conf->endGroup();
@@ -725,8 +723,8 @@ void Exoplanets::saveConfiguration(void)
 	conf->setValue("enable_at_startup", enableAtStartup);
 	conf->setValue("flag_show_exoplanets_button", flagShowExoplanetsButton);
 	conf->setValue("flag_show_designations", getFlagShowExoplanetsDesignations());
-	conf->setValue("habitable_exoplanet_marker_color", StelUtils::vec3fToStr(getHabitableColor()));
-	conf->setValue("exoplanet_marker_color", StelUtils::vec3fToStr(getMarkerColor()));
+	conf->setValue("habitable_exoplanet_marker_color", getHabitableColor().toStr());
+	conf->setValue("exoplanet_marker_color", getMarkerColor().toStr());
 	conf->setValue("temperature_scale", getCurrentTemperatureScaleKey());
 
 	conf->endGroup();
@@ -735,7 +733,7 @@ void Exoplanets::saveConfiguration(void)
 int Exoplanets::getSecondsToUpdate(void)
 {
 	QDateTime nextUpdate = lastUpdate.addSecs(updateFrequencyHours * 3600);
-	return QDateTime::currentDateTime().secsTo(nextUpdate);
+	return static_cast<int>(QDateTime::currentDateTime().secsTo(nextUpdate));
 }
 
 void Exoplanets::checkForUpdate(void)
@@ -870,7 +868,7 @@ void Exoplanets::setFlagShowExoplanets(bool b)
 void Exoplanets::setCurrentTemperatureScaleKey(QString key)
 {
 	const QMetaEnum& en = metaObject()->enumerator(metaObject()->indexOfEnumerator("TemperatureScale"));
-	TemperatureScale ts = (TemperatureScale)en.keyToValue(key.toLatin1().data());
+	TemperatureScale ts = static_cast<TemperatureScale>(en.keyToValue(key.toLatin1().data()));
 	if (ts<0)
 	{
 		qWarning() << "Unknown temperature scale:" << key << "setting \"Celsius\" instead";
@@ -936,11 +934,11 @@ void Exoplanets::updateDownloadProgress(qint64 bytesReceived, qint64 bytesTotal)
 		//Round to the greatest possible derived unit
 		while (bytesTotal > 1024)
 		{
-			bytesReceived = std::floor(bytesReceived / 1024.);
-			bytesTotal    = std::floor(bytesTotal / 1024.);
+			bytesReceived = static_cast<qint64>(std::floor(bytesReceived / 1024.));
+			bytesTotal    = static_cast<qint64>(std::floor(bytesTotal / 1024.));
 		}
-		currentValue = bytesReceived;
-		endValue = bytesTotal;
+		currentValue = static_cast<int>(bytesReceived);
+		endValue = static_cast<int>(bytesTotal);
 	}
 
 	progressBar->setValue(currentValue);
@@ -1002,7 +1000,6 @@ void Exoplanets::downloadComplete(QNetworkReply *reply)
 
 		lastUpdate = QDateTime::currentDateTime();
 		conf->setValue("Exoplanets/last_update", lastUpdate.toString(Qt::ISODate));
-
 	}
 	catch (std::runtime_error &e)
 	{

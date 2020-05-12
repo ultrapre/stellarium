@@ -23,7 +23,7 @@
 #include <QDateTime>
 #include <QProcess>
 #ifdef Q_OS_WIN
- #include <windows.h>
+ #include <Windows.h>
 #endif
 
 // Init statics variables.
@@ -154,7 +154,7 @@ void StelLogger::init(const QString& logFilePath)
 	else
 		writeLog("Windows version too old to get memory info.");
 
-	HKEY hKey = NULL;
+	HKEY hKey = Q_NULLPTR;
 	DWORD dwType = REG_DWORD;
 	DWORD numVal = 0;
 	DWORD dwSize = sizeof(numVal);
@@ -171,7 +171,7 @@ void StelLogger::init(const QString& logFilePath)
 
 		if(lRet == ERROR_SUCCESS)
 		{
-			if(RegQueryValueExA(hKey, "~MHz", NULL, &dwType, (LPBYTE)&numVal, &dwSize) == ERROR_SUCCESS)
+			if(RegQueryValueExA(hKey, "~MHz", Q_NULLPTR, &dwType, (LPBYTE)&numVal, &dwSize) == ERROR_SUCCESS)
 				writeLog(QString("Processor speed: %1 MHz").arg(numVal));
 			else
 				writeLog("Could not get processor speed.");
@@ -184,7 +184,7 @@ void StelLogger::init(const QString& logFilePath)
 
 		if (lRet == ERROR_SUCCESS)
 		{
-			if (RegQueryValueExA(hKey, "ProcessorNameString", NULL, &dwType, (LPBYTE)&nameStr, &nameSize) == ERROR_SUCCESS)
+			if (RegQueryValueExA(hKey, "ProcessorNameString", Q_NULLPTR, &dwType, (LPBYTE)&nameStr, &nameSize) == ERROR_SUCCESS)
 				writeLog(QString("Processor name: %1").arg(nameStr));
 			else
 				writeLog("Could not get processor name.");
@@ -223,7 +223,6 @@ void StelLogger::init(const QString& logFilePath)
 		{
 			writeLog(systemLines.at(i).trimmed());
 		}
-
 	}
 
 #elif defined Q_OS_BSD4
@@ -254,7 +253,7 @@ void StelLogger::init(const QString& logFilePath)
 
 void StelLogger::deinit()
 {
-	qInstallMessageHandler(0);
+	qInstallMessageHandler(Q_NULLPTR);
 	logFile.close();
 }
 
@@ -308,35 +307,26 @@ void StelLogger::writeLog(QString msg)
 
 QString StelLogger::getMsvcVersionString(int ver)
 {
-	QString version;
-	switch(ver)
-	{
-		case 1310:
-			version = "MSVC++ 7.1 (Visual Studio 2003)";
-			break;
-		case 1400:
-			version = "MSVC++ 8.0 (Visual Studio 2005)";
-			break;
-		case 1500:
-			version = "MSVC++ 9.0 (Visual Studio 2008)";
-			break;
-		case 1600:
-			version = "MSVC++ 10.0 (Visual Studio 2010)";
-			break;
-		case 1700:
-			version = "MSVC++ 11.0 (Visual Studio 2012)";
-			break;
-		case 1800:
-			version = "MSVC++ 12.0 (Visual Studio 2013)";
-			break;
-		case 1900:
-			version = "MSVC++ 14.0 (Visual Studio 2015)";
-			break;
-		case 1910:
-			version = "MSVC++ 14.1 (Visual Studio 2017)";
-			break;
-		default:
-			version = "unknown MSVC++ version";
-	}
-	return version;
+	// Defines for _MSC_VER macro: https://docs.microsoft.com/ru-ru/cpp/preprocessor/predefined-macros?view=vs-2019
+	const QMap<int, QString> map = {
+		{1310, "MSVC++ 7.1 (Visual Studio 2003)"     },
+		{1400, "MSVC++ 8.0 (Visual Studio 2005)"     },
+		{1500, "MSVC++ 9.0 (Visual Studio 2008)"     },
+		{1600, "MSVC++ 10.0 (Visual Studio 2010)"    },
+		{1700, "MSVC++ 11.0 (Visual Studio 2012)"    },
+		{1800, "MSVC++ 12.0 (Visual Studio 2013)"    },
+		{1900, "MSVC++ 14.0 (Visual Studio 2015)"    },
+		{1910, "MSVC++ 15.0 (Visual Studio 2017 RTW)"},
+		{1911, "MSVC++ 15.3 (Visual Studio 2017)"    },
+		{1912, "MSVC++ 15.5 (Visual Studio 2017)"    },
+		{1913, "MSVC++ 15.6 (Visual Studio 2017)"    },
+		{1914, "MSVC++ 15.7 (Visual Studio 2017)"    },
+		{1915, "MSVC++ 15.8 (Visual Studio 2017)"    },
+		{1916, "MSVC++ 15.9 (Visual Studio 2017)"    },
+		{1920, "MSVC++ 16.0 (Visual Studio 2019 RTW)"},
+		{1921, "MSVC++ 16.1 (Visual Studio 2019)"    },
+		{1922, "MSVC++ 16.2 (Visual Studio 2019)"    },
+		{1923, "MSVC++ 16.3 (Visual Studio 2019)"    },
+	};
+	return map.value(ver, "unknown MSVC++ version");
 }

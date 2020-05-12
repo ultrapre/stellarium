@@ -64,8 +64,7 @@ SatellitesDialog::SatellitesDialog()
 	, importWindow(Q_NULLPTR)
 	, filterModel(Q_NULLPTR)
 	, checkStateRole(Qt::UserRole)
-	, delimiter(", ")
-	, acEndl("\n")
+	, delimiter(", ")	
 {
 	ui = new Ui_satellitesDialog;
 	iridiumFlaresHeader.clear();
@@ -109,8 +108,7 @@ void SatellitesDialog::createDialogContent()
 	ui->labelAutoAdd->setVisible(false);
 	connect(ui->closeStelWindow, SIGNAL(clicked()), this, SLOT(close()));
 	connect(ui->TitleBar, SIGNAL(movedTo(QPoint)), this, SLOT(handleMovedTo(QPoint)));
-	connect(&StelApp::getInstance(), SIGNAL(languageChanged()),
-		this, SLOT(retranslate()));
+	connect(&StelApp::getInstance(), SIGNAL(languageChanged()), this, SLOT(retranslate()));
 	Satellites* plugin = GETSTELMODULE(Satellites);
 
 	// Kinetic scrolling
@@ -122,112 +120,92 @@ void SatellitesDialog::createDialogContent()
 		connect(gui, SIGNAL(flagUseKineticScrollingChanged(bool)), this, SLOT(enableKineticScrolling(bool)));
 	}
 
-#ifdef Q_OS_WIN
-	acEndl="\r\n";
-#else
-	acEndl="\n";
-#endif
+	// Set symbols on buttons
+	ui->addSatellitesButton->setText(QChar(0x2795)); // Heavy plus symbol
+	ui->removeSatellitesButton->setText(QChar(0x2796)); // Heavy minus symbol
+	ui->satMarkerColorPickerButton->setText(QChar(0x2740)); // Florette symbol
+	ui->satOrbitColorPickerButton->setText(QChar(0x2740)); // Florette symbol
+	ui->satInfoColorPickerButton->setText(QChar(0x2740)); // Florette symbol
+	ui->saveSatellitesButton->setText(QString());
+	ui->addSourceButton->setText(QChar(0x2795)); // Heavy plus symbol
+	ui->deleteSourceButton->setText(QChar(0x2796)); // Heavy minus symbol
 
 	// Settings tab / updates group
 	// These controls are refreshed by updateSettingsPage(), which in
 	// turn is triggered by setting any of these values. Because
 	// clicked() is issued only by user input, there's no endless loop.
-	connect(ui->internetUpdatesCheckbox, SIGNAL(clicked(bool)),
-		plugin, SLOT(enableInternetUpdates(bool)));
-	connect(ui->checkBoxAutoAdd, SIGNAL(clicked(bool)),
-		plugin, SLOT(enableAutoAdd(bool)));
-	connect(ui->checkBoxAutoRemove, SIGNAL(clicked(bool)),
-		plugin, SLOT(enableAutoRemove(bool)));
-	connect(ui->updateFrequencySpinBox, SIGNAL(valueChanged(int)),
-		plugin, SLOT(setUpdateFrequencyHours(int)));
-	connect(ui->updateButton, SIGNAL(clicked()), this, SLOT(updateTLEs()));
-	connect(ui->jumpToSourcesButton, SIGNAL(clicked()),
-		this, SLOT(jumpToSourcesTab()));
-	connect(plugin, SIGNAL(updateStateChanged(Satellites::UpdateState)),
-		this, SLOT(showUpdateState(Satellites::UpdateState)));
-	connect(plugin, SIGNAL(tleUpdateComplete(int, int, int, int)),
-		this, SLOT(showUpdateCompleted(int, int, int, int)));
+	connectBoolProperty(ui->internetUpdatesCheckbox, "Satellites.updatesEnabled");
+	connectBoolProperty(ui->checkBoxAutoAdd,         "Satellites.autoAddEnabled");
+	connectBoolProperty(ui->checkBoxAutoRemove,      "Satellites.autoRemoveEnabled");
+	connectIntProperty(ui->updateFrequencySpinBox,   "Satellites.updateFrequencyHours");
+	connect(ui->updateButton,            SIGNAL(clicked()),         this,   SLOT(updateTLEs()));
+	connect(ui->jumpToSourcesButton,     SIGNAL(clicked()),         this,   SLOT(jumpToSourcesTab()));
+	connect(plugin, SIGNAL(updateStateChanged(Satellites::UpdateState)), this, SLOT(showUpdateState(Satellites::UpdateState)));
+	connect(plugin, SIGNAL(tleUpdateComplete(int, int, int, int)),       this, SLOT(showUpdateCompleted(int, int, int, int)));
 
 	updateTimer = new QTimer(this);
 	connect(updateTimer, SIGNAL(timeout()), this, SLOT(updateCountdown()));
 	updateTimer->start(7000);
 
 	// Settings tab / General settings group
-	// This does call Satellites::setFlagLabels() indirectly.
-	StelAction* action = StelApp::getInstance().getStelActionManager()->findAction("actionShow_Satellite_Labels");
-	connect(ui->labelsGroup, SIGNAL(clicked(bool)),
-		action, SLOT(setChecked(bool)));
-	connect(ui->fontSizeSpinBox, SIGNAL(valueChanged(int)),
-		plugin, SLOT(setLabelFontSize(int)));
-	connect(ui->restoreDefaultsButton, SIGNAL(clicked()),
-		this, SLOT(restoreDefaults()));
-	connect(ui->saveSettingsButton, SIGNAL(clicked()),
-		this, SLOT(saveSettings()));
+	connectBoolProperty(ui->labelsGroup,    "Satellites.flagLabelsVisible");
+	connectIntProperty(ui->fontSizeSpinBox, "Satellites.labelFontSize");
+	connect(ui->restoreDefaultsButton, SIGNAL(clicked()), this, SLOT(restoreDefaults()));
+	connect(ui->saveSettingsButton,    SIGNAL(clicked()), this, SLOT(saveSettings()));
 
 	// Settings tab / realistic mode group
-	connect(ui->realisticGroup, SIGNAL(clicked(bool)),
-		this, SLOT(setFlagRealisticMode(bool)));
-	connect(ui->hideInvisibleSatellites, SIGNAL(clicked(bool)),
-		plugin, SLOT(setFlagHideInvisibleSatellites(bool)));
+	connectBoolProperty(ui->iconicGroup,             "Satellites.flagIconicMode");
+	connectBoolProperty(ui->hideInvisibleSatellites, "Satellites.flagHideInvisible");
 
 	// Settings tab - populate all values
 	updateSettingsPage();
 
 	// Settings tab / orbit lines group
-	connect(ui->orbitLinesGroup, SIGNAL(clicked(bool)),
-		plugin, SLOT(setOrbitLinesFlag(bool)));
-	connect(ui->orbitSegmentsSpin, SIGNAL(valueChanged(int)), this, SLOT(setOrbitParams()));
-	connect(ui->orbitFadeSpin, SIGNAL(valueChanged(int)), this, SLOT(setOrbitParams()));
-	connect(ui->orbitDurationSpin, SIGNAL(valueChanged(int)), this, SLOT(setOrbitParams()));
+	connectBoolProperty(ui->orbitLinesGroup,  "Satellites.flagOrbitLines");
+	connectIntProperty(ui->orbitSegmentsSpin, "Satellites.orbitLineSegments");
+	connectIntProperty(ui->orbitFadeSpin,     "Satellites.orbitLineFadeSegments");
+	connectIntProperty(ui->orbitDurationSpin, "Satellites.orbitLineSegmentDuration");
 
 	// Satellites tab
 	filterModel = new SatellitesListFilterModel(this);
 	filterModel->setSourceModel(plugin->getSatellitesListModel());
 	filterModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
 	ui->satellitesList->setModel(filterModel);
-	connect(ui->lineEditSearch, SIGNAL(textChanged(QString)),
-		filterModel, SLOT(setFilterWildcard(QString)));
+	connect(ui->lineEditSearch, SIGNAL(textChanged(QString)), filterModel, SLOT(setFilterWildcard(QString)));
 
 	QAction *clearAction = ui->lineEditSearch->addAction(QIcon(":/graphicGui/backspace-white.png"),
 							     QLineEdit::ActionPosition::TrailingPosition);
 	connect(clearAction, SIGNAL(triggered()), this, SLOT(searchSatellitesClear()));
 
 	QItemSelectionModel* selectionModel = ui->satellitesList->selectionModel();
-	connect(selectionModel,
-		SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-		this,
-		SLOT(updateSatelliteData()));
+	connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+		     this, SLOT(updateSatelliteData()));
 	connect(ui->satellitesList, SIGNAL(doubleClicked(QModelIndex)),
-		this, SLOT(trackSatellite(QModelIndex)));
+		     this, SLOT(trackSatellite(QModelIndex)));
 
 	// Two-state input, three-state display
-	connect(ui->displayedCheckbox, SIGNAL(clicked(bool)),
-		ui->displayedCheckbox, SLOT(setChecked(bool)));
-	connect(ui->orbitCheckbox, SIGNAL(clicked(bool)),
-		ui->orbitCheckbox, SLOT(setChecked(bool)));
-	connect(ui->userCheckBox, SIGNAL(clicked(bool)),
-		ui->userCheckBox, SLOT(setChecked(bool)));
+	connect(ui->displayedCheckbox, SIGNAL(clicked(bool)), ui->displayedCheckbox, SLOT(setChecked(bool)));
+	connect(ui->orbitCheckbox,     SIGNAL(clicked(bool)), ui->orbitCheckbox,     SLOT(setChecked(bool)));
+	connect(ui->userCheckBox,      SIGNAL(clicked(bool)), ui->userCheckBox,      SLOT(setChecked(bool)));
 
 	// Because the previous signals and slots were connected first,
 	// they will be executed before these.
-	connect(ui->displayedCheckbox, SIGNAL(clicked()),
-		this, SLOT(setFlags()));
-	connect(ui->orbitCheckbox, SIGNAL(clicked()),
-		this, SLOT(setFlags()));
-	connect(ui->userCheckBox, SIGNAL(clicked()),
-		this, SLOT(setFlags()));
+	connect(ui->displayedCheckbox, SIGNAL(clicked()), this, SLOT(setFlags()));
+	connect(ui->orbitCheckbox,     SIGNAL(clicked()), this, SLOT(setFlags()));
+	connect(ui->userCheckBox,      SIGNAL(clicked()), this, SLOT(setFlags()));
 
-	connect(ui->satColorPickerButton, SIGNAL(clicked(bool)), this, SLOT(askSatColor()));
-	connect(ui->descriptionTextEdit, SIGNAL(textChanged()), this, SLOT(descriptionTextChanged()));
+	connect(ui->satMarkerColorPickerButton, SIGNAL(clicked(bool)), this, SLOT(askSatMarkerColor()));
+	connect(ui->satOrbitColorPickerButton,  SIGNAL(clicked(bool)), this, SLOT(askSatOrbitColor()));
+	connect(ui->satInfoColorPickerButton,   SIGNAL(clicked(bool)), this, SLOT(askSatInfoColor()));
+	connect(ui->descriptionTextEdit,        SIGNAL(textChanged()), this, SLOT(descriptionTextChanged()));
 
 
 	connect(ui->groupsListWidget, SIGNAL(itemChanged(QListWidgetItem*)),
-		this, SLOT(handleGroupChanges(QListWidgetItem*)));
+		     this, SLOT(handleGroupChanges(QListWidgetItem*)));
 
-	connect(ui->groupFilterCombo, SIGNAL(currentIndexChanged(int)),
-		this, SLOT(filterListByGroup(int)));
-	connect(ui->saveSatellitesButton, SIGNAL(clicked()), this, SLOT(saveSatellites()));
-	connect(ui->removeSatellitesButton, SIGNAL(clicked()), this, SLOT(removeSatellites()));
+	connect(ui->groupFilterCombo,       SIGNAL(currentIndexChanged(int)), this, SLOT(filterListByGroup(int)));
+	connect(ui->saveSatellitesButton,   SIGNAL(clicked()),                this, SLOT(saveSatellites()));
+	connect(ui->removeSatellitesButton, SIGNAL(clicked()),                this, SLOT(removeSatellites()));
 
 	importWindow = new SatellitesImportDialog();
 	connect(ui->addSatellitesButton, SIGNAL(clicked()), importWindow, SLOT(setVisible()));
@@ -235,14 +213,11 @@ void SatellitesDialog::createDialogContent()
 
 	// Sources tab
 	connect(ui->sourceList, SIGNAL(currentTextChanged(const QString&)), ui->sourceEdit, SLOT(setText(const QString&)));
-	connect(ui->sourceList, SIGNAL(itemChanged(QListWidgetItem*)),
-		this, SLOT(saveSourceList()));
-	connect(ui->sourceEdit, SIGNAL(editingFinished()),
-		this, SLOT(saveEditedSource()));
-	connect(ui->deleteSourceButton, SIGNAL(clicked()), this, SLOT(deleteSourceRow()));
-	connect(ui->addSourceButton, SIGNAL(clicked()), this, SLOT(addSourceRow()));
-	connect(plugin, SIGNAL(settingsChanged()),
-		this, SLOT(toggleCheckableSources()));
+	connect(ui->sourceList, SIGNAL(itemChanged(QListWidgetItem*)),      this,           SLOT(saveSourceList()));
+	connect(ui->sourceEdit, SIGNAL(editingFinished()),                  this,           SLOT(saveEditedSource()));
+	connect(ui->deleteSourceButton, SIGNAL(clicked()),         this, SLOT(deleteSourceRow()));
+	connect(ui->addSourceButton,    SIGNAL(clicked()),         this, SLOT(addSourceRow()));
+	connect(plugin,                 SIGNAL(settingsChanged()), this, SLOT(toggleCheckableSources()));
 
 	// bug #1350669 (https://bugs.launchpad.net/stellarium/+bug/1350669)
 	connect(ui->sourceList, SIGNAL(currentRowChanged(int)), ui->sourceList, SLOT(repaint()));
@@ -259,12 +234,9 @@ void SatellitesDialog::createDialogContent()
 	connect(ui->predictIridiumFlaresPushButton, SIGNAL(clicked()), this, SLOT(predictIridiumFlares()));
 	connect(ui->predictedIridiumFlaresSaveButton, SIGNAL(clicked()), this, SLOT(savePredictedIridiumFlares()));
 	connect(ui->iridiumFlaresTreeWidget, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(selectCurrentIridiumFlare(QModelIndex)));
-
-	ui->satColorPickerButton->setFixedSize(QSize(18, 18));
 }
 
-// for now, the color picker changes hintColor AND orbitColor at once
-void SatellitesDialog::askSatColor()
+void SatellitesDialog::askSatMarkerColor()
 {
 	QModelIndexList selection = ui->satellitesList->selectionModel()->selectedIndexes();
 
@@ -273,7 +245,7 @@ void SatellitesDialog::askSatColor()
 	Satellites* SatellitesMgr = GETSTELMODULE(Satellites);
 	Q_ASSERT(SatellitesMgr);
 
-	QColor c = QColorDialog::getColor(buttonColor, Q_NULLPTR, "");
+	QColor c = QColorDialog::getColor(buttonMarkerColor, Q_NULLPTR, "");
 	if (c.isValid())
 	{
 		Vec3f vColor = Vec3f(c.redF(), c.greenF(), c.blueF());
@@ -284,14 +256,70 @@ void SatellitesDialog::askSatColor()
 		{
 			const QModelIndex& index = selection.at(i);
 			sat = SatellitesMgr->getById(index.data(Qt::UserRole).toString());
-
 			sat->hintColor = vColor;
+		}
+
+		// colorize the button
+		buttonMarkerColor = c;
+		ui->satMarkerColorPickerButton->setStyleSheet("QPushButton { background-color:" + buttonMarkerColor.name() + "; }");
+	}
+}
+
+void SatellitesDialog::askSatOrbitColor()
+{
+	QModelIndexList selection = ui->satellitesList->selectionModel()->selectedIndexes();
+
+	if (selection.isEmpty()) return;
+
+	Satellites* SatellitesMgr = GETSTELMODULE(Satellites);
+	Q_ASSERT(SatellitesMgr);
+
+	QColor c = QColorDialog::getColor(buttonOrbitColor, Q_NULLPTR, "");
+	if (c.isValid())
+	{
+		Vec3f vColor = Vec3f(c.redF(), c.greenF(), c.blueF());
+		SatelliteP sat;
+
+		// colorize all selected satellites
+		for (int i = 0; i < selection.size(); i++)
+		{
+			const QModelIndex& index = selection.at(i);
+			sat = SatellitesMgr->getById(index.data(Qt::UserRole).toString());
 			sat->orbitColor = vColor;
 		}
 
 		// colorize the button
-		buttonColor = c;
-		ui->satColorPickerButton->setStyleSheet("QPushButton { background-color:" + buttonColor.name() + "; }");
+		buttonOrbitColor = c;
+		ui->satOrbitColorPickerButton->setStyleSheet("QPushButton { background-color:" + buttonOrbitColor.name() + "; }");
+	}
+}
+
+void SatellitesDialog::askSatInfoColor()
+{
+	QModelIndexList selection = ui->satellitesList->selectionModel()->selectedIndexes();
+
+	if (selection.isEmpty()) return;
+
+	Satellites* SatellitesMgr = GETSTELMODULE(Satellites);
+	Q_ASSERT(SatellitesMgr);
+
+	QColor c = QColorDialog::getColor(buttonInfoColor, Q_NULLPTR, "");
+	if (c.isValid())
+	{
+		Vec3f vColor = Vec3f(c.redF(), c.greenF(), c.blueF());
+		SatelliteP sat;
+
+		// colorize all selected satellites
+		for (int i = 0; i < selection.size(); i++)
+		{
+			const QModelIndex& index = selection.at(i);
+			sat = SatellitesMgr->getById(index.data(Qt::UserRole).toString());
+			sat->infoColor = vColor;
+		}
+
+		// colorize the button
+		buttonInfoColor = c;
+		ui->satInfoColorPickerButton->setStyleSheet("QPushButton { background-color:" + buttonInfoColor.name() + "; }");
 	}
 }
 
@@ -318,12 +346,6 @@ void SatellitesDialog::descriptionTextChanged()
 			sat->description = newdesc;
 		}
 	}
-}
-
-
-void SatellitesDialog::setFlagRealisticMode(bool state)
-{
-	GETSTELMODULE(Satellites)->setFlagRelisticMode(!state);
 }
 
 void SatellitesDialog::searchSatellitesClear()
@@ -360,7 +382,7 @@ void SatellitesDialog::savePredictedIridiumFlares()
 		QTextStream predictedIridiumFlaresList(&predictedIridiumFlares);
 		predictedIridiumFlaresList.setCodec("UTF-8");
 
-		predictedIridiumFlaresList << iridiumFlaresHeader.join(delimiter) << acEndl;
+		predictedIridiumFlaresList << iridiumFlaresHeader.join(delimiter) << StelUtils::getEndLineChar();
 
 		for (int i = 0; i < count; i++)
 		{
@@ -371,7 +393,7 @@ void SatellitesDialog::savePredictedIridiumFlares()
 				if (j<columns-1)
 					predictedIridiumFlaresList << delimiter;
 				else
-					predictedIridiumFlaresList << acEndl;
+					predictedIridiumFlaresList << StelUtils::getEndLineChar();
 			}
 		}
 		predictedIridiumFlares.close();
@@ -482,11 +504,12 @@ void SatellitesDialog::updateSatelliteData()
 	// needed for colorbutton
 	Satellites* SatellitesMgr = GETSTELMODULE(Satellites);
 	Q_ASSERT(SatellitesMgr);
-	Vec3f vColor;
+	Vec3f mColor, oColor, iColor;
 
 	// set default
-	buttonColor = QColor(QColor::fromRgbF(0.4, 0.4, 0.4));
-
+	buttonMarkerColor = QColor(QColor::fromRgbF(0.4, 0.4, 0.4));
+	buttonOrbitColor = QColor(QColor::fromRgbF(0.4, 0.4, 0.4));
+	buttonInfoColor = QColor(QColor::fromRgbF(0.4, 0.4, 0.4));
 
 	if (selection.count() > 1)
 	{
@@ -501,7 +524,9 @@ void SatellitesDialog::updateSatelliteData()
 			QString id = index.data(Qt::UserRole).toString();
 			SatelliteP sat = SatellitesMgr->getById(id);
 
-			vColor = sat->hintColor;
+			mColor = sat->hintColor;
+			oColor = sat->orbitColor;
+			iColor = sat->infoColor;
 
 			for (int i = 1; i < selection.size(); i++)
 			{
@@ -512,9 +537,11 @@ void SatellitesDialog::updateSatelliteData()
 
 				// test for more than one color in the selection.
 				// if there are, return grey
-				if (sat->hintColor != vColor)
+				if (sat->hintColor != mColor || sat->orbitColor != oColor || sat->infoColor != iColor)
 				{
-					vColor = Vec3f(0.4, 0.4, 0.4);
+					mColor = Vec3f(0.4f, 0.4f, 0.4f);
+					oColor = Vec3f(0.4f, 0.4f, 0.4f);
+					iColor = Vec3f(0.4f, 0.4f, 0.4f);
 					break;
 				}
 			}
@@ -541,7 +568,6 @@ void SatellitesDialog::updateSatelliteData()
 
 			ui->descriptionTextEdit->setText(descText);
 		}
-
 	}
 	else
 	{
@@ -559,18 +585,21 @@ void SatellitesDialog::updateSatelliteData()
 		// get color of the one selected sat
 		QString id = index.data(Qt::UserRole).toString();
 		SatelliteP sat = SatellitesMgr->getById(id);
-		vColor = sat->hintColor;
+		mColor = sat->hintColor;
+		oColor = sat->orbitColor;
+		iColor = sat->infoColor;
 	}
 
 	// colorize the colorpicker button
-	buttonColor.setRgbF(vColor.v[0], vColor.v[1], vColor.v[2]);
-	ui->satColorPickerButton->setStyleSheet("QPushButton { background-color:" + buttonColor.name() + "; }");
+	buttonMarkerColor.setRgbF(mColor.v[0], mColor.v[1], mColor.v[2]);
+	ui->satMarkerColorPickerButton->setStyleSheet("QPushButton { background-color:" + buttonMarkerColor.name() + "; }");
+	buttonOrbitColor.setRgbF(oColor.v[0], oColor.v[1], oColor.v[2]);
+	ui->satOrbitColorPickerButton->setStyleSheet("QPushButton { background-color:" + buttonOrbitColor.name() + "; }");
+	buttonInfoColor.setRgbF(iColor.v[0], iColor.v[1], iColor.v[2]);
+	ui->satInfoColorPickerButton->setStyleSheet("QPushButton { background-color:" + buttonInfoColor.name() + "; }");
 
 	// bug #1350669 (https://bugs.launchpad.net/stellarium/+bug/1350669)
 	ui->satellitesList->repaint();
-
-	// TODO: Fix the comms button...
-//	ui->commsButton->setEnabled(sat->comms.count()>0);
 
 	// Things that are cumulative in a multi-selection
 	GroupSet globalGroups = GETSTELMODULE(Satellites)->getGroups();
@@ -696,6 +725,7 @@ void SatellitesDialog::populateAboutPage()
 			.arg(jsonFileName)
 			.arg(oldJsonFileName);
 	html += "<li>" + resetSettingsText + "</li>";
+	html += "<li>" + q_("The value of perigee and apogee altitudes compute for mean Earth radius.") + "</li>";
 	html += "<li>" + q_("The Satellites plugin is still under development.  Some features are incomplete, missing or buggy.") + "</li>";
 	html += "</ul></p>";
 
@@ -728,9 +758,8 @@ void SatellitesDialog::populateAboutPage()
 	html += "</ul></p></body></html>";
 
 	StelGui* gui = dynamic_cast<StelGui*>(StelApp::getInstance().getGui());
-	Q_ASSERT(gui);
-	QString htmlStyleSheet(gui->getStelStyle().htmlStyleSheet);
-	ui->aboutTextBrowser->document()->setDefaultStyleSheet(htmlStyleSheet);
+	if (gui)
+		ui->aboutTextBrowser->document()->setDefaultStyleSheet(QString(gui->getStelStyle().htmlStyleSheet));
 
 	ui->aboutTextBrowser->setHtml(html);
 }
@@ -744,7 +773,7 @@ void SatellitesDialog::updateCountdown()
 {
 	QString nextUpdate = q_("Next update");
 	Satellites* plugin = GETSTELMODULE(Satellites);
-	bool updatesEnabled = plugin->getUpdatesEnabled();
+	const bool updatesEnabled = plugin->getUpdatesEnabled();
 
 	if (!updatesEnabled)
 		ui->nextUpdateLabel->setText(q_("Internet updates disabled"));
@@ -796,8 +825,8 @@ void SatellitesDialog::showUpdateCompleted(int updated,
 	// display the status for another full interval before refreshing status
 	updateTimer->start();
 	ui->lastUpdateDateTimeEdit->setDateTime(plugin->getLastUpdate());
-	QTimer *timer = new QTimer(this); // FIXME: What's the point of this? --BM
-	connect(timer, SIGNAL(timeout()), this, SLOT(updateCountdown()));
+	//QTimer *timer = new QTimer(this); // FIXME: What's the point of this? --BM. GZ Indeed, never triggered. Remove?
+	//connect(timer, SIGNAL(timeout()), this, SLOT(updateCountdown()));
 }
 
 void SatellitesDialog::saveEditedSource()
@@ -822,7 +851,7 @@ void SatellitesDialog::saveEditedSource()
 		ui->sourceList->currentItem()->setText(u);
 	else if (ui->sourceList->findItems(u, Qt::MatchExactly).count() <= 0)
 	{
-		QListWidgetItem* i = new QListWidgetItem(u, ui->sourceList);;
+		QListWidgetItem* i = new QListWidgetItem(u, ui->sourceList);
 		i->setData(checkStateRole, Qt::Unchecked);
 		i->setSelected(true);
 	}
@@ -864,7 +893,7 @@ void SatellitesDialog::toggleCheckableSources()
 	if (list->count() < 1)
 		return; // Saves effort checking it on every step
 
-	bool enabled = ui->checkBoxAutoAdd->isChecked(); // proxy :)
+	const bool enabled = GETSTELMODULE(Satellites)->isAutoAddEnabled();
 	if (!enabled == list->item(0)->data(Qt::CheckStateRole).isNull())
 		return; // Nothing to do
 
@@ -902,30 +931,14 @@ void SatellitesDialog::updateSettingsPage()
 	Satellites* plugin = GETSTELMODULE(Satellites);
 
 	// Update stuff
-	bool updatesEnabled = plugin->getUpdatesEnabled();
-	ui->internetUpdatesCheckbox->setChecked(updatesEnabled);
+	const bool updatesEnabled = plugin->getUpdatesEnabled();
 	if(updatesEnabled)
 		ui->updateButton->setText(q_("Update now"));
 	else
 		ui->updateButton->setText(q_("Update from files"));
-	ui->checkBoxAutoAdd->setChecked(plugin->isAutoAddEnabled());
-	ui->checkBoxAutoRemove->setChecked(plugin->isAutoRemoveEnabled());
 	ui->lastUpdateDateTimeEdit->setDateTime(plugin->getLastUpdate());
-	ui->updateFrequencySpinBox->setValue(plugin->getUpdateFrequencyHours());
 
 	updateCountdown();
-
-	// Presentation stuff
-	ui->labelsGroup->setChecked(plugin->getFlagLabels());
-	ui->fontSizeSpinBox->setValue(plugin->getLabelFontSize());
-
-	ui->orbitLinesGroup->setChecked(plugin->getOrbitLinesFlag());
-	ui->orbitSegmentsSpin->setValue(Satellite::orbitLineSegments);
-	ui->orbitFadeSpin->setValue(Satellite::orbitLineFadeSegments);
-	ui->orbitDurationSpin->setValue(Satellite::orbitLineSegmentDuration);
-
-	ui->realisticGroup->setChecked(!plugin->getFlagRealisticMode());
-	ui->hideInvisibleSatellites->setChecked(plugin->getFlagHideInvisibleSatellites());
 }
 
 void SatellitesDialog::populateFilterMenu()
@@ -975,8 +988,7 @@ void SatellitesDialog::populateSourcesList()
 
 	Satellites* plugin = GETSTELMODULE(Satellites);
 	QStringList urls = plugin->getTleSources();
-	checkStateRole = plugin->isAutoAddEnabled() ? Qt::CheckStateRole
-						    : Qt::UserRole;
+	checkStateRole = plugin->isAutoAddEnabled() ? Qt::CheckStateRole : Qt::UserRole;
 	for (auto url : urls)
 	{
 		bool checked = false;
@@ -991,8 +1003,7 @@ void SatellitesDialog::populateSourcesList()
 		item->setData(checkStateRole, checked ? Qt::Checked : Qt::Unchecked);
 	}
 	ui->sourceList->blockSignals(false);
-
-	if (ui->sourceList->count() > 0) ui->sourceList->setCurrentRow(0);
+	// if (ui->sourceList->count() > 0) ui->sourceList->setCurrentRow(0);
 }
 
 void SatellitesDialog::addSpecialGroupItem()
@@ -1040,7 +1051,7 @@ void SatellitesDialog::setGroups()
 
 void SatellitesDialog::saveSettings(void)
 {
-	GETSTELMODULE(Satellites)->saveSettings();
+	GETSTELMODULE(Satellites)->saveSettingsToConfig();
 	GETSTELMODULE(Satellites)->saveCatalog();
 }
 
@@ -1171,7 +1182,7 @@ void SatellitesDialog::trackSatellite(const QModelIndex& index)
 	sat->displayed = true;
 
 	// If Satellites are not currently displayed, make them visible.
-	if (!SatellitesMgr->getFlagHints())
+	if (!SatellitesMgr->getFlagHintsVisible())
 	{
 		StelAction* setHintsAction = StelApp::getInstance().getStelActionManager()->findAction("actionShow_Satellite_Hints");
 		Q_ASSERT(setHintsAction);
@@ -1187,14 +1198,6 @@ void SatellitesDialog::trackSatellite(const QModelIndex& index)
 	}
 }
 
-void SatellitesDialog::setOrbitParams(void)
-{
-	Satellite::orbitLineSegments = ui->orbitSegmentsSpin->value();
-	Satellite::orbitLineFadeSegments = ui->orbitFadeSpin->value();
-	Satellite::orbitLineSegmentDuration = ui->orbitDurationSpin->value();
-	GETSTELMODULE(Satellites)->recalculateOrbitLines();
-}
-
 void SatellitesDialog::updateTLEs(void)
 {
 	if(GETSTELMODULE(Satellites)->getUpdatesEnabled())
@@ -1203,7 +1206,7 @@ void SatellitesDialog::updateTLEs(void)
 	}
 	else
 	{
-		QStringList updateFiles = QFileDialog::getOpenFileNames(&StelMainView::getInstance(),
+		QStringList updateFiles = QFileDialog::getOpenFileNames(Q_NULLPTR,
 									q_("Select TLE Update File"),
 									StelFileMgr::getDesktopDir(),
 									"*.*");

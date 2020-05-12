@@ -122,7 +122,7 @@ void CustomObjectMgr::init()
 
 	customObjects.clear();
 
-	setMarkersColor(StelUtils::strToVec3f(conf->value("color/custom_marker_color", "0.1,1.0,0.1").toString()));
+	setMarkersColor(Vec3f(conf->value("color/custom_marker_color", "0.1,1.0,0.1").toString()));
 	setMarkersSize(conf->value("gui/custom_marker_size", 5.f).toFloat());
 	// Limit the click radius to 15px in any direction
 	setActiveRadiusLimit(conf->value("gui/custom_marker_radius_limit", 15).toInt());
@@ -264,7 +264,7 @@ QList<StelObjectP> CustomObjectMgr::searchAround(const Vec3d& av, double limitFo
 
 	Vec3d v(av);
 	v.normalize();
-	double cosLimFov = cos(limitFov * M_PI/180.);
+	const double cosLimFov = cos(limitFov * M_PI/180.);
 	Vec3d equPos;
 
 	for (const auto& cObj : customObjects)
@@ -273,7 +273,7 @@ QList<StelObjectP> CustomObjectMgr::searchAround(const Vec3d& av, double limitFo
 		{
 			equPos = cObj->XYZ;
 			equPos.normalize();
-			if (equPos[0]*v[0] + equPos[1]*v[1] + equPos[2]*v[2]>=cosLimFov)
+			if (equPos.dot(v) >= cosLimFov)
 			{
 				result.append(qSharedPointerCast<StelObject>(cObj));
 			}
@@ -372,7 +372,7 @@ void CustomObjectMgr::setMarkersColor(const Vec3f& c)
 	CustomObject::markerColor = c;
 }
 
-const Vec3f& CustomObjectMgr::getMarkersColor(void) const
+Vec3f CustomObjectMgr::getMarkersColor(void) const
 {
 	return CustomObject::markerColor;
 }

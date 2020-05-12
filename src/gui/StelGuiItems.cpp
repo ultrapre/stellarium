@@ -34,6 +34,7 @@
 #include "StelProgressController.hpp"
 #include "StelObserver.hpp"
 #include "SkyGui.hpp"
+#include "EphemWrapper.hpp"
 
 #include <QPainter>
 #include <QGraphicsScene>
@@ -60,7 +61,7 @@ QPixmap getTextPixmap(const QString& str, QFont font)
 {
 	// Render the text str into a QPixmap.
 	QRect strRect = QFontMetrics(font).boundingRect(str);
-	int w = strRect.width()+1+(int)(0.02f*strRect.width());
+	int w = strRect.width()+1+static_cast<int>(0.02f*strRect.width());
 	int h = strRect.height();
 
 	QPixmap strPixmap(w, h);
@@ -426,9 +427,14 @@ void BottomStelBar::setFontSizeFromApp(int size)
 	location->setFont(font);
 	fov->setFont(font);
 	fps->setFont(font);
-	SkyGui* skyGui=dynamic_cast<StelGui*>(StelApp::getInstance().getGui()) ->getSkyGui();
-	if (skyGui)
-		skyGui->updateBarsPos();
+	StelGui* gui = dynamic_cast<StelGui*>(StelApp::getInstance().getGui());
+	if (gui)
+	{
+		// to avoid crash
+		SkyGui* skyGui=gui->getSkyGui();
+		if (skyGui)
+			skyGui->updateBarsPos();
+	}
 }
 
 //! connect from StelApp to resize fonts on the fly.
@@ -439,9 +445,14 @@ void BottomStelBar::setFont(QFont font)
 	location->setFont(font);
 	fov->setFont(font);
 	fps->setFont(font);
-	SkyGui* skyGui=dynamic_cast<StelGui*>(StelApp::getInstance().getGui()) ->getSkyGui();
-	if (skyGui)
-		skyGui->updateBarsPos();
+	StelGui* gui = dynamic_cast<StelGui*>(StelApp::getInstance().getGui());
+	if (gui)
+	{
+		// to avoid crash
+		SkyGui* skyGui=gui->getSkyGui();
+		if (skyGui)
+			skyGui->updateBarsPos();
+	}
 }
 
 BottomStelBar::~BottomStelBar()
@@ -541,7 +552,6 @@ void BottomStelBar::setGroupBackground(const QString& groupName,
                                        const QPixmap& pixMiddle,
                                        const QPixmap& pixSingle)
 {
-
 	if (!buttonGroups.contains(groupName))
 		return;
 
@@ -642,9 +652,9 @@ void BottomStelBar::updateButtonsGroups()
 void BottomStelBar::updateText(bool updatePos)
 {
 	StelCore* core = StelApp::getInstance().getCore();
-	double jd = core->getJD();
-	double deltaT = core->getDeltaT();
-	double sigma = StelUtils::getDeltaTStandardError(jd);
+	const double jd = core->getJD();
+	const double deltaT = core->getDeltaT();
+	const double sigma = StelUtils::getDeltaTStandardError(jd);
 	QString sigmaInfo = "";
 	QString validRangeMarker = "";
 	core->getCurrentDeltaTAlgorithmValidRangeDescription(jd, &validRangeMarker);
@@ -671,7 +681,7 @@ void BottomStelBar::updateText(bool updatePos)
 	if (planetName=="SpaceShip") // Avoid crash
 	{
 		const StelTranslator& trans = StelApp::getInstance().getLocaleMgr().getSkyTranslator();
-		planetNameI18n = trans.qtranslate(planetName);
+		planetNameI18n = trans.qtranslate(planetName, "special celestial body"); // added context
 	}
 	else
 		planetNameI18n = GETSTELMODULE(SolarSystem)->searchByEnglishName(planetName)->getNameI18n();
@@ -682,7 +692,7 @@ void BottomStelBar::updateText(bool updatePos)
 
 	QString currTZ = QString("%1: %2").arg(q_("Time zone")).arg(tzName);
 
-	if (tzName.contains("LMST") || tzName.contains("auto") || (planetName=="Earth" && jd<=StelCore::TZ_ERA_BEGINNING && !core->getUseCustomTimeZone()) || planetName!="Earth")
+	if (tzName.contains("LMST") || tzName.contains("auto") || (planetName=="Earth" && jd<=StelCore::TZ_ERA_BEGINNING && !core->getUseCustomTimeZone()) )
 		currTZ = q_("Local Mean Solar Time");
 
 	if (tzName.contains("LTST"))
@@ -715,8 +725,12 @@ void BottomStelBar::updateText(bool updatePos)
 	if (timeRate>60.)
 		timeRateInfo = QString("%1: x%2 (%3 %4)").arg(q_("Simulation speed"), QString::number(timeRate, 'f', 0), QString::number(timeSpeed, 'f', 2), timeRateMU);
 
-	updatePos = true;
-	datetime->setText(newDateInfo);
+	if (datetime->text()!=newDateInfo)
+	{
+		updatePos = true;
+		datetime->setText(newDateInfo);
+	}
+
 	if (core->getCurrentDeltaTAlgorithm()!=StelCore::WithoutCorrection)
 	{
 		if (sigma>0)
@@ -731,7 +745,7 @@ void BottomStelBar::updateText(bool updatePos)
 		// the corrective ndot to be displayed could be set according to the currently used DeltaT algorithm.
 		//float ndot=core->getDeltaTnDot();
 		// or just to the used ephemeris. This has to be read as "Selected DeltaT formula used, but with the ephemeris's nDot applied it corrects DeltaT to..."
-		float ndot=( (core->de430IsActive() || core->de431IsActive()) ? -25.8f : -23.8946f );
+		float ndot=( (EphemWrapper::use_de430(jd) || EphemWrapper::use_de431(jd)) ? -25.8f : -23.8946f );
 
 		datetime->setToolTip(QString("<p style='white-space:pre'>%1T = %2 [n%8 @ %3\"/cy%4%5]<br>%6<br>%7<br>%9</p>").arg(QChar(0x0394)).arg(deltaTInfo).arg(QString::number(ndot, 'f', 4)).arg(QChar(0x00B2)).arg(sigmaInfo).arg(newDateAppx).arg(currTZ).arg(QChar(0x2032)).arg(timeRateInfo));
 	}
@@ -746,18 +760,24 @@ void BottomStelBar::updateText(bool updatePos)
 
 	// build location tooltip
 	QString newLocation = "";
-	const StelLocation* loc = &core->getCurrentLocation();
-	if (getFlagShowLocation() && !loc->name.isEmpty())
+	if (getFlagShowLocation())
 	{
-		//TRANSLATORS: Unit of measure for distance - meter
-		newLocation = planetNameI18n +", "+loc->name + ", "+ QString("%1 %2").arg(loc->altitude).arg(qc_("m", "distance"));
-	}
-	if (getFlagShowLocation() && loc->name.isEmpty())
-	{
-		newLocation = planetNameI18n +", "+StelUtils::decDegToDmsStr(loc->latitude)+", "+StelUtils::decDegToDmsStr(loc->longitude);
+		const StelLocation* loc = &core->getCurrentLocation();
+		if(loc->name.isEmpty())
+			newLocation = planetNameI18n +", "+StelUtils::decDegToDmsStr(loc->latitude)+", "+StelUtils::decDegToDmsStr(loc->longitude);
+		else
+		{
+			if (loc->name.contains("->")) // a spaceship
+				newLocation = QString("%1 [%2 %3]").arg(planetNameI18n, q_("flight"), loc->name);
+			else
+			{
+				//TRANSLATORS: Unit of measure for distance - meter
+				newLocation = planetNameI18n +", "+q_(loc->name) + ", "+ QString("%1 %2").arg(loc->altitude).arg(qc_("m", "distance"));
+			}
+		}
 	}
 	// TODO: When topocentric switch is toggled, this must be redrawn!
-	if (location->text()!=newLocation || updatePos)
+	if (location->text()!=newLocation)
 	{
 		updatePos = true;
 		location->setText(newLocation);
@@ -786,7 +806,10 @@ void BottomStelBar::updateText(bool updatePos)
 		else
 			rho = q_("planetocentric observer");
 
-		location->setToolTip(QString("%1 %2; %3").arg(latStr).arg(lonStr).arg(rho));
+		if (newLocation.contains("->")) // a spaceship
+			location->setToolTip(QString());
+		else
+			location->setToolTip(QString("%1 %2; %3").arg(latStr).arg(lonStr).arg(rho));
 		if (qApp->property("text_texture")==true) // CLI option -t given?
 		{
 			locationPixmap->setPixmap(getTextPixmap(newLocation, location->font()));
@@ -996,7 +1019,8 @@ void StelBarsPath::setBackgroundOpacity(double opacity)
 	setBrush(QBrush(QColor::fromRgbF(0.22, 0.22, 0.23, opacity)));
 }
 
-StelProgressBarMgr::StelProgressBarMgr(QGraphicsItem*)
+StelProgressBarMgr::StelProgressBarMgr(QGraphicsItem* parent):
+	QGraphicsWidget(parent)
 {
 	setLayout(new QGraphicsLinearLayout(Qt::Vertical));
 }

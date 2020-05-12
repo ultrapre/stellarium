@@ -106,23 +106,21 @@ private slots:
 	void handleGroupChanges(QListWidgetItem* item);
 	//! Display, select and start tracking the double clicked satellite.
 	void trackSatellite(const QModelIndex & index);
-	void setOrbitParams(void);
 	void updateTLEs(void);
 
 	void predictIridiumFlares();
 	void selectCurrentIridiumFlare(const QModelIndex &modelIndex);
 	void savePredictedIridiumFlares();
 
-	void setFlagRealisticMode(bool state);
-
 	void searchSatellitesClear();
 
 	// change selection's color
-	void askSatColor();
+	void askSatMarkerColor();
+	void askSatOrbitColor();
+	void askSatInfoColor();
 
 	// change description text
 	void descriptionTextChanged();
-
 
 private:
 	//! @todo find out if this is really necessary... --BM
@@ -163,11 +161,11 @@ private:
 	//! Makes sure that newly added source lines are as checkable as the rest.
 	Qt::ItemDataRole checkStateRole;
 
-	QString delimiter, acEndl;
+	QString delimiter;
 	QStringList iridiumFlaresHeader;
 
 	// colorpickerbutton's color
-	QColor buttonColor;
+	QColor buttonMarkerColor, buttonOrbitColor, buttonInfoColor;
 };
 
 // Reimplements the QTreeWidgetItem class to fix the sorting bug
