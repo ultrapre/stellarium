@@ -1,0 +1,15 @@
+#!/usr/bin/make -f
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+%:
+	dh $@
+
+override_dh_install:
+	dh_install
+	rm debian/tmp/usr/share/stellarium/data/DejaVuSans.ttf
+	rm debian/tmp/usr/share/stellarium/data/DejaVuSansMono.ttf
+
+override_dh_missing:
+	dh_missing --fail-missing

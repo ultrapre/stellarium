@@ -1,0 +1,7 @@
+usr/bin/stellarium
+usr/share/applications/stellarium.desktop
+usr/share/icons/hicolor/*/apps/stellarium.png
+usr/share/man/man1/stellarium.1
+usr/share/metainfo/stellarium.appdata.xml
+usr/share/mime/packages/stellarium.xml
+usr/share/pixmaps/stellarium.xpm
