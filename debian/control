@@ -3,8 +3,8 @@ Maintainer: Alexander Wolf <alex.v.wolf@gmail.com>
 Section: science
 Priority: optional
 Build-Depends: cmake,
-               debhelper (>= 12),
-               debhelper-compat (= 12),
+               debhelper (>= 11),
+               debhelper-compat (= 11),
                doxygen,
                libqt5opengl5-dev (>= 5.7),
                libqt5serialport5-dev (>= 5.7),
