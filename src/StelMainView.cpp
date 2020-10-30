@@ -459,6 +459,7 @@ protected:
 				if (touchPoints.count() == 1)
 					setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton | Qt::MiddleButton);
 
+#if defined(Q_OS_WIN)
 				r = true;
 				break;
 #else

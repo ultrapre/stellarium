@@ -153,7 +153,11 @@ void StelFileMgr::init()
 
 			qWarning() << "Maybe this is AppImage or something similar? Let's check relative path...";
 			// This hook has been added after reverse-engineering an AppImage application
+#ifdef Q_OS_ANDROID
+			QString relativePath = "/sdcard/stellarium";
+#else
 			QString relativePath =  QCoreApplication::applicationDirPath() + QString("/../share/stellarium");
+#endif
 			checkFile = QFileInfo(relativePath + QDir::separator() + CHECK_FILE);
 			if (checkFile.exists())
 			{

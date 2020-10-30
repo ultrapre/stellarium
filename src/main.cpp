@@ -159,10 +159,14 @@ int main(int argc, char **argv)
 	QCoreApplication::setOrganizationDomain("stellarium.org");
 	QCoreApplication::setOrganizationName("stellarium");
 
+	#ifdef Q_OS_ANDROID
+	QCoreApplication::setAttribute(Qt::AA_Use96Dpi, true);
+	#else
 	// Support high DPI pixmaps and fonts
 	QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps, true);
 	#if (QT_VERSION>=QT_VERSION_CHECK(5, 6, 0))
 	QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling, true);
+	#endif
 	#endif
 
 	#if defined(Q_OS_MAC)
@@ -190,6 +194,13 @@ int main(int argc, char **argv)
 	// we need scanf()/printf() and friends to always work in the C locale,
 	// otherwise configuration/INI file parsing will be erroneous.
 	setlocale(LC_NUMERIC, "C");
+
+#ifdef Q_OS_ANDROID
+    QFont newFont = QApplication::font();
+    newFont.setPixelSize(14);
+    QApplication::setFont(newFont);
+#endif
+
 
 	// Solution for bug: https://bugs.launchpad.net/stellarium/+bug/1498616
 	qputenv("QT_HARFBUZZ", "old");
