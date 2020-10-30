@@ -285,7 +285,7 @@ ENDIF()
 SET(stellarium_exe_SRCS main.cpp)
 
 ################# compiles resources files ############
-SET(stellarium_RES ${CMAKE_SOURCE_DIR}/data/mainRes.qrc)
+SET(stellarium_RES ${PROJECT_SOURCE_DIR}/data/mainRes.qrc)
 QT5_ADD_RESOURCES(stellarium_RES_CXX ${stellarium_RES})
 
 #############################################################################################
@@ -385,7 +385,7 @@ IF(STELLARIUM_GUI_MODE STREQUAL "Standard")
      QT5_WRAP_UI(stellarium_UIS_H ${stellarium_UIS})
 
      # compiles resources files
-     SET(stellarium_gui_RES ${CMAKE_SOURCE_DIR}/data/gui/guiRes.qrc)
+     SET(stellarium_gui_RES ${PROJECT_SOURCE_DIR}/data/gui/guiRes.qrc)
      QT5_ADD_RESOURCES(stellarium_gui_RES_CXX ${stellarium_gui_RES})
 
      SET(stellarium_lib_SRCS ${stellarium_lib_SRCS} ${stellarium_gui_SRCS} ${stellarium_UIS_H} ${stellarium_gui_RES_CXX})

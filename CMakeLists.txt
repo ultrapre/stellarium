@@ -335,9 +335,9 @@ ENDIF()
 IF(ENABLE_SPOUT)
      ADD_DEFINITIONS(-DENABLE_SPOUT)
      IF("${CMAKE_SIZEOF_VOID_P}" EQUAL "4") # 32bit build?
-          SET(SPOUT_PATH_HINT ${CMAKE_SOURCE_DIR}/util/spout2/Win32/)
+          SET(SPOUT_PATH_HINT ${PROJECT_SOURCE_DIR}/util/spout2/Win32/)
      ELSEIF("${CMAKE_SIZEOF_VOID_P}" EQUAL "8") # 64bit build?
-          SET(SPOUT_PATH_HINT ${CMAKE_SOURCE_DIR}/util/spout2/x64/)
+          SET(SPOUT_PATH_HINT ${PROJECT_SOURCE_DIR}/util/spout2/x64/)
      ENDIF()
 
      # make sure the .lib file is used, otherwise MinGW will try the .dll directly and fails to link
@@ -351,7 +351,7 @@ IF(ENABLE_SPOUT)
      # try to find the .dll for automatic copy
      GET_FILENAME_COMPONENT(SPOUT_LIBRARY_DIR ${SPOUT_LIBRARY} DIRECTORY)
      SET(SPOUT_LIBRARY_DLL ${SPOUT_LIBRARY_DIR}/SpoutLibrary.dll CACHE FILEPATH "The path to the Spout .dll file")
-     SET(SPOUT_LIBRARY_LICENCE ${CMAKE_SOURCE_DIR}/util/spout2/licence.txt CACHE FILEPATH "The path to the Spout licence file")
+     SET(SPOUT_LIBRARY_LICENCE ${PROJECT_SOURCE_DIR}/util/spout2/licence.txt CACHE FILEPATH "The path to the Spout licence file")
 
      IF(NOT EXISTS ${SPOUT_LIBRARY_DLL})
           UNSET(SPOUT_LIBRARY_DLL)
@@ -400,7 +400,7 @@ ELSE(ENABLE_TESTING)
 ENDIF(ENABLE_TESTING)
 
 ########### User Guide ###############
-IF(EXISTS "${CMAKE_SOURCE_DIR}/guide/guide.pdf")
+IF(EXISTS "${PROJECT_SOURCE_DIR}/guide/guide.pdf")
      MESSAGE(STATUS "Found Stellarium User Guide")
      INSTALL(FILES guide/guide.pdf DESTINATION ${SDATALOC}/guide)
      SET(ISS_GUIDE "Name: \"{group}\\{cm:UserGuide}\"; Filename: \"{app}\\guide\\guide.pdf\"")
@@ -648,7 +648,7 @@ ENDIF()
 
 IF(NOT USE_SYSTEM_ZLIB)
      #use our own zlib
-     MESSAGE(STATUS "Using bundled zlib version at ${CMAKE_SOURCE_DIR}/src/external/zlib")
+     MESSAGE(STATUS "Using bundled zlib version at ${PROJECT_SOURCE_DIR}/src/external/zlib")
      SET(ZLIB_LIBRARIES zlib_stel)
 ELSE()
      MESSAGE(STATUS "Using system-provided zlib at ${ZLIB_LIBRARIES}")
@@ -667,10 +667,10 @@ ELSE()
      ADD_DEFINITIONS(-DINSTALL_DATADIR=".")
      ADD_DEFINITIONS(-DINSTALL_LOCALEDIR="./locale")
 ENDIF()
-# For not installed debug builds with build directory path that not match sources directory path ${PROJECT_BINARY_DIR} != ${CMAKE_SOURCE_DIR}
+# For not installed debug builds with build directory path that not match sources directory path ${PROJECT_BINARY_DIR} != ${PROJECT_SOURCE_DIR}
 IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
-     ADD_DEFINITIONS(-DINSTALL_DATADIR_FOR_DEBUG="${CMAKE_SOURCE_DIR}")
-     ADD_DEFINITIONS(-DINSTALL_LOCALEDIR_FOR_DEBUG="${CMAKE_SOURCE_DIR}")
+     ADD_DEFINITIONS(-DINSTALL_DATADIR_FOR_DEBUG="${PROJECT_SOURCE_DIR}")
+     ADD_DEFINITIONS(-DINSTALL_LOCALEDIR_FOR_DEBUG="${PROJECT_SOURCE_DIR}")
 ENDIF()
 
 IF(WIN32)
@@ -694,7 +694,7 @@ IF(WIN32)
           SET(PACKAGE_VERSION_RC "${WINDOWS_PACKAGE_VERSION}")
      ENDIF()
      STRING(REGEX REPLACE "([.]+)" "," PACKAGE_VERSION_RC ${PACKAGE_VERSION_RC})
-     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/cmake/stellarium.rc.cmake ${CMAKE_CURRENT_BINARY_DIR}/stellarium.rc @ONLY)
+     CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/cmake/stellarium.rc.cmake ${CMAKE_CURRENT_BINARY_DIR}/stellarium.rc @ONLY)
 
      #######################################################
      ### [Optional] Embed icon in the Windows executable
@@ -750,7 +750,7 @@ IF(CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebI
      ADD_DEFINITIONS(-DNDEBUG)
 ENDIF()
 
-CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/cmake/default_cfg.ini.cmake ${CMAKE_SOURCE_DIR}/data/default_cfg.ini @ONLY)
+CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/cmake/default_cfg.ini.cmake ${PROJECT_SOURCE_DIR}/data/default_cfg.ini @ONLY)
 
 ########### uninstall files ###############
 CONFIGURE_FILE(
@@ -805,7 +805,7 @@ IF(APPLE)
      MESSAGE(STATUS "Mac OS X deployment target: ${CMAKE_OSX_DEPLOYMENT_TARGET}")
      SET(PACKAGE_OSX_TARGET ${CMAKE_OSX_DEPLOYMENT_TARGET})
      ADD_DEFINITIONS(-DPACKAGE_OSX_TARGET)
-     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/cmake/Info.plist.cmake ${CMAKE_SOURCE_DIR}/data/Info.plist @ONLY)
+     CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/cmake/Info.plist.cmake ${PROJECT_SOURCE_DIR}/data/Info.plist @ONLY)
 ENDIF()
 
 ########### Windows packaging ###############
@@ -853,12 +853,12 @@ ENDIF()
 # This will be used for all compilations in sub-directories
 INCLUDE_DIRECTORIES(
       ${CMAKE_BINARY_DIR}
-      ${CMAKE_SOURCE_DIR}/src
-      ${CMAKE_SOURCE_DIR}/src/core
-      ${CMAKE_SOURCE_DIR}/src/core/modules
-      ${CMAKE_SOURCE_DIR}/src/core/planetsephems
-      ${CMAKE_SOURCE_DIR}/src/gui
-      ${CMAKE_SOURCE_DIR}/src/scripting
+      ${PROJECT_SOURCE_DIR}/src
+      ${PROJECT_SOURCE_DIR}/src/core
+      ${PROJECT_SOURCE_DIR}/src/core/modules
+      ${PROJECT_SOURCE_DIR}/src/core/planetsephems
+      ${PROJECT_SOURCE_DIR}/src/gui
+      ${PROJECT_SOURCE_DIR}/src/scripting
       ${INTL_INCLUDE_DIR}
       ${CMAKE_BINARY_DIR}/src
 )
