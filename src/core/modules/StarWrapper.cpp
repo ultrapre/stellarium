@@ -117,6 +117,7 @@ QString StarWrapper1::getInfoString(const StelCore *core, const InfoStringGroup&
 		const QString additionalNameI18 = StarMgr::getAdditionalNames(s->getHip());
 		const QString sciName = StarMgr::getSciName(s->getHip());
 		const QString addSciName = StarMgr::getSciAdditionalName(s->getHip());
+		const QString dblSciName = StarMgr::getSciAdditionalDblName(s->getHip());
 		const QString varSciName = StarMgr::getGcvsName(s->getHip());
 		const QString wdsSciName = StarMgr::getWdsName(s->getHip());
 		QStringList designations;
@@ -124,7 +125,9 @@ QString StarWrapper1::getInfoString(const StelCore *core, const InfoStringGroup&
 			designations.append(sciName);
 		if (!addSciName.isEmpty())
 			designations.append(addSciName);
-		if (!varSciName.isEmpty() && varSciName!=addSciName && varSciName!=sciName)
+		if (!dblSciName.isEmpty())
+			designations.append(dblSciName);
+		if (!varSciName.isEmpty() && varSciName!=addSciName && varSciName!=dblSciName && varSciName!=sciName)
 			designations.append(varSciName);
 
 		QString hip, hipq;
@@ -405,18 +408,17 @@ QVariantMap StarWrapper1::getInfoMap(const StelCore *core) const
 	return map;
 }
 
-StelObjectP Star1::createStelObject(const SpecialZoneArray<Star1> *a,
-									const SpecialZoneData<Star1> *z) const {
-  return StelObjectP(new StarWrapper1(a,z,this), true);
+StelObjectP Star1::createStelObject(const SpecialZoneArray<Star1> *a, const SpecialZoneData<Star1> *z) const
+{
+	return StelObjectP(new StarWrapper1(a,z,this), true);
 }
 
-StelObjectP Star2::createStelObject(const SpecialZoneArray<Star2> *a,
-									const SpecialZoneData<Star2> *z) const {
-  return StelObjectP(new StarWrapper2(a,z,this), true);
+StelObjectP Star2::createStelObject(const SpecialZoneArray<Star2> *a, const SpecialZoneData<Star2> *z) const
+{
+	return StelObjectP(new StarWrapper2(a,z,this), true);
 }
 
-StelObjectP Star3::createStelObject(const SpecialZoneArray<Star3> *a,
-									const SpecialZoneData<Star3> *z) const {
-  return StelObjectP(new StarWrapper3(a,z,this), true);
+StelObjectP Star3::createStelObject(const SpecialZoneArray<Star3> *a, const SpecialZoneData<Star3> *z) const
+{
+	return StelObjectP(new StarWrapper3(a,z,this), true);
 }
-

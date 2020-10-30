@@ -276,7 +276,7 @@ void StelGui::init(QGraphicsWidget *atopLevelGraphicsWidget)
 	setFlagUseButtonsBackground(conf->value("gui/flag_show_buttons_background", true).toBool());
 	// Add everything
 	QPixmap pxmapDefault, pxmapOn, pxmapOff;
-	QPixmap pxmapGlow32x32(":/graphicGui/glow32x32.png");
+	QPixmap pxmapGlow32x32(":/graphicGui/miscGlow32x32.png");
 
 	// Add buttons on left bar (Window)
 	addButtonOnLeftBar("bbtLocation", "actionShow_Location_Window_Global");
@@ -414,7 +414,7 @@ void StelGui::init(QGraphicsWidget *atopLevelGraphicsWidget)
 
 void StelGui::addButtonOnBottomBar(QString buttonName, QString actionName, QString groupName)
 {
-	QPixmap pxmapGlow(":/graphicGui/glow32x32.png");
+	QPixmap pxmapGlow(":/graphicGui/miscGlow32x32.png");
 	QPixmap pxmapOn = QPixmap(QString(":/graphicGui/%1-on.png").arg(buttonName));
 	QPixmap pxmapOff = QPixmap(QString(":/graphicGui/%1-off.png").arg(buttonName));
 	StelButton* b = new StelButton(Q_NULLPTR, pxmapOn, pxmapOff, pxmapGlow, actionName);
@@ -423,7 +423,7 @@ void StelGui::addButtonOnBottomBar(QString buttonName, QString actionName, QStri
 
 void StelGui::addButtonOnLeftBar(QString buttonName, QString actionName)
 {
-	QPixmap pxmapGlow(":/graphicGui/glow.png");
+	QPixmap pxmapGlow(":/graphicGui/miscGlow.png");
 	QPixmap pxmapOn = QPixmap(QString(":/graphicGui/%1-on.png").arg(buttonName));
 	QPixmap pxmapOff = QPixmap(QString(":/graphicGui/%1-off.png").arg(buttonName));
 	StelButton* b = new StelButton(Q_NULLPTR, pxmapOn, pxmapOff, pxmapGlow, actionName);
@@ -683,13 +683,13 @@ void StelGui::setFlagShowFlipButtons(bool b)
 		if (b==true) {
 			if (flipVert==Q_NULLPTR) {
 				// Create the vertical flip button
-				QPixmap pxmapGlow32x32(":/graphicGui/glow32x32.png");
+				QPixmap pxmapGlow32x32(":/graphicGui/miscGlow32x32.png");
 				QPixmap pxmapOn(":/graphicGui/btFlipVertical-on.png");
 				QPixmap pxmapOff(":/graphicGui/btFlipVertical-off.png");
 				flipVert = new StelButton(Q_NULLPTR, pxmapOn, pxmapOff, pxmapGlow32x32, "actionVertical_Flip");
 			}
 			if (flipHoriz==Q_NULLPTR) {
-				QPixmap pxmapGlow32x32(":/graphicGui/glow32x32.png");
+				QPixmap pxmapGlow32x32(":/graphicGui/miscGlow32x32.png");
 				QPixmap pxmapOn(":/graphicGui/btFlipHorizontal-on.png");
 				QPixmap pxmapOff(":/graphicGui/btFlipHorizontal-off.png");
 				flipHoriz = new StelButton(Q_NULLPTR, pxmapOn, pxmapOff, pxmapGlow32x32, "actionHorizontal_Flip");
@@ -720,9 +720,9 @@ void StelGui::setFlagShowNebulaBackgroundButton(bool b)
 		if (b==true) {
 			if (btShowNebulaeBackground==Q_NULLPTR) {
 				// Create the nebulae background button
-				QPixmap pxmapGlow32x32(":/graphicGui/glow32x32.png");
-				QPixmap pxmapOn(":/graphicGui/btDSS-on.png");
-				QPixmap pxmapOff(":/graphicGui/btDSS-off.png");
+				QPixmap pxmapGlow32x32(":/graphicGui/miscGlow32x32.png");
+				QPixmap pxmapOn(":/graphicGui/btNebulaeBackground-on.png");
+				QPixmap pxmapOff(":/graphicGui/btNebulaeBackground-off.png");
 				btShowNebulaeBackground = new StelButton(Q_NULLPTR, pxmapOn, pxmapOff, pxmapGlow32x32, "actionShow_DSO_Textures");
 			}
 			getButtonBar()->addButton(btShowNebulaeBackground, "040-nebulaeGroup");
@@ -749,9 +749,9 @@ void StelGui::setFlagShowBookmarksButton(bool b)
 		if (b==true) {
 			if (btShowBookmarks==Q_NULLPTR) {
 				// Create the nebulae background button
-				QPixmap pxmapGlow32x32(":/graphicGui/glow32x32.png");
-				QPixmap pxmapOn(":/graphicGui/btBookmarksA-on.png");
-				QPixmap pxmapOff(":/graphicGui/btBookmarksA-off.png");
+				QPixmap pxmapGlow32x32(":/graphicGui/miscGlow32x32.png");
+				QPixmap pxmapOn(":/graphicGui/btBookmarks-on.png");
+				QPixmap pxmapOff(":/graphicGui/btBookmarks-off.png");
 				btShowBookmarks = new StelButton(Q_NULLPTR, pxmapOn, pxmapOff, pxmapGlow32x32, "actionShow_Bookmarks_Window_Global");
 			}
 			getButtonBar()->addButton(btShowBookmarks, "060-othersGroup");
@@ -778,7 +778,7 @@ void StelGui::setFlagShowICRSGridButton(bool b)
 		if (b==true) {
 			if (btShowICRSGrid==Q_NULLPTR) {
 				// Create the nebulae background button
-				QPixmap pxmapGlow32x32(":/graphicGui/glow32x32.png");
+				QPixmap pxmapGlow32x32(":/graphicGui/miscGlow32x32.png");
 				QPixmap pxmapOn(":/graphicGui/btEquatorialJ2000Grid-on.png");
 				QPixmap pxmapOff(":/graphicGui/btEquatorialJ2000Grid-off.png");
 				btShowICRSGrid = new StelButton(Q_NULLPTR, pxmapOn, pxmapOff, pxmapGlow32x32, "actionShow_Equatorial_J2000_Grid");
@@ -807,7 +807,7 @@ void StelGui::setFlagShowGalacticGridButton(bool b)
 		if (b==true) {
 			if (btShowGalacticGrid==Q_NULLPTR) {
 				// Create the nebulae background button
-				QPixmap pxmapGlow32x32(":/graphicGui/glow32x32.png");
+				QPixmap pxmapGlow32x32(":/graphicGui/miscGlow32x32.png");
 				QPixmap pxmapOn(":/graphicGui/btGalacticGrid-on.png");
 				QPixmap pxmapOff(":/graphicGui/btGalacticGrid-off.png");
 				btShowGalacticGrid = new StelButton(Q_NULLPTR, pxmapOn, pxmapOff, pxmapGlow32x32, "actionShow_Galactic_Grid");
@@ -836,7 +836,7 @@ void StelGui::setFlagShowEclipticGridButton(bool b)
 		if (b==true) {
 			if (btShowEclipticGrid==Q_NULLPTR) {
 				// Create the nebulae background button
-				QPixmap pxmapGlow32x32(":/graphicGui/glow32x32.png");
+				QPixmap pxmapGlow32x32(":/graphicGui/miscGlow32x32.png");
 				QPixmap pxmapOn(":/graphicGui/btEclipticGrid-on.png");
 				QPixmap pxmapOff(":/graphicGui/btEclipticGrid-off.png");
 				btShowEclipticGrid = new StelButton(Q_NULLPTR, pxmapOn, pxmapOff, pxmapGlow32x32, "actionShow_Ecliptic_Grid");
@@ -865,7 +865,7 @@ void StelGui::setFlagShowConstellationBoundariesButton(bool b)
 		if (b==true) {
 			if (btShowConstellationBoundaries==Q_NULLPTR) {
 				// Create the nebulae background button
-				QPixmap pxmapGlow32x32(":/graphicGui/glow32x32.png");
+				QPixmap pxmapGlow32x32(":/graphicGui/miscGlow32x32.png");
 				QPixmap pxmapOn(":/graphicGui/btConstellationBoundaries-on.png");
 				QPixmap pxmapOff(":/graphicGui/btConstellationBoundaries-off.png");
 				btShowConstellationBoundaries = new StelButton(Q_NULLPTR, pxmapOn, pxmapOff, pxmapGlow32x32, "actionShow_Constellation_Boundaries");
@@ -894,7 +894,7 @@ void StelGui::setFlagShowAsterismLinesButton(bool b)
 		if (b==true) {
 			if (btShowAsterismLines==Q_NULLPTR) {
 				// Create the asterism lines button
-				QPixmap pxmapGlow32x32(":/graphicGui/glow32x32.png");
+				QPixmap pxmapGlow32x32(":/graphicGui/miscGlow32x32.png");
 				QPixmap pxmapOn(":/graphicGui/btAsterismLines-on.png");
 				QPixmap pxmapOff(":/graphicGui/btAsterismLines-off.png");
 				btShowAsterismLines = new StelButton(Q_NULLPTR, pxmapOn, pxmapOff, pxmapGlow32x32, "actionShow_Asterism_Lines");
@@ -923,7 +923,7 @@ void StelGui::setFlagShowAsterismLabelsButton(bool b)
 		if (b==true) {
 			if (btShowAsterismLabels==Q_NULLPTR) {
 				// Create the asterism labels button
-				QPixmap pxmapGlow32x32(":/graphicGui/glow32x32.png");
+				QPixmap pxmapGlow32x32(":/graphicGui/miscGlow32x32.png");
 				QPixmap pxmapOn(":/graphicGui/btAsterismLabels-on.png");
 				QPixmap pxmapOff(":/graphicGui/btAsterismLabels-off.png");
 				btShowAsterismLabels = new StelButton(Q_NULLPTR, pxmapOn, pxmapOff, pxmapGlow32x32, "actionShow_Asterism_Labels");
@@ -954,9 +954,9 @@ void StelGui::setFlagShowDSSButton(bool b)
 		if (b==true) {
 			if (btShowDSS==Q_NULLPTR) {
 				// Create the nebulae background button
-				QPixmap pxmapGlow32x32(":/graphicGui/glow32x32.png");
-				QPixmap pxmapOn(":/graphicGui/btToastSurvey-on.png");
-				QPixmap pxmapOff(":/graphicGui/btToastSurvey-off");
+				QPixmap pxmapGlow32x32(":/graphicGui/miscGlow32x32.png");
+				QPixmap pxmapOn(":/graphicGui/btDSS-on.png");
+				QPixmap pxmapOff(":/graphicGui/btDSS-off");
 				btShowDSS = new StelButton(Q_NULLPTR, pxmapOn, pxmapOff, pxmapGlow32x32, "actionShow_Toast_Survey");
 			}
 			getButtonBar()->addButton(btShowDSS, "040-nebulaeGroup");
@@ -980,9 +980,9 @@ void StelGui::setFlagShowHiPSButton(bool b)
 		if (b==true) {
 			if (btShowHiPS==Q_NULLPTR) {
 				// Create the nebulae background button
-				QPixmap pxmapGlow32x32(":/graphicGui/glow32x32.png");
-				QPixmap pxmapOn(":/graphicGui/btSurveys-on.png");
-				QPixmap pxmapOff(":/graphicGui/btSurveys-off.png");
+				QPixmap pxmapGlow32x32(":/graphicGui/miscGlow32x32.png");
+				QPixmap pxmapOn(":/graphicGui/btHIPS-on.png");
+				QPixmap pxmapOff(":/graphicGui/btHIPS-off.png");
 				btShowHiPS = new StelButton(Q_NULLPTR, pxmapOn, pxmapOff, pxmapGlow32x32, "actionShow_Hips_Surveys");
 			}
 			getButtonBar()->addButton(btShowHiPS, "040-nebulaeGroup");
@@ -1006,7 +1006,7 @@ void StelGui::setFlagShowGotoSelectedObjectButton(bool b)
 		if (b==true) {
 			if (buttonGotoSelectedObject==Q_NULLPTR) {
 				// Create the button
-				QPixmap pxmapGlow32x32(":/graphicGui/glow32x32.png");
+				QPixmap pxmapGlow32x32(":/graphicGui/miscGlow32x32.png");
 				QPixmap pxmapOn(":/graphicGui/btGotoSelectedObject-on.png");
 				QPixmap pxmapOff(":/graphicGui/btGotoSelectedObject-off.png");
 				buttonGotoSelectedObject = new StelButton(Q_NULLPTR, pxmapOn, pxmapOff, pxmapGlow32x32, "actionGoto_Selected_Object");
@@ -1031,7 +1031,7 @@ void StelGui::setFlagShowNightmodeButton(bool b)
 		if (b==true) {
 			if (buttonNightmode==Q_NULLPTR) {
 				// Create the nightmode button
-				QPixmap pxmapGlow32x32(":/graphicGui/glow32x32.png");
+				QPixmap pxmapGlow32x32(":/graphicGui/miscGlow32x32.png");
 				QPixmap pxmapOn(":/graphicGui/btNightView-on.png");
 				QPixmap pxmapOff(":/graphicGui/btNightView-off.png");
 				buttonNightmode = new StelButton(Q_NULLPTR, pxmapOn, pxmapOff, pxmapGlow32x32, "actionShow_Night_Mode");
@@ -1056,7 +1056,7 @@ void StelGui::setFlagShowFullscreenButton(bool b)
 		if (b==true) {
 			if (buttonFullscreen==Q_NULLPTR) {
 				// Create the fullscreen button
-				QPixmap pxmapGlow32x32(":/graphicGui/glow32x32.png");
+				QPixmap pxmapGlow32x32(":/graphicGui/miscGlow32x32.png");
 				QPixmap pxmapOn(":/graphicGui/btFullScreen-on.png");
 				QPixmap pxmapOff(":/graphicGui/btFullScreen-off.png");
 				buttonFullscreen = new StelButton(Q_NULLPTR, pxmapOn, pxmapOff, pxmapGlow32x32, "actionSet_Full_Screen_Global");
@@ -1081,7 +1081,7 @@ void StelGui::setFlagShowQuitButton(bool b)
 		if (b==true) {
 			if (buttonFullscreen==Q_NULLPTR) {
 				// Create the fullscreen button
-				QPixmap pxmapGlow32x32(":/graphicGui/glow32x32.png");
+				QPixmap pxmapGlow32x32(":/graphicGui/miscGlow32x32.png");
 				QPixmap pxmapOn(":/graphicGui/btQuit.png");
 				buttonQuit = new StelButton(Q_NULLPTR, pxmapOn, pxmapOn, pxmapGlow32x32, "actionQuit_Global");
 			}

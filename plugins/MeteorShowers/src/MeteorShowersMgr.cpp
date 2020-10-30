@@ -301,6 +301,15 @@ void MeteorShowersMgr::checkForUpdates()
 	}
 }
 
+void MeteorShowersMgr::actionEnablePlugin(const bool &b)
+{
+	if (m_enablePlugin != b)
+	{
+		m_enablePlugin = b;
+		emit enablePluginChanged(b);
+		emit StelApp::getInstance().getCore()->updateSearchLists();
+	}
+}
 
 void MeteorShowersMgr::deleteDownloadProgressBar()
 {
@@ -331,9 +340,7 @@ void MeteorShowersMgr::startDownload(QString urlString)
 	QNetworkRequest request;
 	request.setUrl(QUrl(m_url));
 	request.setRawHeader("User-Agent", StelUtils::getUserAgentString().toUtf8());
-	#if QT_VERSION >= 0x050600
 	request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
-	#endif
 	m_downloadReply = m_networkManager->get(request);
 	connect(m_downloadReply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(updateDownloadProgress(qint64,qint64)));
 
@@ -370,23 +377,6 @@ void MeteorShowersMgr::downloadComplete(QNetworkReply *reply)
 		return;
 
 	disconnect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(downloadComplete(QNetworkReply*)));
-
-	#if QT_VERSION < 0x050600
-	int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-	if (statusCode == 301 || statusCode == 302 || statusCode == 307)
-	{
-		QUrl rawUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
-		QUrl redirectUrl(rawUrl.toString(QUrl::RemoveQuery));
-		qDebug() << "[MeteorShowersMgr] The query has been redirected to" << redirectUrl.toString();
-		m_url = redirectUrl.toString();
-		m_conf->setValue(MS_CONFIG_PREFIX + "/url", m_url);
-		reply->deleteLater();
-		m_downloadReply = Q_NULLPTR;
-		startDownload(redirectUrl.toString());
-		return;
-	}
-	#endif
-
 	deleteDownloadProgressBar();
 
 	if (reply->error() || reply->bytesAvailable()==0)
@@ -485,7 +475,7 @@ void MeteorShowersMgr::setShowEnableButton(const bool& show)
 			StelButton* enablePlugin = new StelButton(Q_NULLPTR,
 								  QPixmap(":/MeteorShowers/btMS-on.png"),
 								  QPixmap(":/MeteorShowers/btMS-off.png"),
-								  QPixmap(":/graphicGui/glow32x32.png"),
+								  QPixmap(":/graphicGui/miscGlow32x32.png"),
 								  "actionShow_MeteorShowers");
 			gui->getButtonBar()->addButton(enablePlugin, "065-pluginsGroup");
 		}
@@ -518,7 +508,7 @@ void MeteorShowersMgr::setShowSearchButton(const bool& show)
 			StelButton* searchMS = new StelButton(Q_NULLPTR,
 							      QPixmap(":/MeteorShowers/btMS-search-on.png"),
 							      QPixmap(":/MeteorShowers/btMS-search-off.png"),
-							      QPixmap(":/graphicGui/glow32x32.png"),
+							      QPixmap(":/graphicGui/miscGlow32x32.png"),
 							      "actionShow_MeteorShowers_search_dialog");
 			gui->getButtonBar()->addButton(searchMS, "065-pluginsGroup");
 		}

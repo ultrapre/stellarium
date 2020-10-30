@@ -41,6 +41,7 @@
 #include <QScroller>
 #include <QToolButton>
 #include <QColorDialog>
+#include <QMessageBox>
 
 StelDialog::StelDialog(QString dialogName, QObject* parent)
 	: QObject(parent)
@@ -64,6 +65,11 @@ void StelDialog::close()
 	setVisible(false);
 }
 
+void StelDialog::styleChanged()
+{
+	// Nothing for now
+}
+
 bool StelDialog::visible() const
 {
 	return dialog!=Q_NULLPTR && dialog->isVisible();
@@ -75,7 +81,8 @@ void StelDialog::setVisible(bool v)
 	{
 		StelGui* gui = dynamic_cast<StelGui*>(StelApp::getInstance().getGui());		
 		QSize screenSize = StelMainView::getInstance().size();
-		QSize maxSize = 0.8*screenSize;
+		// If dialog size is very large and we move to a computer with much smaller screen, this should create the dialog with reasonable better size.
+		QSize maxSize = 0.95*screenSize;
 		if (dialog)
 		{
 			// reload stylesheet, in case size changed!
@@ -93,13 +100,6 @@ void StelDialog::setVisible(bool v)
 				newPos.setY(screenSize.height() - dialog->size().height());
 			if (newPos != dialog->pos())
 				proxy->setPos(newPos);
-			QSizeF newSize = proxy->size();
-			if (newSize.width() >= maxSize.width())
-				newSize.setWidth(maxSize.width());
-			if (newSize.height() >= maxSize.height())
-				newSize.setHeight(maxSize.height());
-			if(newSize != dialog->size())
-				proxy->resize(newSize);
 		}
 		else
 		{
@@ -153,8 +153,9 @@ void StelDialog::setVisible(bool v)
 			if (newY <-0)
 				newY = 0;
 			proxy->setPos(newX, newY);
-			proxy->setWindowFrameMargins(2,0,2,2);
+			// Invisible frame around the window to make resizing easier
 			// (this also changes the bounding rectangle size)
+			proxy->setWindowFrameMargins(7,0,7,7);
 
 			// Retrieve stored panel sizes, scale panel up if it was stored larger than default.
 			QString confNameSize="DialogSizes/" + dialogName;
@@ -173,20 +174,14 @@ void StelDialog::setVisible(bool v)
 			// resize only if number was valid and larger than default loaded size.
 			if ( (newX>=proxy->size().width()) || (newY>=proxy->size().height()) )
 			{
-				//qDebug() << confNameSize << ": resize to " << storedSizeString;
+				//qDebug() << confNameSize << ": resize from" << proxy->size().width() << "x" << proxy->size().height() << "to " << storedSizeString;
 				proxy->resize(qMax(static_cast<qreal>(newX), proxy->size().width()), qMax(static_cast<qreal>(newY), proxy->size().height()));
 			}
 			if(proxy->size().width() > maxSize.width() || proxy->size().height() > maxSize.height())
 			{
-				proxy->resize(maxSize);
+				proxy->resize(qMin(static_cast<qreal>(maxSize.width()), proxy->size().width()), qMin(static_cast<qreal>(maxSize.height()), proxy->size().height()));
 			}
 			handleDialogSizeChanged(proxy->size()); // This may trigger internal updates in subclasses. E.g. LocationPanel location arrow.
-
-			// The caching is buggy on all platforms with Qt 4.5.2
-			// Disabled on mac for the moment (https://github.com/Stellarium/stellarium/issues/393)
-			#ifndef Q_OS_MAC
-			proxy->setCacheMode(QGraphicsItem::ItemCoordinateCache);
-			#endif
 
 			proxy->setZValue(100);
 			StelMainView::getInstance().scene()->setActiveWindow(proxy);
@@ -304,6 +299,11 @@ void StelDialog::connectBoolProperty(QGroupBox *checkBox, const QString &propNam
 	Q_ASSERT_X(prop,"StelDialog", "StelProperty does not exist");
 
 	new QGroupBoxStelPropertyConnectionHelper(prop,checkBox);
+}
+
+bool StelDialog::askConfirmation()
+{
+	return (QMessageBox::warning(Q_NULLPTR, q_("Attention!"), q_("Are you sure? This will delete your customized data."), QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes);
 }
 
 void StelDialog::connectColorButton(QToolButton *toolButton, QString propertyName, QString iniName, QString moduleName)

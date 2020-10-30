@@ -35,6 +35,7 @@
 #include <QString>
 #include <QDebug>
 #include <QStringList>
+#include <QSettings>
 
 StelObjectMgr::StelObjectMgr() : objectPointerVisibility(true), searchRadiusPixel(25.), distanceWeight(1.f)
 {
@@ -61,6 +62,10 @@ void StelObjectMgr::init()
 	actionsMgr->addAction("actionPrevious_Transit", timeGroup, N_("Previous transit of the selected object"), this, "previousTransit()");
 	actionsMgr->addAction("actionPrevious_Rising", timeGroup, N_("Previous rising of the selected object"), this, "previousRising()");
 	actionsMgr->addAction("actionPrevious_Setting", timeGroup, N_("Previous setting of the selected object"), this, "previousSetting()");
+
+	QSettings* conf = StelApp::getInstance().getSettings();
+	Q_ASSERT(conf);
+	setFlagSelectedObjectPointer(conf->value("viewing/flag_show_selection_marker", true).toBool());
 }
 
 void StelObjectMgr::nextTransit()
@@ -247,7 +252,8 @@ void StelObjectMgr::registerStelObjectMgr(StelObjectModule* m)
 		objModulesMap["NebulaMgr:30"] = "Emission-line stars";
 		objModulesMap["NebulaMgr:31"] = "Supernova candidates";
 		objModulesMap["NebulaMgr:32"] = "Supernova remnant candidates";
-		objModulesMap["NebulaMgr:33"] = "Clusters of galaxies";
+		objModulesMap["NebulaMgr:33"] = "Clusters of galaxies";		
+		objModulesMap["NebulaMgr:35"] = "Regions of the sky";
 		objModulesMap["NebulaMgr:100"] = "Messier Catalogue";
 		objModulesMap["NebulaMgr:101"] = "Caldwell Catalogue";
 		objModulesMap["NebulaMgr:102"] = "Barnard Catalogue";
@@ -487,8 +493,10 @@ StelObjectP StelObjectMgr::cleverFind(const StelCore* core, const Vec3d& v) cons
 	for (const auto* m : objectsModules)
 		candidates += m->searchAround(v, fov_around, core);
 
-	// GZ 2014-08-17: This should be exactly the sky's limit magnitude (or even more, but not less!), else visible stars cannot be clicked.
-	float limitMag = core->getSkyDrawer()->getLimitMagnitude(); // -2.f;
+	// This should be exactly the sky's limit magnitude, else visible stars cannot be clicked, or suppressed stars can be found.
+	const float limitMag = core->getSkyDrawer()->getFlagStarMagnitudeLimit() ?
+				static_cast<float>(core->getSkyDrawer()->getCustomStarMagnitudeLimit()) :
+				core->getSkyDrawer()->getLimitMagnitude();
 	QList<StelObjectP> tmp;
 	for (const auto& obj : candidates)
 	{
@@ -633,7 +641,11 @@ QStringList StelObjectMgr::listAllModuleObjects(const QString &moduleId, bool in
 	if (moduleId.contains(":"))
 	{
 		subSet = true;
+		#if (QT_VERSION>=QT_VERSION_CHECK(5, 14, 0))
+		list = moduleId.split(":", Qt::SkipEmptyParts);
+		#else
 		list = moduleId.split(":", QString::SkipEmptyParts);
+		#endif
 		objModule = list.at(0);
 		objType = list.at(1);
 	}

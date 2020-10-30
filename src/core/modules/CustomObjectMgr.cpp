@@ -157,6 +157,8 @@ void CustomObjectMgr::addCustomObject(QString designation, Vec3d coordinates, bo
 
 		if (isVisible)
 			countMarkers++;
+
+		emit StelApp::getInstance().getCore()->updateSearchLists();
 	}
 }
 
@@ -200,12 +202,14 @@ void CustomObjectMgr::removeCustomObjects()
 	customObjects.clear();
 	//This marker count can be set to 0 because there will be no markers left and a duplicate will be impossible
 	countMarkers = 0;
+	emit StelApp::getInstance().getCore()->updateSearchLists();
 }
 
 void CustomObjectMgr::removeCustomObject(CustomObjectP obj)
 {
 	setSelected("");
 	customObjects.removeOne(obj);
+	emit StelApp::getInstance().getCore()->updateSearchLists();
 }
 
 void CustomObjectMgr::removeCustomObject(QString englishName)
@@ -216,7 +220,7 @@ void CustomObjectMgr::removeCustomObject(QString englishName)
 		//If we have a match for the thing we want to delete
 		if(cObj && cObj->getEnglishName()==englishName && cObj->initialized)
 			customObjects.removeOne(cObj);
-	}
+	}	
 }
 
 void CustomObjectMgr::draw(StelCore* core)
@@ -250,8 +254,7 @@ void CustomObjectMgr::drawPointer(StelCore* core, StelPainter& painter)
 		if (!painter.getProjector()->project(pos, screenpos))
 			return;
 
-		const Vec3f& c(obj->getInfoColor());
-		painter.setColor(c[0],c[1],c[2]);
+		painter.setColor(obj->getInfoColor());
 		texPointer->bind();
 		painter.setBlending(true);
 		painter.drawSprite2dMode(screenpos[0], screenpos[1], 13.f, StelApp::getInstance().getTotalRunTime()*40.);

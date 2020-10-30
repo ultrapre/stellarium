@@ -238,7 +238,7 @@ bool SolarSystemEditor::resetSolarSystemConfigurationFile() const
 		if (!QFile::remove((customSolarSystemFilePath)))
 		{
 			qWarning() << "Unable to delete" << QDir::toNativeSeparators(customSolarSystemFilePath)
-			         << endl << "Please remove the file manually.";
+				 << StelUtils::getEndLineChar() << "Please remove the file manually.";
 			return false;
 		}
 	}
@@ -598,8 +598,7 @@ SsoElements SolarSystemEditor::readMpcOneLineCometElements(QString oneLineElemen
 		const double a=perihelionDistance/(1.-eccentricity); // semimajor axis.
 		const double meanMotion=std::sqrt(mu/(a*a*a)); // radians/day
 		double period=M_PI*2.0 / meanMotion; // period, days
-		result.insert("orbit_good", qMin(1000, static_cast<int>(floor(0.5*period)))); // validity for elliptical osculating elements, days. Goes from aphel to next aphel or max 1000 days.
-		result.insert("orbit_visualization_period", period); // add period for visualization of orbit
+		result.insert("orbit_good", qMin(1000, static_cast<int>(floor(0.5*period)))); // validity for elliptical osculating elements, days. Goes from aphel to next aphel or max 1000 days.		
 	}
 	else
 		result.insert("orbit_good", 1000); // default validity for osculating elements, days
@@ -611,8 +610,7 @@ SsoElements SolarSystemEditor::readMpcOneLineCometElements(QString oneLineElemen
 	double slopeParameter = mpcParser.cap(16).toDouble(&ok);
 	result.insert("slope_parameter", slopeParameter);
 
-	double radius = 5; //Fictitious default assumption
-	result.insert("radius", radius);
+	result.insert("radius", 5); //Fictitious default assumption
 	result.insert("albedo", 0.1); // GZ 2014-01-10: Comets are very dark, should even be 0.03!
 	result.insert("dust_lengthfactor", 0.4); // dust tail length w.r.t. gas tail length
 	result.insert("dust_brightnessfactor", 1.5); // dust tail brightness w.r.t. gas tail.
@@ -1044,10 +1042,10 @@ bool SolarSystemEditor::appendToSolarSystemConfigurationFile(QList<SsoElements> 
 			if (name.isEmpty())
 				continue;
 
-			output << endl << QString("[%1]").arg(sectionName) << endl;
+			output << StelUtils::getEndLineChar() << QString("[%1]").arg(sectionName) << StelUtils::getEndLineChar();
 			for (auto key : object.keys())
 			{
-				output << QString("%1 = %2").arg(key).arg(object.value(key).toString()) << endl;
+				output << QString("%1 = %2").arg(key).arg(object.value(key).toString()) << StelUtils::getEndLineChar();
 			}
 			output.flush();
 			qDebug() << "Appended successfully" << sectionName;

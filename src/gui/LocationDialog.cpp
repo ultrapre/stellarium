@@ -31,6 +31,7 @@
 #include "StelLocaleMgr.hpp"
 #include "StelGui.hpp"
 #include "StelGuiItems.hpp"
+#include "StelSkyCultureMgr.hpp"
 
 #include <QSettings>
 #include <QDebug>
@@ -88,7 +89,9 @@ void LocationDialog::createDialogContent()
 	ui->mapLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 	ui->mapLabel->setScaledContents(false);
 
-	connect(&StelApp::getInstance(), SIGNAL(languageChanged()), this, SLOT(retranslate()));
+	StelApp *app = &StelApp::getInstance();
+	connect(app, SIGNAL(languageChanged()), this, SLOT(retranslate()));
+	connect(&app->getSkyCultureMgr(), SIGNAL(currentSkyCultureChanged(QString)), this, SLOT(populatePlanetList(QString)));
 	// Init the SpinBox entries
 	ui->longitudeSpinBox->setDisplayFormat(AngleSpinBox::DMSSymbols);
 	ui->longitudeSpinBox->setPrefixType(AngleSpinBox::Longitude);
@@ -213,7 +216,7 @@ void LocationDialog::populateTooltips()
 // Update the widget to make sure it is synchrone if the location is changed programmatically
 void LocationDialog::updateFromProgram(const StelLocation& currentLocation)
 {
-	if (!dialog->isVisible())
+	if (!dialog)
 		return;
 
 	StelCore* stelCore = StelApp::getInstance().getCore();
@@ -272,25 +275,30 @@ void LocationDialog::setFieldsFromLocation(const StelLocation& loc)
 		customTimeZone=core->getCurrentTimeZone();
 
 	ui->cityNameLineEdit->setText(loc.name);
-	int idx = ui->countryNameComboBox->findData(loc.country, Qt::UserRole, Qt::MatchCaseSensitive);
-	if (idx==-1)
-	{
-		// Use France as default
-		idx = ui->countryNameComboBox->findData(QVariant("France"), Qt::UserRole, Qt::MatchCaseSensitive);
-	}
-	ui->countryNameComboBox->setCurrentIndex(idx);
-
 	ui->longitudeSpinBox->setDegrees(loc.longitude);
 	ui->latitudeSpinBox->setDegrees(loc.latitude);
 	ui->altitudeSpinBox->setValue(loc.altitude);
 
-	idx = ui->planetNameComboBox->findData(loc.planetName, Qt::UserRole, Qt::MatchCaseSensitive);
+	int idx = ui->planetNameComboBox->findData(loc.planetName, Qt::UserRole, Qt::MatchCaseSensitive);
 	if (idx==-1)
 	{
 		// Use Earth as default
 		idx = ui->planetNameComboBox->findData(QVariant("Earth"), Qt::UserRole, Qt::MatchCaseSensitive);
 	}
 	ui->planetNameComboBox->setCurrentIndex(idx);
+
+	idx = ui->countryNameComboBox->findData(loc.country, Qt::UserRole, Qt::MatchCaseSensitive);
+	if (idx==-1)
+	{
+		if (ui->planetNameComboBox->currentData(Qt::UserRole).toString()=="Earth")
+		{
+			// Use France as default on Earth
+			idx = ui->countryNameComboBox->findData(QVariant("France"), Qt::UserRole, Qt::MatchCaseSensitive);
+		}
+		else
+			idx = ui->countryNameComboBox->findData(QVariant(""), Qt::UserRole, Qt::MatchCaseSensitive);
+	}
+	ui->countryNameComboBox->setCurrentIndex(idx);
 
 	QString tz = loc.ianaTimeZone;
 	if (loc.planetName=="Earth" && tz.isEmpty())
@@ -353,7 +361,7 @@ void LocationDialog::setMapForLocation(const StelLocation& loc)
 	if (loc.planetName=="Earth")
 	{
 		// Special case for earth, we don't want to see the clouds
-		pixmap = QPixmap(":/graphicGui/world.png");
+		pixmap = QPixmap(":/graphicGui/miscWorldMap.png");
 	}
 	else
 	{
@@ -552,7 +560,7 @@ void LocationDialog::setLocationFromMap(double longitude, double latitude)
 	pickedModel->setStringList(results.keys());
 	proxyModel->setSourceModel(pickedModel);
 	proxyModel->sort(0, Qt::AscendingOrder);
-	ui->citySearchLineEdit->clear();	
+	ui->citySearchLineEdit->setText(""); // https://wiki.qt.io/Technical_FAQ#Why_does_the_memory_keep_increasing_when_repeatedly_pasting_text_and_calling_clear.28.29_in_a_QLineEdit.3F
 }
 
 // Called when the planet name is changed by hand
@@ -592,7 +600,7 @@ void LocationDialog::moveToAnotherPlanet(const QString&)
 			//	ui->timeZoneNameComboBox->setCurrentIndex(ui->timeZoneNameComboBox->findData("LMST", Qt::UserRole, Qt::MatchCaseSensitive));
 		}
 		proxyModel->sort(0, Qt::AscendingOrder);
-		ui->citySearchLineEdit->clear();
+		ui->citySearchLineEdit->setText(""); // https://wiki.qt.io/Technical_FAQ#Why_does_the_memory_keep_increasing_when_repeatedly_pasting_text_and_calling_clear.28.29_in_a_QLineEdit.3F
 		ui->citySearchLineEdit->setFocus();
 		stelCore->moveObserverTo(loc, 0., 0.);
 	}
@@ -675,7 +683,7 @@ void LocationDialog::reportEdit()
 void LocationDialog::addCurrentLocationToList()
 {
 	const StelLocation& loc = locationFromFields();
-	ui->citySearchLineEdit->clear();
+	ui->citySearchLineEdit->setText(""); // https://wiki.qt.io/Technical_FAQ#Why_does_the_memory_keep_increasing_when_repeatedly_pasting_text_and_calling_clear.28.29_in_a_QLineEdit.3F
 	StelApp::getInstance().getLocationMgr().saveUserLocation(loc);
 	isEditingNew=false;
 	ui->addLocationToListPushButton->setEnabled(false);
@@ -686,9 +694,8 @@ void LocationDialog::addCurrentLocationToList()
 	{
 		if (model->index(i,0).data()==id)
 		{
-			//FIXME: scroll caused artifcats in the GUI for long lists. WTF????
-			//ui->citiesListView->scrollTo(model->index(i,0));
 			ui->citiesListView->selectionModel()->select(model->index(i,0), QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows);
+			ui->citiesListView->scrollTo(model->index(i,0));
 			setLocationFromList(model->index(i,0));
 			disconnectEditSignals();
 			ui->citySearchLineEdit->setFocus();
@@ -853,7 +860,7 @@ void LocationDialog::resetGPSbuttonLabel()
 void LocationDialog::resetLocationList()
 {
 	//reset search before setting model, prevents unnecessary search in full list
-	ui->citySearchLineEdit->clear();
+	ui->citySearchLineEdit->setText(""); // https://wiki.qt.io/Technical_FAQ#Why_does_the_memory_keep_increasing_when_repeatedly_pasting_text_and_calling_clear.28.29_in_a_QLineEdit.3F
 	ui->citySearchLineEdit->setFocus();
 	proxyModel->setSourceModel(allModel);
 	proxyModel->sort(0, Qt::AscendingOrder);
@@ -869,6 +876,6 @@ void LocationDialog::filterSitesByCountry()
 	pickedModel->setStringList(results.keys());
 	proxyModel->setSourceModel(pickedModel);
 	proxyModel->sort(0, Qt::AscendingOrder);
-	ui->citySearchLineEdit->clear();
+	ui->citySearchLineEdit->setText(""); // https://wiki.qt.io/Technical_FAQ#Why_does_the_memory_keep_increasing_when_repeatedly_pasting_text_and_calling_clear.28.29_in_a_QLineEdit.3F
 	ui->citySearchLineEdit->setFocus();
 }

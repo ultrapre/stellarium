@@ -135,7 +135,7 @@ void NavStars::init()
 			toolbarButton = new StelButton(Q_NULLPTR,
 						       QPixmap(":/NavStars/btNavStars-on.png"),
 						       QPixmap(":/NavStars/btNavStars-off.png"),
-						       QPixmap(":/graphicGui/glow32x32.png"),
+						       QPixmap(":/graphicGui/miscGlow32x32.png"),
 						       "actionShow_NavStars");
 		}
 		gui->getButtonBar()->addButton(toolbarButton, "065-pluginsGroup");
@@ -264,6 +264,7 @@ void NavStars::loadConfiguration(void)
 	limitInfoToNavStars  = conf->value("limit_info_to_nav_stars", false).toBool();
 	tabulatedDisplay = conf->value("tabulated_display", false).toBool();
 	upperLimb = conf->value("upper_limb", false).toBool();
+	setShowExtraDecimals(conf->value("extra_decimals", false).toBool());
 
 	conf->endGroup();
 }
@@ -279,6 +280,7 @@ void NavStars::saveConfiguration(void)
 	conf->setValue("limit_info_to_nav_stars", limitInfoToNavStars);
 	conf->setValue("tabulated_display", tabulatedDisplay);
 	conf->setValue("upper_limb", upperLimb);
+	conf->setValue("extra_decimals", getShowExtraDecimals());
 
 	conf->endGroup();
 }
@@ -496,16 +498,13 @@ void NavStars::extraInfo(StelCore* core, const StelObjectP& selectedObject, bool
 		.setGmst(get_mean_sidereal_time(jd, jde));
 
 	StelUtils::rectToSphe(&x, &y, selectedObject->getEquinoxEquatorialPos(core));	
-	calc.setRaRad(x)
-		.setDecRad(y);
+	calc.setRaRad(x).setDecRad(y);
 
 	StelUtils::rectToSphe(&x,&y,selectedObject->getAltAzPosGeometric(core)); 
-	calc.setAzRad(x)
-		.setAltRad(y);
+	calc.setAzRad(x).setAltRad(y);
 
 	StelUtils::rectToSphe(&x,&y,selectedObject->getAltAzPosApparent(core)); 
-	calc.setAzAppRad(x)
-		.setAltAppRad(y);
+	calc.setAzAppRad(x).setAltAppRad(y);
 
 	calc.execute();
 

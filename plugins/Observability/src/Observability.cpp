@@ -198,7 +198,7 @@ void Observability::updateMessageText()
 double Observability::getCallOrder(StelModuleActionName actionName) const
 {
 	if (actionName==StelModule::ActionDraw)
-		return StelApp::getInstance().getModuleMgr().getModule("LandscapeMgr")->getCallOrder(actionName)+10.;
+		return StelApp::getInstance().getModuleMgr().getModule("LabelMgr")->getCallOrder(actionName)+110.;
 	return 0;
 }
 
@@ -222,7 +222,7 @@ void Observability::init()
 		button = new StelButton(Q_NULLPTR,
 					QPixmap(":/observability/bt_observab_on.png"),
 					QPixmap(":/observability/bt_observab_off.png"),
-					QPixmap(":/graphicGui/glow32x32.png"),
+					QPixmap(":/graphicGui/miscGlow32x32.png"),
 					actionShow);
 		gui->getButtonBar()->addButton(button, "065-pluginsGroup");
 	}

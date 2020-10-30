@@ -33,7 +33,6 @@ Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
 #include <QPainter>
 #include <QPen>
 #include <QPushButton>
-#include <QSignalMapper>
 #include <QWidget>
 
 OcularsGuiPanel::OcularsGuiPanel(Oculars* plugin,
@@ -121,6 +120,7 @@ OcularsGuiPanel::OcularsGuiPanel(Oculars* plugin,
 	fieldOcularAfov = new QGraphicsTextItem(ocularControls);
 	fieldCcdName = new QGraphicsTextItem(ccdControls);
 	fieldCcdDimensions = new QGraphicsTextItem(ccdControls);
+	fieldCcdBinning = new QGraphicsTextItem(ccdControls);
 	fieldCcdHScale = new QGraphicsTextItem(ccdControls);
 	fieldCcdVScale = new QGraphicsTextItem(ccdControls);
 	fieldCcdRotation = new QGraphicsTextItem(ccdControls);
@@ -143,7 +143,7 @@ OcularsGuiPanel::OcularsGuiPanel(Oculars* plugin,
 
 	//Traditional field width from Ocular ;)
 	QFontMetrics fm(fieldOcularName->font());
-	int maxWidth = fm.width(QString("MMMMMMMMMMMMMMMMMMM"));
+	int maxWidth = fm.boundingRect(QString("MMMMMMMMMMMMMMMMMMM")).width();
 	int lineHeight = fm.height();
 
 	fieldOcularName->setTextWidth(maxWidth);
@@ -151,6 +151,7 @@ OcularsGuiPanel::OcularsGuiPanel(Oculars* plugin,
 	fieldOcularAfov->setTextWidth(maxWidth);
 	fieldCcdName->setTextWidth(maxWidth);
 	fieldCcdDimensions->setTextWidth(maxWidth);
+	fieldCcdBinning->setTextWidth(maxWidth);
 	fieldCcdHScale->setTextWidth(maxWidth);
 	fieldCcdVScale->setTextWidth(maxWidth);
 	fieldCcdRotation->setTextWidth(maxWidth);
@@ -167,7 +168,11 @@ OcularsGuiPanel::OcularsGuiPanel(Oculars* plugin,
 	fieldLensMultipler->setTextWidth(maxWidth);
 
 	// Retrieve value from setting directly, because at this stage the plugin has not parsed it yet.
-	float scale=lineHeight*plugin->getSettings()->value("arrow_scale", 1.5).toDouble();
+	// TODO: Remove this conversion tool in version 0.21 or 0.22
+	float scv = plugin->getSettings()->value("arrow_scale", 150.f).toFloat();
+	if (scv<100.f) // convert old value and type
+		scv *= 100.f;
+	float scale=lineHeight*scv*0.01f;
 	// TODO: change this load-once to interactively editable value of scaling coefficient
 	QPixmap pa(":/graphicGui/btTimeRewind-on.png");
 	QPixmap prevArrow = pa.scaledToHeight(scale, Qt::SmoothTransformation);
@@ -259,7 +264,7 @@ OcularsGuiPanel::OcularsGuiPanel(Oculars* plugin,
 	QColor cOff(102, 102, 102);
 	QColor cHover(162, 162, 162);
 	QString degrees = QString("-15%1").arg(QChar(0x00B0));
-	int degreesW = fm.width(degrees);
+	int degreesW = fm.boundingRect(degrees).width();
 	QPixmap pOn    = createPixmapFromText(degrees, degreesW, lineHeight, newFont, cOn);
 	QPixmap pOff   = createPixmapFromText(degrees, degreesW, lineHeight, newFont, cOff);
 	QPixmap pHover = createPixmapFromText(degrees, degreesW, lineHeight, newFont, cHover);
@@ -272,7 +277,7 @@ OcularsGuiPanel::OcularsGuiPanel(Oculars* plugin,
 	rotateCcdMinus15Button->setToolTip(q_("Rotate the sensor frame 15 degrees counterclockwise"));
 
 	degrees  = QString("-5%1").arg(QChar(0x00B0));
-	degreesW = fm.width(degrees);
+	degreesW = fm.boundingRect(degrees).width();
 	pOn    = createPixmapFromText(degrees, degreesW, lineHeight, newFont, cOn);
 	pOff   = createPixmapFromText(degrees, degreesW, lineHeight, newFont, cOff);
 	pHover = createPixmapFromText(degrees, degreesW, lineHeight, newFont, cHover);
@@ -285,7 +290,7 @@ OcularsGuiPanel::OcularsGuiPanel(Oculars* plugin,
 	rotateCcdMinus5Button->setToolTip(q_("Rotate the sensor frame 5 degrees counterclockwise"));
 
 	degrees  = QString("-1%1").arg(QChar(0x00B0));
-	degreesW = fm.width(degrees);
+	degreesW = fm.boundingRect(degrees).width();
 	pOn    = createPixmapFromText(degrees, degreesW, lineHeight, newFont, cOn);
 	pOff   = createPixmapFromText(degrees, degreesW, lineHeight, newFont, cOff);
 	pHover = createPixmapFromText(degrees, degreesW, lineHeight, newFont, cHover);
@@ -298,7 +303,7 @@ OcularsGuiPanel::OcularsGuiPanel(Oculars* plugin,
 	rotateCcdMinus1Button->setToolTip(q_("Rotate the sensor frame 1 degree counterclockwise"));
 
 	degrees  = QString("0%1").arg(QChar(0x00B0));
-	degreesW = fm.width(degrees);
+	degreesW = fm.boundingRect(degrees).width();
 	pOn    = createPixmapFromText(degrees, degreesW, lineHeight, newFont, cOn);
 	pOff   = createPixmapFromText(degrees, degreesW, lineHeight, newFont, cOff);
 	pHover = createPixmapFromText(degrees, degreesW, lineHeight, newFont, cHover);
@@ -311,7 +316,7 @@ OcularsGuiPanel::OcularsGuiPanel(Oculars* plugin,
 	resetCcdRotationButton->setToolTip(q_("Reset the sensor frame rotation"));
 
 	degrees  = QString("+1%1").arg(QChar(0x00B0));
-	degreesW = fm.width(degrees);
+	degreesW = fm.boundingRect(degrees).width();
 	pOn    = createPixmapFromText(degrees, degreesW, lineHeight, newFont, cOn);
 	pOff   = createPixmapFromText(degrees, degreesW, lineHeight, newFont, cOff);
 	pHover = createPixmapFromText(degrees, degreesW, lineHeight, newFont, cHover);
@@ -324,7 +329,7 @@ OcularsGuiPanel::OcularsGuiPanel(Oculars* plugin,
 	rotateCcdPlus1Button->setToolTip(q_("Rotate the sensor frame 1 degree clockwise"));
 
 	degrees  = QString("+5%1").arg(QChar(0x00B0));
-	degreesW = fm.width(degrees);
+	degreesW = fm.boundingRect(degrees).width();
 	pOn    = createPixmapFromText(degrees, degreesW, lineHeight, newFont, cOn);
 	pOff   = createPixmapFromText(degrees, degreesW, lineHeight, newFont, cOff);
 	pHover = createPixmapFromText(degrees, degreesW, lineHeight, newFont, cHover);
@@ -337,7 +342,7 @@ OcularsGuiPanel::OcularsGuiPanel(Oculars* plugin,
 	rotateCcdPlus5Button->setToolTip(q_("Rotate the sensor frame 5 degrees clockwise"));
 
 	degrees  = QString("+15%1").arg(QChar(0x00B0));
-	degreesW = fm.width(degrees);
+	degreesW = fm.boundingRect(degrees).width();
 	pOn    = createPixmapFromText(degrees, degreesW, lineHeight, newFont, cOn);
 	pOff   = createPixmapFromText(degrees, degreesW, lineHeight, newFont, cOff);
 	pHover = createPixmapFromText(degrees, degreesW, lineHeight, newFont, cHover);
@@ -349,20 +354,12 @@ OcularsGuiPanel::OcularsGuiPanel(Oculars* plugin,
 					       true);
 	rotateCcdPlus15Button->setToolTip(q_("Rotate the sensor frame 15 degrees clockwise"));
 
-	QSignalMapper* sm = ocularsPlugin->ccdRotationSignalMapper;
-	sm->setMapping(rotateCcdMinus15Button, -15);
-	sm->setMapping(rotateCcdMinus5Button,   -5);
-	sm->setMapping(rotateCcdMinus1Button,   -1);
-	sm->setMapping(rotateCcdPlus1Button,     1);
-	sm->setMapping(rotateCcdPlus5Button,     5);
-	sm->setMapping(rotateCcdPlus15Button,   15);
-
-	connect(rotateCcdMinus15Button, SIGNAL(triggered()), sm, SLOT(map()));
-	connect(rotateCcdMinus5Button,  SIGNAL(triggered()), sm, SLOT(map()));
-	connect(rotateCcdMinus1Button,  SIGNAL(triggered()), sm, SLOT(map()));
-	connect(rotateCcdPlus1Button,   SIGNAL(triggered()), sm, SLOT(map()));
-	connect(rotateCcdPlus5Button,   SIGNAL(triggered()), sm, SLOT(map()));
-	connect(rotateCcdPlus15Button,  SIGNAL(triggered()), sm, SLOT(map()));
+	connect(rotateCcdMinus15Button, &StelButton::triggered, [=](){ocularsPlugin->rotateCCD(-15);});
+	connect(rotateCcdMinus5Button,  &StelButton::triggered, [=](){ocularsPlugin->rotateCCD(-5);});
+	connect(rotateCcdMinus1Button,  &StelButton::triggered, [=](){ocularsPlugin->rotateCCD(-1);});
+	connect(rotateCcdPlus1Button,   &StelButton::triggered, [=](){ocularsPlugin->rotateCCD(1);});
+	connect(rotateCcdPlus5Button,   &StelButton::triggered, [=](){ocularsPlugin->rotateCCD(5);});
+	connect(rotateCcdPlus15Button,  &StelButton::triggered, [=](){ocularsPlugin->rotateCCD(15);});
 	connect(resetCcdRotationButton, SIGNAL(triggered()),ocularsPlugin, SLOT(ccdRotationReset()));
 
 	connect(rotateCcdMinus15Button, SIGNAL(triggered()), this, SLOT(updateCcdControls()));
@@ -423,6 +420,7 @@ OcularsGuiPanel::~OcularsGuiPanel()
 	delete fieldOcularAfov; fieldOcularAfov = Q_NULLPTR;
 	delete fieldCcdName; fieldCcdName = Q_NULLPTR;
 	delete fieldCcdDimensions; fieldCcdDimensions = Q_NULLPTR;
+	delete fieldCcdBinning; fieldCcdBinning = Q_NULLPTR;
 	delete fieldCcdHScale; fieldCcdHScale = Q_NULLPTR;
 	delete fieldCcdVScale; fieldCcdVScale = Q_NULLPTR;
 	delete fieldCcdRotation; fieldCcdRotation = Q_NULLPTR;
@@ -545,7 +543,7 @@ void OcularsGuiPanel::updateOcularControls()
 	posY += fieldOcularName->boundingRect().height();
 	widgetHeight += fieldOcularName->boundingRect().height();
 
-
+	buttonCrosshairs->setEnabled(!ocular->hasPermanentCrosshair());
 	if (ocular->isBinoculars())
 	{
 		fieldOcularFl->setVisible(false);
@@ -705,8 +703,13 @@ void OcularsGuiPanel::updateCcdControls()
 	fieldCcdDimensions->setToolTip(q_("Dimensions field of view"));
 	fieldCcdDimensions->setPos(posX, posY);
 	posY += fieldCcdDimensions->boundingRect().height();
-	widgetHeight += fieldCcdDimensions->boundingRect().height();
-	//TRANSLATORS: Unit of measure for scale - arcseconds per pixel
+	widgetHeight += fieldCcdDimensions->boundingRect().height();	
+	QString binningLabel = QString("%1: %2 %4 %3").arg(q_("Binning")).arg(ccd->binningX()).arg(ccd->binningY()).arg(QChar(0x00D7));
+	fieldCcdBinning->setPlainText(binningLabel);
+	fieldCcdBinning->setPos(posX, posY);
+	posY += fieldCcdBinning->boundingRect().height();
+	widgetHeight += fieldCcdBinning->boundingRect().height();
+	//TRANSLATORS: Unit of measure for scale - arc-seconds per pixel
 	QString unit = q_("\"/px");
 	fieldCcdHScale->setPlainText(QString("%1: %2%3").arg(q_("X scale"), QString::number(fovX*3600*ccd->binningX()/ccd->resolutionX(), 'f', 4), unit));
 	fieldCcdHScale->setToolTip(q_("Horizontal scale"));
@@ -815,18 +818,26 @@ void OcularsGuiPanel::updateTelescopeControls()
 		fieldCcdDimensions->setPlainText(dimensionsLabel);
 		fieldCcdDimensions->setToolTip(q_("Dimensions field of view"));
 
-		//TRANSLATORS: Unit of measure for scale - arcseconds per pixel
+		QString binningLabel = QString("%1: %2 %4 %3").arg(q_("Binning")).arg(ccd->binningX()).arg(ccd->binningY()).arg(QChar(0x00D7));
+		fieldCcdBinning->setPlainText(binningLabel);
+
+		//TRANSLATORS: Unit of measure for scale - arc-seconds per pixel
 		QString unit = q_("\"/px");
 		fieldCcdHScale->setPlainText(QString("%1: %2%3").arg(q_("X scale"), QString::number(fovX*3600*ccd->binningX()/ccd->resolutionX(), 'f', 4), unit));
 		fieldCcdHScale->setToolTip(q_("Horizontal scale"));
 		fieldCcdVScale->setPlainText(QString("%1: %2%3").arg(q_("Y scale"), QString::number(fovY*3600*ccd->binningY()/ccd->resolutionY(), 'f', 4), unit));
 		fieldCcdVScale->setToolTip(q_("Vertical scale"));
 
+		prevTelescopeButton->setVisible(true);
+		nextTelescopeButton->setVisible(true);
+		fieldTelescopeName->setVisible(true);
+
 		fieldMagnification->setVisible(false);
 		fieldExitPupil->setVisible(false);
 		fieldFov->setVisible(false);
 	}
-	else if (ocularsPlugin->flagShowOculars)
+
+	if (ocularsPlugin->flagShowOculars)
 	{
 		//We need the current ocular
 		int index = ocularsPlugin->selectedOcularIndex;
@@ -892,17 +903,7 @@ void OcularsGuiPanel::updateTelescopeControls()
 			fieldExitPupil->setVisible(true);
 		else
 			fieldExitPupil->setVisible(false);
-	}
-	else
-	{
-		prevTelescopeButton->setVisible(true);
-		nextTelescopeButton->setVisible(true);
-		fieldTelescopeName->setVisible(true);
-
-		fieldMagnification->setVisible(false);
-		fieldFov->setVisible(false);
-		fieldExitPupil->setVisible(false);
-	}
+	}	
 
 	double diameter = telescope->diameter();
 	if (diameter>0.0 && ocularsPlugin->getFlagShowResolutionCriteria())
@@ -1111,6 +1112,7 @@ void OcularsGuiPanel::setControlsColor(const QColor& color)
 	Q_ASSERT(fieldOcularAfov);
 	Q_ASSERT(fieldCcdName);
 	Q_ASSERT(fieldCcdDimensions);
+	Q_ASSERT(fieldCcdBinning);
 	Q_ASSERT(fieldCcdHScale);
 	Q_ASSERT(fieldCcdVScale);
 	Q_ASSERT(fieldCcdRotation);
@@ -1131,6 +1133,7 @@ void OcularsGuiPanel::setControlsColor(const QColor& color)
 	fieldOcularAfov->setDefaultTextColor(color);
 	fieldCcdName->setDefaultTextColor(color);
 	fieldCcdDimensions->setDefaultTextColor(color);
+	fieldCcdBinning->setDefaultTextColor(color);
 	fieldCcdHScale->setDefaultTextColor(color);
 	fieldCcdVScale->setDefaultTextColor(color);
 	fieldCcdRotation->setDefaultTextColor(color);
@@ -1154,6 +1157,7 @@ void OcularsGuiPanel::setControlsFont(const QFont& font)
 	Q_ASSERT(fieldOcularAfov);
 	Q_ASSERT(fieldCcdName);
 	Q_ASSERT(fieldCcdDimensions);
+	Q_ASSERT(fieldCcdBinning);
 	Q_ASSERT(fieldCcdHScale);
 	Q_ASSERT(fieldCcdVScale);
 	Q_ASSERT(fieldCcdRotation);
@@ -1174,6 +1178,7 @@ void OcularsGuiPanel::setControlsFont(const QFont& font)
 	fieldOcularAfov->setFont(font);
 	fieldCcdName->setFont(font);
 	fieldCcdDimensions->setFont(font);
+	fieldCcdBinning->setFont(font);
 	fieldCcdHScale->setFont(font);
 	fieldCcdVScale->setFont(font);
 	fieldCcdRotation->setFont(font);

@@ -74,7 +74,7 @@ public:
 		CatTr			= 0x02000000, //!< Trumpler Catalogue (Tr)
 		CatSt		= 0x04000000, //!< Stock Catalogue (St)
 		CatRu		= 0x08000000, //!< Ruprecht Catalogue (Ru)
-		CatVdBHa		= 0x10000000, //!< van den Bergh-Hagen Catalogue (VdB-Ha)
+		CatVdBHa		= 0x10000000, //!< van den Bergh-Hagen Catalogue (vdB-Ha)
 		CatOther		= 0x20000000  //!< without ID
 	};
 	Q_DECLARE_FLAGS(CatalogGroup, CatalogGroupFlags)
@@ -138,7 +138,7 @@ public:
 		NebSNRC			= 32, 	//!< Supernova Remnant Candidate
 		NebGxCl			= 33,	//!< Cluster of Galaxies
 		NebPartOfGx		= 34,	//!< Part of a Galaxy
-		NebRegion		= 35,	//!< Part of a Galaxy
+		NebRegion		= 35,	//!< Region of the sky
 		NebUnknown		= 36		//!< m Unknown type, catalog errors, "Unidentified Southern Objects" etc.
 	};
 
@@ -201,6 +201,13 @@ public:
 	//! Compute an extended object's contrast index
 	float getContrastIndex(const StelCore* core) const;
 
+	//! Return object's B magnitude as seen from observer, without including extinction.
+	virtual float getBMagnitude(const StelCore* core) const;
+
+	//! Return object's B magnitude as seen from observer including extinction.
+	//! Extinction obviously only if atmosphere=on.
+	float getBMagnitudeWithExtinction(const StelCore* core) const;
+
 	//! Get the surface area.
 	//! @return surface area in square degrees.
 	float getSurfaceArea(void) const;
@@ -212,6 +219,9 @@ public:
 	//! Get designation for DSO (with priority: M, C, NGC, IC, B, Sh2, vdB, RCW, LDN, LBN, Cr, Mel, PGC, UGC, Ced, Arp, VV, PK, PN G, SNR G, ACO, HCG, ESO, vdBH, DWB, Tr, St, Ru, vdB-Ha)
 	//! @return a designation
 	QString getDSODesignation() const;
+	//! Get designation for DSO with priority and ignorance of availability of catalogs
+	//! @return a designation
+	QString getDSODesignationWIC() const;
 
 	bool objectInDisplayedCatalog() const;
 
@@ -300,6 +310,7 @@ private:
 	NebulaType nType;
 
 	SphericalRegionP pointRegion;
+	QStringList designations;
 
 	static StelTextureSP texCircle;				// The symbolic circle texture
 	static StelTextureSP texCircleLarge;			// The symbolic circle texture for large objects

@@ -70,7 +70,7 @@ defined in https://www.w3.org/TR/SVG11/types.htm.
 
 QScriptValue vec3fToString(QScriptContext* context, QScriptEngine *engine)
 {
-	std::ignore = engine;
+	Q_UNUSED(engine)
 	QScriptValue that = context->thisObject();
 	QScriptValue rVal = that.property( "r", QScriptValue::ResolveLocal );
 	QScriptValue gVal = that.property( "g", QScriptValue::ResolveLocal );
@@ -81,7 +81,7 @@ QScriptValue vec3fToString(QScriptContext* context, QScriptEngine *engine)
 
 QScriptValue vec3fToHex(QScriptContext* context, QScriptEngine *engine)
 {
-	std::ignore = engine;
+	Q_UNUSED(engine)
 	QScriptValue that = context->thisObject();
 	QScriptValue rVal = that.property( "r", QScriptValue::ResolveLocal );
 	QScriptValue gVal = that.property( "g", QScriptValue::ResolveLocal );
@@ -128,7 +128,7 @@ QScriptValue createVec3f(QScriptContext* context, QScriptEngine *engine)
 				QColor qcol = QColor( context->argument(0).toString() );
 				if( qcol.isValid() )
 				{
-					c.set( qcol.redF(), qcol.greenF(), qcol.blueF() );
+					c.set( static_cast<float>(qcol.redF()), static_cast<float>(qcol.greenF()), static_cast<float>(qcol.blueF()) );
 					break;
 				}
 				else
@@ -187,7 +187,7 @@ by StelUtils::getDecAngle.
 
 QScriptValue vec3dToString(QScriptContext* context, QScriptEngine *engine)
 {
-	std::ignore = engine;
+	Q_UNUSED(engine)
 	QScriptValue that = context->thisObject();
 	QScriptValue xVal = that.property( "r", QScriptValue::ResolveLocal );
 	QScriptValue yVal = that.property( "g", QScriptValue::ResolveLocal );
@@ -198,40 +198,40 @@ QScriptValue vec3dToString(QScriptContext* context, QScriptEngine *engine)
 
 QScriptValue getX(QScriptContext* context, QScriptEngine *engine)
 {
-	std::ignore = engine;
+	Q_UNUSED(engine)
 	QScriptValue that = context->thisObject();
 	return that.property( "r", QScriptValue::ResolveLocal );
 }
 QScriptValue getY(QScriptContext* context, QScriptEngine *engine)
 {
-	std::ignore = engine;
+	Q_UNUSED(engine)
 	QScriptValue that = context->thisObject();
 	return that.property( "g", QScriptValue::ResolveLocal );
 }
 QScriptValue getZ(QScriptContext* context, QScriptEngine *engine)
 {
-	std::ignore = engine;
+	Q_UNUSED(engine)
 	QScriptValue that = context->thisObject();
 	return that.property( "b", QScriptValue::ResolveLocal );
 }
 
 QScriptValue setX(QScriptContext* context, QScriptEngine *engine)
 {
-	std::ignore = engine;
+	Q_UNUSED(engine)
 	QScriptValue that = context->thisObject();
 	that.setProperty("r", context->argument(0).toNumber());
 	return QScriptValue();
 }
 QScriptValue setY(QScriptContext* context, QScriptEngine *engine)
 {
-	std::ignore = engine;
+	Q_UNUSED(engine)
 	QScriptValue that = context->thisObject();
 	that.setProperty("g", context->argument(0).toNumber());
 	return QScriptValue();
 }
 QScriptValue setZ(QScriptContext* context, QScriptEngine *engine)
 {
-	std::ignore = engine;
+	Q_UNUSED(engine)
 	QScriptValue that = context->thisObject();
 	that.setProperty("b", context->argument(0).toNumber());
 	return QScriptValue();
@@ -239,9 +239,9 @@ QScriptValue setZ(QScriptContext* context, QScriptEngine *engine)
 
 void vec3dFromScriptValue(const QScriptValue& obj, Vec3d& c)
 {
-	c[0] = static_cast<float>(obj.property("r").toNumber());
-	c[1] = static_cast<float>(obj.property("g").toNumber());
-	c[2] = static_cast<float>(obj.property("b").toNumber());
+	c[0] = obj.property("r").toNumber();
+	c[1] = obj.property("g").toNumber();
+	c[2] = obj.property("b").toNumber();
 }
 
 QScriptValue vec3dToScriptValue(QScriptEngine *engine, const Vec3d& v)
@@ -269,7 +269,7 @@ QScriptValue createVec3d(QScriptContext* context, QScriptEngine *engine)
 			c.set( 0, 0, 0 );
 			break;
 		case 2:
-			// longitude, latitude - maybe string d/hms, maybe numeric degrees
+			// longitude/azimuth, latitude/altitude - maybe string dms, maybe numeric degrees
 			double lng;
 			if( context->argument(0).isString() )
 				lng = StelUtils::getDecAngle( context->argument(0).toString() );
@@ -277,10 +277,10 @@ QScriptValue createVec3d(QScriptContext* context, QScriptEngine *engine)
 				lng = static_cast<double>(context->argument(0).toNumber())*M_PI_180;
 
 			double lat;
-			if ( context->argument(0).isString())
-				lat = StelUtils::getDecAngle( context->argument(0).toString() );
+			if ( context->argument(1).isString())
+				lat = StelUtils::getDecAngle( context->argument(1).toString() );
 			else
-				lat = static_cast<double>(context->argument(0).toNumber())*M_PI_180;
+				lat = static_cast<double>(context->argument(1).toNumber())*M_PI_180;
 
 			StelUtils::spheToRect( lng, lat, c );
 			break;
@@ -324,9 +324,9 @@ void StelScriptMgr::defVecClasses(QScriptEngine *engine)
 	engine->globalObject().setProperty("Vec3d", ctorVec3d);
 }
 
-
 StelScriptMgr::StelScriptMgr(QObject *parent): QObject(parent)
 {
+	waitEventLoop = new QEventLoop();
 	engine = new QScriptEngine(this);
 	connect(&StelApp::getInstance(), SIGNAL(aboutToQuit()), this, SLOT(stopScript()), Qt::DirectConnection);
 	// Scripting images
@@ -362,18 +362,14 @@ StelScriptMgr::StelScriptMgr(QObject *parent): QObject(parent)
 void StelScriptMgr::initActions()
 {
 	StelActionMgr* actionMgr = StelApp::getInstance().getStelActionManager();
-	QSignalMapper* mapper = new QSignalMapper(this);
 	for (const auto& script : getScriptList())
 	{
 		QString shortcut = getShortcut(script);
 		QString actionId = "actionScript/" + script;
-		StelAction* action = actionMgr->addAction(
-					actionId, N_("Scripts"), q_(getName(script).trimmed()), mapper, "map()", shortcut);
-		mapper->setMapping(action, script);
+		actionMgr->addAction(actionId, N_("Scripts"), q_(getName(script).trimmed()),
+				     this, [this, script] { runScript(script); }, shortcut);
 	}
-	connect(mapper, SIGNAL(mapped(QString)), this, SLOT(runScript(QString)));
 }
-
 
 StelScriptMgr::~StelScriptMgr()
 {
@@ -601,13 +597,13 @@ bool StelScriptMgr::runScript(const QString& fileName, const QString& includePat
 	return runPreprocessedScript(preprocessedScript,fileName);
 }
 
-bool StelScriptMgr::runScriptDirect(const QString scriptId, const QString &scriptCode, const QString& includePath)
+bool StelScriptMgr::runScriptDirect(const QString scriptId, const QString &scriptCode, int &errLoc, const QString& includePath)
 {
 	QString path = includePath.isNull() ? QString(".") : includePath;
 	if( path.isEmpty() )
 		path = QStringLiteral("scripts");
 	QString processed;
-	bool ok = preprocessScript( scriptId, scriptCode, processed, path);
+	bool ok = preprocessScript( scriptId, scriptCode, processed, path, errLoc );
 	if(ok)
 		return runPreprocessedScript(processed, "<Direct script input>");
 	return false;
@@ -657,6 +653,15 @@ bool StelScriptMgr::prepareScript( QString &script, const QString &fileName, con
 
 void StelScriptMgr::stopScript()
 {
+	// Hack abusing stopScript for two different stops: it
+	// will be called again after exit from the timer loop
+	// which we kill here if it is running.
+    if( waitEventLoop->isRunning() )
+	{
+		waitEventLoop->exit( 1 );
+		return;
+	}
+	
 	if (engine->isEvaluating())
 	{
 		GETSTELMODULE(LabelMgr)->deleteAllLabels();
@@ -670,7 +675,7 @@ void StelScriptMgr::stopScript()
 		//qDebug() << msg;
 		engine->abortEvaluation();
 	}
-	scriptEnded();
+	// "Script finished..." is emitted after return from engine->evaluate().
 }
 
 void StelScriptMgr::setScriptRate(double r)
@@ -774,21 +779,27 @@ bool StelScriptMgr::strToBool(const QString& str)
 bool StelScriptMgr::preprocessFile(const QString fileName, QFile &input, QString& output, const QString& scriptDir)
 {
 	QString aText = QString::fromUtf8(input.readAll());
-	return preprocessScript( fileName, aText, output, scriptDir );
+	int errLoc;
+	return preprocessScript( fileName, aText, output, scriptDir, errLoc );
 }
 
-bool StelScriptMgr::preprocessScript(const QString fileName, const QString &input, QString &output, const QString &scriptDir)
+bool StelScriptMgr::preprocessScript(const QString fileName, const QString &input, QString &output, const QString &scriptDir, int &errLoc )
 {
 	// The one and only top-level call for expand.
 	scriptFileName = fileName;
 	num2loc = QMap<int,QPair<QString,int>>();
 	outline = 0;
 	includeSet.clear();
-	bool result = expand( fileName, input, output, scriptDir );
-	return result;
+	errLoc = -1;
+	expand( fileName, input, output, scriptDir, errLoc );
+	if( errLoc != -1 ){
+		return false;
+	} else {
+		return true;
+	}
 }
 	
-bool StelScriptMgr::expand(const QString fileName, const QString &input, QString &output, const QString &scriptDir){
+void StelScriptMgr::expand(const QString fileName, const QString &input, QString &output, const QString &scriptDir, int &errLoc){
 	QStringList lines = input.split("\n");
 	QRegExp includeRe("^include\\s*\\(\\s*\"([^\"]+)\"\\s*\\)\\s*;\\s*(//.*)?$");
 	int curline = 0;
@@ -811,6 +822,7 @@ bool StelScriptMgr::expand(const QString fileName, const QString &input, QString
 				incPath = StelFileMgr::findFile(scriptDir + "/" + incName);
 				if (incPath.isEmpty())
 				{
+					QString fail = scriptDir + "/" + incName;
 					qWarning() << "WARNING: file not found! Let's check standard scripts directory...";
 
 					// OK, file is not exists in relative path; Let's check standard scripts directory
@@ -818,9 +830,13 @@ bool StelScriptMgr::expand(const QString fileName, const QString &input, QString
 
 					if (incPath.isEmpty())
 					{
+						fail += " or scripts/" + incName;
 						emit(scriptDebug(QString("WARNING: could not find script include file: %1").arg(QDir::toNativeSeparators(incName))));
 						qWarning() << "WARNING: could not find script include file: " << QDir::toNativeSeparators(incName);
-						return false;
+						if( errLoc == -1 ) errLoc = output.length();
+						output += line + " // <<< " + fail + " not found\n";
+						outline++;
+						continue;
 					}
 				}
 			}
@@ -838,14 +854,17 @@ bool StelScriptMgr::expand(const QString fileName, const QString &input, QString
 				{
 					qWarning() << "script include: " << QDir::toNativeSeparators(incPath);
 					QString aText = QString::fromUtf8(fic.readAll());
-					expand( incPath, aText, output, scriptDir);
+					expand( incPath, aText, output, scriptDir, errLoc );
 					fic.close();
 				}
 				else
 				{
 					emit(scriptDebug(QString("WARNING: could not open script include file for reading: %1").arg(QDir::toNativeSeparators(incPath))));
 					qWarning() << "WARNING: could not open script include file for reading: " << QDir::toNativeSeparators(incPath);
-					return false;
+				   	if( errLoc == -1 ) errLoc = output.length();
+					output += line + " // <<< " + incPath + ": cannot open\n";
+					outline++;
+					continue;
 				}
 			}
 		}
@@ -870,7 +889,7 @@ bool StelScriptMgr::expand(const QString fileName, const QString &input, QString
 			lineIdx++;
 		}
 	}
-	return true;
+	return;
 }
 
 QString StelScriptMgr::lookup( int outputPos )
@@ -896,9 +915,8 @@ QString StelScriptMgr::lookup( int outputPos )
 
 StelScriptEngineAgent::StelScriptEngineAgent(QScriptEngine *engine) 
 	: QScriptEngineAgent(engine)
-{
-	isPaused = false;
-}
+	, isPaused(false)
+	{}
 
 void StelScriptEngineAgent::positionChange(qint64 scriptId, int lineNumber, int columnNumber)
 {

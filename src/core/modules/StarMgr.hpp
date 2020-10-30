@@ -114,6 +114,11 @@ class StarMgr : public StelObjectModule
 		   WRITE setFlagAdditionalNames
 		   NOTIFY flagAdditionalNamesDisplayedChanged
 		   )
+	Q_PROPERTY(bool flagDesignationLabels
+		   READ getDesignationUsage
+		   WRITE setDesignationUsage
+		   NOTIFY designationUsageChanged
+		   )
 
 public:
 	StarMgr(void);
@@ -197,6 +202,11 @@ public slots:
 	static void setFlagSciNames(bool f) {flagSciNames = f;}
 	static bool getFlagSciNames(void) {return flagSciNames;}
 
+	//! Set flag for usage designations of stars for their labels instead common names.
+	void setDesignationUsage(const bool flag) { if(flagDesignations!=flag){ flagDesignations=flag; emit designationUsageChanged(flag);}}
+	//! Get flag for usage designations of stars for their labels instead common names.
+	bool getDesignationUsage(void) {return flagDesignations; }
+
 	//! Show additional star names.
 	void setFlagAdditionalNames(bool flag) { if (flagAdditionalStarNames!=flag){ flagAdditionalStarNames=flag; emit flagAdditionalNamesDisplayedChanged(flag);}}
 	static bool getFlagAdditionalNames(void) { return flagAdditionalStarNames; }
@@ -227,6 +237,12 @@ public:
 	//! @param hip The Hipparcos number of star
 	//! @return translated additional scientific name of star
 	static QString getSciAdditionalName(int hip);
+
+	//! Get the (translated) additional scientific name for a star with a
+	//! specified Hipparcos catalogue number.
+	//! @param hip The Hipparcos number of star
+	//! @return translated additional scientific name of star
+	static QString getSciAdditionalDblName(int hip);
 
 	//! Get the (translated) scientific name for a variable star with a specified
 	//! Hipparcos catalogue number.
@@ -369,6 +385,7 @@ private slots:
 signals:
 	void starLabelsDisplayedChanged(const bool displayed);
 	void starsDisplayedChanged(const bool displayed);
+	void designationUsageChanged(const bool flag);
 	void flagAdditionalNamesDisplayedChanged(const bool displayed);
 	void labelsAmountChanged(float a);
 
@@ -465,6 +482,9 @@ private:
 	static QHash<int, QString> sciAdditionalNamesMapI18n;
 	static QMap<QString, int> sciAdditionalNamesIndexI18n;
 
+	static QHash<int, QString> sciAdditionalDblNamesMapI18n;
+	static QMap<QString, int> sciAdditionalDblNamesIndexI18n;
+
 	static QHash<int, varstar> varStarsMapI18n;
 	static QMap<QString, int> varStarsIndexI18n;
 
@@ -483,6 +503,7 @@ private:
 	QFont starFont;
 	static bool flagSciNames;
 	static bool flagAdditionalStarNames;
+	static bool flagDesignations;
 
 	StelTextureSP texPointer;		// The selection pointer texture
 

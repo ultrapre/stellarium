@@ -118,13 +118,9 @@ float StelObject::getParallacticAngle(const StelCore* core) const
 // Checking position an object above mathematical horizon for current location
 bool StelObject::isAboveHorizon(const StelCore *core) const
 {
-	bool r = true;
 	float az, alt;
 	StelUtils::rectToSphe(&az, &alt, getAltAzPosAuto(core));
-	if (alt < 0.f)
-		r = false;
-
-	return r;
+	return (alt >= 0.f);
 }
 
 // Checking position an object above real horizon for current location
@@ -220,10 +216,7 @@ Vec3f StelObject::computeRTSTime(StelCore *core) const
 
 float StelObject::getSelectPriority(const StelCore* core) const
 {
-	float extMag = getVMagnitudeWithExtinction(core);
-	if (extMag>15.f)
-		extMag=15.f;
-	return extMag;
+	return qMin(getVMagnitudeWithExtinction(core), 15.0f);
 }
 
 float StelObject::getVMagnitudeWithExtinction(const StelCore* core) const
@@ -242,15 +235,14 @@ QString StelObject::getMagnitudeInfoString(const StelCore *core, const InfoStrin
 {
 	if (flags&Magnitude)
 	{
-		QString emag = "";
+		QString str = QString("%1: <b>%2</b>").arg(q_("Magnitude"), QString::number(getVMagnitude(core), 'f', decimals));
 		if (core->getSkyDrawer()->getFlagHasAtmosphere() && (alt_app>-2.0*M_PI_180)) // Don't show extincted magnitude much below horizon where model is meaningless.
 		{
 			const Extinction &extinction=core->getSkyDrawer()->getExtinction();
 			const float airmass=extinction.airmass(static_cast<float>(std::cos(M_PI_2-alt_app)), true);
-
-			emag = QString(" (%1 <b>%2</b> %3 <b>%4</b> %5)").arg(q_("reduced to"), QString::number(getVMagnitudeWithExtinction(core), 'f', decimals), q_("by"), QString::number(airmass, 'f', 2), q_("Airmasses"));
+			str += QString(" (%1 <b>%2</b> %3 <b>%4</b> %5)").arg(q_("reduced to"), QString::number(getVMagnitudeWithExtinction(core), 'f', decimals), q_("by"), QString::number(airmass, 'f', 2), q_("Airmasses"));
 		}
-		QString str = QString("%1: <b>%2</b>%3<br />").arg(q_("Magnitude"), QString::number(getVMagnitude(core), 'f', decimals), emag);
+		str +="<br />";
 		str += getExtraInfoStrings(Magnitude).join("");
 		return str;
 	}
@@ -735,12 +727,12 @@ void StelObject::postProcessInfoString(QString& str, const InfoStringGroup& flag
 		if (StelApp::getInstance().getFlagOverwriteInfoColor())
 		{
 			// make info text more readable...
-			color = Vec3f(StelApp::getInstance().getSettings()->value("color/info_text_color", "1.0,1.0,1.0").toString());
+			color = StelApp::getInstance().getOverwriteInfoColor();
 		}
 		if (core->isBrightDaylight() && !StelApp::getInstance().getVisionModeNight())
 		{
 			// make info text more readable when atmosphere enabled at daylight.
-			color = Vec3f(StelApp::getInstance().getSettings()->value("color/daylight_text_color", "0.0,0.0,0.0").toString());
+			color = StelApp::getInstance().getDaylightInfoColor();
 		}
 		str.prepend(QString("<font color=%1>").arg(color.toHtmlColor()));
 		str.append(QString("</font>"));

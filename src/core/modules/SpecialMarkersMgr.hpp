@@ -31,9 +31,15 @@ class SpecialMarkersMgr : public StelModule
 	Q_PROPERTY(bool fovCenterMarkerDisplayed	READ getFlagFOVCenterMarker		WRITE setFlagFOVCenterMarker		NOTIFY fovCenterMarkerDisplayedChanged)
 	Q_PROPERTY(Vec3f fovCenterMarkerColor		READ getColorFOVCenterMarker	WRITE setColorFOVCenterMarker	NOTIFY fovCenterMarkerColorChanged)
 
-	Q_PROPERTY(bool fovCircleMarkerDisplayed	READ getFlagFOVCircleMarker		WRITE setFlagFOVCircleMarker		NOTIFY fovCircleMarkerDisplayedChanged)
-	Q_PROPERTY(double fovCircleMarkerSize		READ getFOVCircleMarkerSize		WRITE setFOVCircleMarkerSize		NOTIFY fovCircleMarkerSizeChanged)
-	Q_PROPERTY(Vec3f fovCircleMarkerColor		READ getColorFOVCircleMarker		WRITE setColorFOVCircleMarker		NOTIFY fovCircleMarkerColorChanged)
+	Q_PROPERTY(bool fovCircularMarkerDisplayed	READ getFlagFOVCircularMarker	WRITE setFlagFOVCircularMarker	NOTIFY fovCircularMarkerDisplayedChanged)
+	Q_PROPERTY(double fovCircularMarkerSize	READ getFOVCircularMarkerSize	WRITE setFOVCircularMarkerSize	NOTIFY fovCircularMarkerSizeChanged)
+	Q_PROPERTY(Vec3f fovCircularMarkerColor		READ getColorFOVCircularMarker	WRITE setColorFOVCircularMarker	NOTIFY fovCircularMarkerColorChanged)
+
+	Q_PROPERTY(bool fovRectangularMarkerDisplayed	READ getFlagFOVRectangularMarker		WRITE setFlagFOVRectangularMarker		NOTIFY fovRectangularMarkerDisplayedChanged)
+	Q_PROPERTY(double fovRectangularMarkerWidth	READ getFOVRectangularMarkerWidth	WRITE setFOVRectangularMarkerWidth	NOTIFY fovRectangularMarkerWidthChanged)
+	Q_PROPERTY(double fovRectangularMarkerHeight	READ getFOVRectangularMarkerHeight	WRITE setFOVRectangularMarkerHeight	NOTIFY fovRectangularMarkerHeightChanged)
+	Q_PROPERTY(double fovRectangularMarkerRotationAngle	READ getFOVRectangularMarkerRotationAngle	WRITE setFOVRectangularMarkerRotationAngle	NOTIFY fovRectangularMarkerRotationAngleChanged)
+	Q_PROPERTY(Vec3f fovRectangularMarkerColor		READ getColorFOVRectangularMarker	WRITE setColorFOVRectangularMarker	NOTIFY fovRectangularMarkerColorChanged)
 
 public:
 	SpecialMarkersMgr();
@@ -80,34 +86,66 @@ public slots:
 	//! @endcode
 	void setColorFOVCenterMarker(const Vec3f& newColor);
 
-	//! Setter for displaying the circle FOV marker
-	void setFlagFOVCircleMarker(const bool displayed);
-	//! Accessor for displaying circle FOV marker.
-	bool getFlagFOVCircleMarker() const;
-	//! Setter for size of circle FOV marker
-	void setFOVCircleMarkerSize(const double size);
-	//! Accessor for get size of circle FOV marker.
-	double getFOVCircleMarkerSize() const;
-	//! Get the current color of the circle FOV marker.
-	Vec3f getColorFOVCircleMarker() const;
-	//! Set the color of the circle FOV marker.
-	//! @param newColor The color of circle FOV marker.
+	//! Setter for displaying the circular FOV marker
+	void setFlagFOVCircularMarker(const bool displayed);
+	//! Accessor for displaying circular FOV marker.
+	bool getFlagFOVCircularMarker() const;
+	//! Setter for size of circular FOV marker
+	void setFOVCircularMarkerSize(const double size);
+	//! Accessor for get size of circular FOV marker.
+	double getFOVCircularMarkerSize() const;
+	//! Get the current color of the circular FOV marker.
+	Vec3f getColorFOVCircularMarker() const;
+	//! Set the color of the circular FOV marker.
+	//! @param newColor The color of circular FOV marker.
 	//! @code
 	//! // example of usage in scripts
-	//! GridLinesMgr.setColorFOVCircleMarker(Vec3f(1.0,0.0,0.0));
+	//! GridLinesMgr.setColorFOVCircularMarker(Vec3f(1.0,0.0,0.0));
 	//! @endcode
-	void setColorFOVCircleMarker(const Vec3f& newColor);
+	void setColorFOVCircularMarker(const Vec3f& newColor);
+
+	//! Setter for displaying the rectangular FOV marker
+	void setFlagFOVRectangularMarker(const bool displayed);
+	//! Accessor for displaying rectangular FOV marker.
+	bool getFlagFOVRectangularMarker() const;
+	//! Setter for width of rectangular FOV marker
+	void setFOVRectangularMarkerWidth(const double size);
+	//! Accessor for get width of rectangular FOV marker.
+	double getFOVRectangularMarkerWidth() const;
+	//! Setter for height of rectangular FOV marker
+	void setFOVRectangularMarkerHeight(const double size);
+	//! Accessor for get height of rectangular FOV marker.
+	double getFOVRectangularMarkerHeight() const;
+	//! Setter for rotation angle of rectangular FOV marker
+	void setFOVRectangularMarkerRotationAngle(const double pa);
+	//! Accessor for get rotation angle of rectangular FOV marker.
+	double getFOVRectangularMarkerRotationAngle() const;
+	//! Get the current color of the rectangular FOV marker.
+	Vec3f getColorFOVRectangularMarker() const;
+	//! Set the color of the rectangular FOV marker.
+	//! @param newColor The color of rectangular FOV marker.
+	//! @code
+	//! // example of usage in scripts
+	//! GridLinesMgr.setColorFOVRectangularMarker(Vec3f(1.0,0.0,0.0));
+	//! @endcode
+	void setColorFOVRectangularMarker(const Vec3f& newColor);
 
 signals:
 	void fovCenterMarkerDisplayedChanged(const bool displayed) const;
 	void fovCenterMarkerColorChanged(const Vec3f & newColor) const;
-	void fovCircleMarkerDisplayedChanged(const bool displayed) const;
-	void fovCircleMarkerSizeChanged(const double size) const;
-	void fovCircleMarkerColorChanged(const Vec3f & newColor) const;
+	void fovCircularMarkerDisplayedChanged(const bool displayed) const;
+	void fovCircularMarkerSizeChanged(const double size) const;
+	void fovCircularMarkerColorChanged(const Vec3f & newColor) const;
+	void fovRectangularMarkerDisplayedChanged(const bool displayed) const;
+	void fovRectangularMarkerWidthChanged(const double size) const;
+	void fovRectangularMarkerHeightChanged(const double size) const;
+	void fovRectangularMarkerRotationAngleChanged(const double size) const;
+	void fovRectangularMarkerColorChanged(const Vec3f & newColor) const;
 
 private:
 	SpecialSkyMarker * fovCenterMarker;
-	SpecialSkyMarker * fovCircleMarker;
+	SpecialSkyMarker * fovCircularMarker;
+	SpecialSkyMarker * fovRectangularMarker;
 };
 
 #endif // SPECIALMARKERSMGR_HPP

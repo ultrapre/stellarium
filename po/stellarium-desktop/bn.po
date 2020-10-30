@@ -1,13 +1,14 @@
 # Translators:
 # cardinot <mcardinot@gmail.com>, 2017
+# Tanmoy Saha <t4saha@gmail.com>, 2020
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Stellarium desktop file translation\n"
 "Report-Msgid-Bugs-To: stellarium@googlegroups.com\n"
-"POT-Creation-Date: 2020-03-29 17:51+0700\n"
+"POT-Creation-Date: 2020-08-30 15:22+0700\n"
 "PO-Revision-Date: 2017-11-29 01:17+0000\n"
-"Last-Translator: cardinot <mcardinot@gmail.com>, 2017\n"
+"Last-Translator: Tanmoy Saha <t4saha@gmail.com>, 2020\n"
 "Language-Team: Bengali (https://www.transifex.com/stellarium/teams/80998/bn/)\n"
 "Language: bn\n"
 "MIME-Version: 1.0\n"
@@ -44,3 +45,8 @@ msgstr "পুরো স্ক্রীন জুড়ে"
 msgctxt "Name"
 msgid "Open in debug mode"
 msgstr "ডিবাগ মোডে চালু"
+
+#: ../../data/stellarium.desktop
+msgctxt "Name"
+msgid "Open in scale 200%"
+msgstr "দুগুণ বড় করে চালু করুন"
