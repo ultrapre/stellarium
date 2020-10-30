@@ -296,6 +296,9 @@ IF(APPLE)
 
      # We support only 64 bits MacOSX
      SET(CMAKE_OSX_ARCHITECTURES "x86_64")
+ELSEIF(UNIX)
+     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 ENDIF()
 
 # This activates Link Time Optimization on recent GCC
