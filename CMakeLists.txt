@@ -14,6 +14,9 @@ SET(CMAKE_WARN_DEPRECATED 1)
 
 SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
 
+SET( QT_ANDROID_APPLICATION_BINARY stellarium )
+SET( ANDROID_PACKAGE_SOURCE_DIR    ${CMAKE_CURRENT_LIST_DIR}/android )
+
 ########### Project name ###########
 PROJECT(Stellarium)
 # Use integer versions instead of strings for easier handling if required
@@ -348,7 +351,7 @@ SET(GENERATE_PACKAGE_TARGET 1 CACHE BOOL "Set to 1 or true if you want to have m
 # On WIN32 we need to split the main binary into a small binary and a dll
 # This is for allowing to link dynamic plug-ins afterward
 # It does not seem to work with MSVC, so I disable it for the moment.
-IF(WIN32 AND NOT MSVC)
+IF( WIN32 AND (NOT MSVC) AND (NOT ANDROID) )
      SET(GENERATE_STELMAINLIB 1)
 ELSE()
      SET(GENERATE_STELMAINLIB 0)
@@ -490,6 +493,22 @@ IF(WIN32)
     ENDIF()
 ENDIF()
 
+IF(ANDROID)
+     FIND_PACKAGE(Qt5AndroidExtras REQUIRED)
+
+     FIND_FILE(OPENSSL_SSL_LIBRARY_DLL libssl_1_1.so)
+     FIND_FILE(OPENSSL_CRYPTO_LIBRARY_DLL libcrypto_1_1.so)
+
+     IF( (EXISTS ${OPENSSL_SSL_LIBRARY_DLL}) AND (EXISTS ${OPENSSL_CRYPTO_LIBRARY_DLL}) )
+         set(ANDROID_EXTRA_LIBS
+              ${OPENSSL_SSL_LIBRARY_DLL}
+              ${OPENSSL_CRYPTO_LIBRARY_DLL}
+              CACHE INTERNAL "")
+     ELSE()
+         message( "OpenSSL libraries not found" )
+     ENDIF()
+ENDIF()
+
 # when using Qt 5.3, default to using the old QGLWidget, but warn
 IF(${Qt5Core_VERSION} VERSION_LESS "5.4")
      SET(USE_OLD_QGLWIDGET 1)
@@ -519,7 +538,11 @@ ENDIF()
 # On dynamic builds, this property is also "GL"
 IF(${Qt5Gui_OPENGL_IMPLEMENTATION} MATCHES "GLES")
      MESSAGE(STATUS "Building an OpenGL ES build (${Qt5Gui_OPENGL_IMPLEMENTATION})")
-     SET(STEL_GLES_LIBS Qt5::Gui_EGL Qt5::Gui_GLESv2)
+     IF( ANDROID )
+         SET(STEL_GLES_LIBS EGL GLESv2)
+     ELSE()
+         SET(STEL_GLES_LIBS Qt5::Gui_EGL Qt5::Gui_GLESv2)
+     ENDIF()
 ENDIF()
 
 # Tell CMake to run moc when necessary:
