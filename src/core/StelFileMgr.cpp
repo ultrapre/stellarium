@@ -118,7 +118,7 @@ void StelFileMgr::init()
 		if (!QCoreApplication::applicationDirPath().contains("src")) {
 			ResourcesDir.cd(QString("Resources"));
 		}
-		searchPaths += ResourcesDir.absolutePath()
+		searchPaths += ResourcesDir.absolutePath();
 	#elif defined(Q_OS_WIN)		
 		searchPaths += QCoreApplication::applicationDirPath();
 	#else
