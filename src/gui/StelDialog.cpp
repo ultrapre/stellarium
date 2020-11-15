@@ -41,6 +41,7 @@
 #include <QScroller>
 #include <QToolButton>
 #include <QColorDialog>
+#include <QMessageBox>
 
 StelDialog::StelDialog(QString dialogName, QObject* parent)
 	: QObject(parent)
@@ -64,6 +65,11 @@ void StelDialog::close()
 	setVisible(false);
 }
 
+void StelDialog::styleChanged()
+{
+	// Nothing for now
+}
+
 bool StelDialog::visible() const
 {
 	return dialog!=Q_NULLPTR && dialog->isVisible();
@@ -75,7 +81,8 @@ void StelDialog::setVisible(bool v)
 	{
 		StelGui* gui = dynamic_cast<StelGui*>(StelApp::getInstance().getGui());		
 		QSize screenSize = StelMainView::getInstance().size();
-		QSize maxSize = 0.8*screenSize;
+		// If dialog size is very large and we move to a computer with much smaller screen, this should create the dialog with reasonable better size.
+		QSize maxSize = 0.95*screenSize;
 		if (dialog)
 		{
 			// reload stylesheet, in case size changed!
@@ -93,13 +100,6 @@ void StelDialog::setVisible(bool v)
 				newPos.setY(screenSize.height() - dialog->size().height());
 			if (newPos != dialog->pos())
 				proxy->setPos(newPos);
-			QSizeF newSize = proxy->size();
-			if (newSize.width() >= maxSize.width())
-				newSize.setWidth(maxSize.width());
-			if (newSize.height() >= maxSize.height())
-				newSize.setHeight(maxSize.height());
-			if(newSize != dialog->size())
-				proxy->resize(newSize);
 		}
 		else
 		{
@@ -153,8 +153,9 @@ void StelDialog::setVisible(bool v)
 			if (newY <-0)
 				newY = 0;
 			proxy->setPos(newX, newY);
-			proxy->setWindowFrameMargins(2,0,2,2);
+			// Invisible frame around the window to make resizing easier
 			// (this also changes the bounding rectangle size)
+			proxy->setWindowFrameMargins(7,0,7,7);
 
 			// Retrieve stored panel sizes, scale panel up if it was stored larger than default.
 			QString confNameSize="DialogSizes/" + dialogName;
@@ -173,20 +174,14 @@ void StelDialog::setVisible(bool v)
 			// resize only if number was valid and larger than default loaded size.
 			if ( (newX>=proxy->size().width()) || (newY>=proxy->size().height()) )
 			{
-				//qDebug() << confNameSize << ": resize to " << storedSizeString;
-				proxy->resize(qMax((qreal)newX, proxy->size().width()), qMax((qreal)newY, proxy->size().height()));
+				//qDebug() << confNameSize << ": resize from" << proxy->size().width() << "x" << proxy->size().height() << "to " << storedSizeString;
+				proxy->resize(qMax(static_cast<qreal>(newX), proxy->size().width()), qMax(static_cast<qreal>(newY), proxy->size().height()));
 			}
 			if(proxy->size().width() > maxSize.width() || proxy->size().height() > maxSize.height())
 			{
-				proxy->resize(maxSize);
+				proxy->resize(qMin(static_cast<qreal>(maxSize.width()), proxy->size().width()), qMin(static_cast<qreal>(maxSize.height()), proxy->size().height()));
 			}
 			handleDialogSizeChanged(proxy->size()); // This may trigger internal updates in subclasses. E.g. LocationPanel location arrow.
-
-			// The caching is buggy on all platforms with Qt 4.5.2
-			// Disabled on mac for the moment (https://github.com/Stellarium/stellarium/issues/393)
-			#ifndef Q_OS_MAC
-			proxy->setCacheMode(QGraphicsItem::ItemCoordinateCache);
-			#endif
 
 			proxy->setZValue(100);
 			StelMainView::getInstance().scene()->setActiveWindow(proxy);
@@ -306,14 +301,18 @@ void StelDialog::connectBoolProperty(QGroupBox *checkBox, const QString &propNam
 	new QGroupBoxStelPropertyConnectionHelper(prop,checkBox);
 }
 
+bool StelDialog::askConfirmation()
+{
+	return (QMessageBox::warning(Q_NULLPTR, q_("Attention!"), q_("Are you sure? This will delete your customized data."), QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes);
+}
+
 void StelDialog::connectColorButton(QToolButton *toolButton, QString propertyName, QString iniName, QString moduleName)
 {
 	toolButton->setProperty("propName", propertyName);
 	toolButton->setProperty("iniName", iniName);
 	toolButton->setProperty("moduleName", moduleName);
 	StelProperty* prop = StelApp::getInstance().getStelPropertyManager()->getProperty(propertyName);
-	Vec3f vColor = prop->getValue().value<Vec3f>();
-	QColor color=QColor::fromRgbF(vColor.v[0], vColor.v[1], vColor.v[2]);
+	QColor color=prop->getValue().value<Vec3f>().toQColor();
 	// Use style sheet to create a nice button :)
 	toolButton->setStyleSheet("QToolButton { background-color:" + color.name() + "; }");
 	toolButton->setFixedSize(QSize(18, 18));
@@ -345,21 +344,21 @@ void StelDialog::askColor()
 		Q_ASSERT(0);
 		return;
 	}
-	Vec3f vColor = StelApp::getInstance().getStelPropertyManager()->getProperty(propName)->getValue().value<Vec3f>();
-	QColor color = QColor::fromRgbF(vColor.v[0], vColor.v[1], vColor.v[2]);
+	Vec3d vColor = StelApp::getInstance().getStelPropertyManager()->getProperty(propName)->getValue().value<Vec3f>().toVec3d();
+	QColor color = vColor.toQColor();
 	QColor c = QColorDialog::getColor(color, Q_NULLPTR, q_(static_cast<QToolButton*>(QObject::sender())->toolTip()));
 	if (c.isValid())
 	{
-		vColor = Vec3f(c.redF(), c.greenF(), c.blueF());
-		StelApp::getInstance().getStelPropertyManager()->setStelPropertyValue(propName, QVariant::fromValue(vColor));
+		vColor = Vec3d(c.redF(), c.greenF(), c.blueF());
+		StelApp::getInstance().getStelPropertyManager()->setStelPropertyValue(propName, QVariant::fromValue(Vec3f(c.redF(), c.greenF(), c.blueF())));
 		if (moduleName.isEmpty())
-			StelApp::getInstance().getSettings()->setValue(iniName, StelUtils::vec3fToStr(vColor));
+			StelApp::getInstance().getSettings()->setValue(iniName, vColor.toStr());
 		else
 		{
 			StelModule *module=StelApp::getInstance().getModuleMgr().getModule(moduleName);
 			QSettings *settings=module->getSettings();
 			Q_ASSERT(settings);
-			settings->setValue(iniName, StelUtils::vec3fToStr(vColor));
+			settings->setValue(iniName, vColor.toStr());
 		}
 		static_cast<QToolButton*>(QObject::sender())->setStyleSheet("QToolButton { background-color:" + c.name() + "; }");
 	}
@@ -583,7 +582,7 @@ QSliderStelPropertyConnectionHelper::QSliderStelPropertyConnectionHelper(StelPro
 }
 void QSliderStelPropertyConnectionHelper::sliderIntValueChanged(int val)
 {
-	double dVal = ((val - slider->minimum()) / (double)(slider->maximum() - slider->minimum())) * dRange + minValue;
+	double dVal = ((val - slider->minimum()) / static_cast<double>(slider->maximum() - slider->minimum())) * dRange + minValue;
 	prop->setValue(dVal);
 }
 

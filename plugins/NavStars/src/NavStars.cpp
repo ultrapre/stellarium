@@ -35,7 +35,6 @@
 #include "NavStarsWindow.hpp"
 #include "NavStarsCalculator.hpp"
 #include "Planet.hpp"
-#include <StelMainScriptAPI.hpp>
 
 #include <QList>
 #include <QSharedPointer>
@@ -70,7 +69,7 @@ NavStars::NavStars()
 	, upperLimb(false)
 	, highlightWhenVisible(false)
 	, limitInfoToNavStars(false)	
-	, tabulatedDisplay(false)	
+	, tabulatedDisplay(false)
 	, toolbarButton(Q_NULLPTR)
 {
 	setObjectName("NavStars");
@@ -125,6 +124,8 @@ void NavStars::init()
 	addAction("actionShow_NavStars", N_("Navigational Stars"), N_("Mark the navigational stars"), "navStarsVisible", "");
 
 	connect(StelApp::getInstance().getCore(), SIGNAL(configurationDataSaved()), this, SLOT(saveSettings()));
+	connect(&StelApp::getInstance(), SIGNAL(flagShowDecimalDegreesChanged(bool)), this, SLOT(setUseDecimalDegrees()));
+	setUseDecimalDegrees();
 
 	// Toolbar button
 	StelGui* gui = dynamic_cast<StelGui*>(StelApp::getInstance().getGui());
@@ -136,7 +137,7 @@ void NavStars::init()
 			toolbarButton = new StelButton(Q_NULLPTR,
 						       QPixmap(":/NavStars/btNavStars-on.png"),
 						       QPixmap(":/NavStars/btNavStars-off.png"),
-						       QPixmap(":/graphicGui/glow32x32.png"),
+						       QPixmap(":/graphicGui/miscGlow32x32.png"),
 						       "actionShow_NavStars");
 		}
 		gui->getButtonBar()->addButton(toolbarButton, "065-pluginsGroup");
@@ -244,6 +245,11 @@ bool NavStars::getNavStarsMarks() const
 	return markerFader;
 }
 
+void NavStars::setUseDecimalDegrees()
+{
+	NavStarsCalculator::useDecimalDegrees = (StelApp::getInstance().getFlagShowDecimalDegrees() ? true : false);
+}
+
 void NavStars::restoreDefaultConfiguration(void)
 {
 	// Remove the whole section from the configuration file
@@ -259,12 +265,13 @@ void NavStars::loadConfiguration(void)
 	conf->beginGroup("NavigationalStars");
 
 	setCurrentNavigationalStarsSetKey(conf->value("current_ns_set", "AngloAmerican").toString());
-	markerColor = StelUtils::strToVec3f(conf->value("marker_color", "0.8,0.0,0.0").toString());
+	markerColor = Vec3f(conf->value("marker_color", "0.8,0.0,0.0").toString());
 	enableAtStartup = conf->value("enable_at_startup", false).toBool();
 	highlightWhenVisible = conf->value("highlight_when_visible", false).toBool();
 	limitInfoToNavStars  = conf->value("limit_info_to_nav_stars", false).toBool();
 	tabulatedDisplay = conf->value("tabulated_display", false).toBool();
 	upperLimb = conf->value("upper_limb", false).toBool();
+	setShowExtraDecimals(conf->value("extra_decimals", false).toBool());
 
 	conf->endGroup();
 }
@@ -274,12 +281,13 @@ void NavStars::saveConfiguration(void)
 	conf->beginGroup("NavigationalStars");
 
 	conf->setValue("current_ns_set", getCurrentNavigationalStarsSetKey());
-	conf->setValue("marker_color", StelUtils::vec3fToStr(markerColor));
+	conf->setValue("marker_color", markerColor.toStr());
 	conf->setValue("enable_at_startup", enableAtStartup);
 	conf->setValue("highlight_when_visible", highlightWhenVisible);
 	conf->setValue("limit_info_to_nav_stars", limitInfoToNavStars);
 	conf->setValue("tabulated_display", tabulatedDisplay);
 	conf->setValue("upper_limb", upperLimb);
+	conf->setValue("extra_decimals", getShowExtraDecimals());
 
 	conf->endGroup();
 }
@@ -473,14 +481,12 @@ void NavStars::addExtraInfo(StelCore *core)
 				}
 			}
 		}
-		if (doExtraInfo) {
-			withTables = stelApp.getFlagUseFormattingOutput();
-			extraInfo(core, selectedObject, withTables);
-		}
+		if (doExtraInfo)
+			extraInfo(core, selectedObject);
 	}
 }
 
-void NavStars::extraInfo(StelCore* core, const StelObjectP& selectedObject, bool withTables)
+void NavStars::extraInfo(StelCore* core, const StelObjectP& selectedObject)
 {
 	double jd, jde, x = 0., y = 0.;
 	QString extraText = "", englishName = selectedObject->getEnglishName();
@@ -489,7 +495,7 @@ void NavStars::extraInfo(StelCore* core, const StelObjectP& selectedObject, bool
 	jde = core->getJDE();
 
 	NavStarsCalculator calc;
-	calc.setUTC(StelMainScriptAPI::getDate("utc"))
+	calc.setUTC(StelUtils::julianDayToISO8601String(jd))
 		.setLatDeg(core->getCurrentLocation().latitude)
 		.setLonDeg(core->getCurrentLocation().longitude)
 		.setJd(jd)
@@ -497,16 +503,13 @@ void NavStars::extraInfo(StelCore* core, const StelObjectP& selectedObject, bool
 		.setGmst(get_mean_sidereal_time(jd, jde));
 
 	StelUtils::rectToSphe(&x, &y, selectedObject->getEquinoxEquatorialPos(core));	
-	calc.setRaRad(x)
-		.setDecRad(y);
+	calc.setRaRad(x).setDecRad(y);
 
 	StelUtils::rectToSphe(&x,&y,selectedObject->getAltAzPosGeometric(core)); 
-	calc.setAzRad(x)
-		.setAltRad(y);
+	calc.setAzRad(x).setAltRad(y);
 
 	StelUtils::rectToSphe(&x,&y,selectedObject->getAltAzPosApparent(core)); 
-	calc.setAzAppRad(x)
-		.setAltAppRad(y);
+	calc.setAzAppRad(x).setAltAppRad(y);
 
 	calc.execute();
 
@@ -528,10 +531,9 @@ void NavStars::extraInfo(StelCore* core, const StelObjectP& selectedObject, bool
 		displayStandardInfo(selectedObject, calc, extraText);
 }
 
-
 void NavStars::displayStandardInfo(const StelObjectP& selectedObject, NavStarsCalculator& calc, const QString& extraText)
 {
-	Q_UNUSED(extraText)
+	Q_UNUSED(extraText)	
 	QString temp;
 	StelObject::InfoStringGroup infoGroup = StelObject::OtherCoord;
 	selectedObject->addToExtraInfoString(infoGroup, 
@@ -556,7 +558,7 @@ void NavStars::displayStandardInfo(const StelObjectP& selectedObject, NavStarsCa
 
 void NavStars::displayTabulatedInfo(const StelObjectP& selectedObject, NavStarsCalculator& calc, const QString& extraText)
 {
-	StelObject::InfoStringGroup infoGroup = StelObject::OtherCoord;	
+	StelObject::InfoStringGroup infoGroup = StelObject::OtherCoord;		
 	selectedObject->addToExtraInfoString(infoGroup, 
 		oneRowTwoCells(qc_("UTC", "Universal Time Coordinated"), calc.getUTC(), "", false));
 	selectedObject->addToExtraInfoString(infoGroup, "<table style='margin:0em 0em 0em -0.125em;border-spacing:0px;border:0px;'>");

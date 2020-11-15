@@ -35,6 +35,7 @@
 #include "LabelMgr.hpp"
 #include "Planet.hpp"
 #include "Orbit.hpp"
+#include "StelActionMgr.hpp"
 
 #include <cmath>
 #include <QString>
@@ -116,6 +117,7 @@ void StelMovementMgr::init()
 	Q_ASSERT(objectMgr);
 	connect(objectMgr, SIGNAL(selectedObjectChanged(StelModule::StelModuleSelectAction)),
 		this, SLOT(selectedObjectChange(StelModule::StelModuleSelectAction)));
+	connect(&StelApp::getInstance(), SIGNAL(languageChanged()), this, SLOT(bindingFOVActions()));
 
 	flagEnableMoveAtScreenEdge = conf->value("navigation/flag_enable_move_at_screen_edge",false).toBool();
 	mouseZoomSpeed = conf->value("navigation/mouse_zoom",30).toInt();
@@ -132,7 +134,6 @@ void StelMovementMgr::init()
 	minFov = conf->value("navigation/min_fov",0.001389).toDouble(); // default: minimal FOV = 5"
 	initFov = conf->value("navigation/init_fov",60.0).toDouble();
 	currentFov = initFov;
-
 
 	// we must set mount mode before potentially loading zenith views etc.
 	QString tmpstr = conf->value("navigation/viewing_mode", "horizon").toString();
@@ -154,7 +155,7 @@ void StelMovementMgr::init()
 	//           -1/0   ->180   SOUTH is bottom
 	//            0/-1  -> 90   EAST is bottom
 	//            0/1   ->270   WEST is bottom
-	Vec3f tmp = StelUtils::strToVec3f(conf->value("navigation/init_view_pos", "1,0,0").toString());
+	Vec3f tmp(conf->value("navigation/init_view_pos", "1,0,0").toString());
 	//qDebug() << "initViewPos" << tmp[0] << "/" << tmp[1] << "/" << tmp[2];
 	if (tmp[2]>=1)
 	{
@@ -205,20 +206,8 @@ void StelMovementMgr::init()
 	addAction("actionLook_Towards_NCP", movementGroup, N_("Look towards North Celestial pole"), "lookTowardsNCP()", "Alt+Shift+N");
 	addAction("actionLook_Towards_SCP", movementGroup, N_("Look towards South Celestial pole"), "lookTowardsSCP()", "Alt+Shift+S");
 	// Field of view
-	// The feature was moved from FOV plugin
-	// TODO: Switch to use C++/Qt lambda's
-	QString fovGroup = N_("Field of View");
-	QString fovText = q_("Set FOV to");
-	addAction("actionSet_FOV_180deg",	 fovGroup, QString("%1 %2%3").arg(fovText, " 180", QChar(0x00B0)), "setFOV180Deg()", "Ctrl+Alt+1");
-	addAction("actionSet_FOV_90deg",   fovGroup, QString("%1 %2%3").arg(fovText, "  90", QChar(0x00B0)),   "setFOV90Deg()",   "Ctrl+Alt+2");
-	addAction("actionSet_FOV_60deg",   fovGroup, QString("%1 %2%3").arg(fovText, "  60", QChar(0x00B0)),   "setFOV60Deg()",   "Ctrl+Alt+3");
-	addAction("actionSet_FOV_45deg",   fovGroup, QString("%1 %2%3").arg(fovText, "  45", QChar(0x00B0)),   "setFOV45Deg()",   "Ctrl+Alt+4");
-	addAction("actionSet_FOV_20deg",   fovGroup, QString("%1 %2%3").arg(fovText, "  20", QChar(0x00B0)),   "setFOV20Deg()",   "Ctrl+Alt+5");
-	addAction("actionSet_FOV_10deg",   fovGroup, QString("%1 %2%3").arg(fovText, "  10", QChar(0x00B0)),   "setFOV10Deg()",   "Ctrl+Alt+6");
-	addAction("actionSet_FOV_5deg",     fovGroup, QString("%1 %2%3").arg(fovText, "   5", QChar(0x00B0)),     "setFOV5Deg()",     "Ctrl+Alt+7");
-	addAction("actionSet_FOV_2deg",     fovGroup, QString("%1 %2%3").arg(fovText, "   2", QChar(0x00B0)),     "setFOV2Deg()",     "Ctrl+Alt+8");
-	addAction("actionSet_FOV_1deg",     fovGroup, QString("%1 %2%3").arg(fovText, "   1", QChar(0x00B0)),     "setFOV1Deg()",     "Ctrl+Alt+9");
-	addAction("actionSet_FOV_0_5deg", fovGroup, QString("%1 %2%3").arg(fovText, "0.5", QChar(0x00B0)),  "setFOV05Deg()",   "Ctrl+Alt+0");
+	// The feature was moved from FOV plugin	
+	bindingFOVActions();
 	// Remove all FOV settings
 	conf->beginGroup("FOV");
 	conf->remove("");
@@ -228,6 +217,25 @@ void StelMovementMgr::init()
 	viewportOffsetTimeline->setFrameRange(0, 100);
 	connect(viewportOffsetTimeline, SIGNAL(valueChanged(qreal)), this, SLOT(handleViewportOffsetMovement(qreal)));
 	targetViewportOffset.set(core->getViewportHorizontalOffset(), core->getViewportVerticalOffset());
+}
+
+void StelMovementMgr::bindingFOVActions()
+{
+	StelActionMgr* actionMgr = StelApp::getInstance().getStelActionManager();
+	QString tfov, fovGroup = N_("Field of View"), fovText = q_("Set FOV to");
+	QList<float> fov = { 0.5f, 180.f, 90.f, 60.f, 45.f, 20.f, 10.f, 5.f, 2.f, 1.f };
+	for (int i = 0; i < fov.size(); ++i)
+	{
+		float cfov = fov.at(i);
+		(cfov<1.f) ? tfov = QString::number(cfov, 'f', 1) : tfov = QString::number(cfov, 'f', 0);
+		QString actionName = QString("actionSet_FOV_%1deg").arg(tfov).replace(".","_");
+		QString actionDescription = QString("%1 %2%3").arg(fovText, tfov, QChar(0x00B0));		
+		StelAction* action = actionMgr->findAction(actionName);
+		if (action!=Q_NULLPTR)
+			actionMgr->findAction(actionName)->setText(actionDescription);
+		else
+			addAction(actionName, fovGroup, actionDescription, this, [=](){setFOVDeg(cfov);}, QString("Ctrl+Alt+%1").arg(i));
+	}
 }
 
 void StelMovementMgr::setEquatorialMount(bool b)
@@ -922,54 +930,9 @@ void StelMovementMgr::lookTowardsSCP(void)
 	setViewDirectionJ2000(core->equinoxEquToJ2000(Vec3d(0,0,-1), StelCore::RefractionOff));
 }
 
-void StelMovementMgr::setFOV180Deg()
+void StelMovementMgr::setFOVDeg(float fov)
 {
-	zoomTo(180., 1.f);
-}
-
-void StelMovementMgr::setFOV90Deg()
-{
-	zoomTo(90., 1.f);
-}
-
-void StelMovementMgr::setFOV60Deg()
-{
-	zoomTo(60., 1.f);
-}
-
-void StelMovementMgr::setFOV45Deg()
-{
-	zoomTo(45., 1.f);
-}
-
-void StelMovementMgr::setFOV20Deg()
-{
-	zoomTo(20., 1.f);
-}
-
-void StelMovementMgr::setFOV10Deg()
-{
-	zoomTo(10., 1.f);
-}
-
-void StelMovementMgr::setFOV5Deg()
-{
-	zoomTo(5., 1.f);
-}
-
-void StelMovementMgr::setFOV2Deg()
-{
-	zoomTo(2., 1.f);
-}
-
-void StelMovementMgr::setFOV1Deg()
-{
-	zoomTo(1., 1.f);
-}
-
-void StelMovementMgr::setFOV05Deg()
-{
-	zoomTo(0.5, 1.f);
+	zoomTo(fov, 1.f);
 }
 
 // Increment/decrement smoothly the vision field and position

@@ -7,6 +7,7 @@ src/core/modules/Constellation.cpp
 src/core/modules/ConstellationMgr.cpp
 src/core/modules/StarMgr.cpp
 src/core/modules/GridLinesMgr.cpp
+src/core/modules/SpecialMarkersMgr.cpp
 src/core/modules/Landscape.cpp
 src/core/modules/LandscapeMgr.cpp
 src/core/modules/NomenclatureItem.cpp
@@ -38,6 +39,7 @@ src/gui/ConfigurationDialog.cpp
 src/gui/HelpDialog.cpp
 src/gui/StelGui.cpp
 src/gui/StelGuiItems.cpp
+src/gui/StelDialog.cpp
 src/gui/ViewDialog.cpp
 src/gui/LocationDialog.cpp
 src/gui/AddRemoveLandscapesDialog.cpp
@@ -47,6 +49,7 @@ src/gui/ShortcutsDialog.cpp
 src/gui/CustomDeltaTEquationDialog.cpp
 src/gui/AstroCalcDialog.cpp
 src/gui/AstroCalcExtraEphemerisDialog.cpp
+src/gui/AstroCalcCustomStepsDialog.cpp
 src/gui/BookmarksDialog.cpp
 src/gui/ConfigureDSOColorsDialog.cpp
 src/gui/ConfigureOrbitColorsDialog.cpp
@@ -73,6 +76,7 @@ src/ui_greatRedSpotDialog.h
 src/ui_scriptConsole.h
 src/ui_astroCalcDialog.h
 src/ui_astroCalcExtraEphemerisDialog.h
+src/ui_astroCalcCustomStepsDialog.h
 src/ui_bookmarksDialog.h
 src/ui_dsoColorsDialog.h
 src/ui_orbitColorsDialog.h
@@ -87,6 +91,7 @@ plugins/Oculars/src/Oculars.cpp
 plugins/Oculars/src/gui/OcularsGuiPanel.cpp
 plugins/Oculars/src/gui/OcularDialog.cpp
 plugins/Oculars/src/ui_ocularDialog.h
+plugins/Oculus/src/Oculus.cpp
 plugins/Satellites/src/Satellites.cpp
 plugins/Satellites/src/Satellite.cpp
 plugins/Satellites/src/gui/SatellitesDialog.cpp

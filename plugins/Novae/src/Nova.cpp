@@ -115,7 +115,7 @@ QString Nova::getNameI18n() const
 	QRegExp nn("^Nova\\s+(\\w+|\\w+\\s+\\w+)\\s+(\\d+|\\d+\\s+#\\d+)$");
 	QString nameI18n = novaName;
 	if (nn.exactMatch(novaName))
-		nameI18n = QString("%1 %2 %3").arg(trans.qtranslate("Nova", "Nova template"), trans.qtranslate(nn.capturedTexts().at(1).trimmed(), "Genitive name of constellation"), nn.capturedTexts().at(2).trimmed());
+		nameI18n = QString("%1 %2 %3").arg(trans.qtranslate("Nova", "Nova template"), trans.qtranslate(nn.cap(1).trimmed(), "Genitive name of constellation"), nn.cap(2).trimmed());
 	else
 		nameI18n = trans.qtranslate(novaName);
 
@@ -150,7 +150,7 @@ QString Nova::getInfoString(const StelCore* core, const InfoStringGroup& flags) 
 	{
 		double az_app, alt_app;
 		StelUtils::rectToSphe(&az_app,&alt_app,getAltAzPosApparent(core));
-		Q_UNUSED(az_app);
+		Q_UNUSED(az_app)
 		oss << getMagnitudeInfoString(core, flags, alt_app, 2);
 	}
 
@@ -171,7 +171,6 @@ QString Nova::getInfoString(const StelCore* core, const InfoStringGroup& flags) 
 	postProcessInfoString(str, flags);
 	return str;
 }
-
 
 QVariantMap Nova::getInfoMap(const StelCore *core) const
 {

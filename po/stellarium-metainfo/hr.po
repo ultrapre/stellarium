@@ -1,3 +1,4 @@
+# 
 # Translators:
 # cardinot <mcardinot@gmail.com>, 2017
 # Orr Nuts <orrnuts@gmail.com>, 2020
@@ -5,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2020-01-16 14:48+0700\n"
+"POT-Creation-Date: 2020-09-27 15:11+0700\n"
 "PO-Revision-Date: 2017-11-29 01:17+0000\n"
 "Last-Translator: Orr Nuts <orrnuts@gmail.com>, 2020\n"
 "Language-Team: Croatian (https://www.transifex.com/stellarium/teams/80998/hr/)\n"
@@ -33,9 +34,9 @@ msgid ""
 "features including multiple panoramic landscapes, fog, light pollution "
 "simulation and a built-in scripting engine."
 msgstr ""
-"Stellarium pruža 3D foto-realistično nebo u stvarnom vremenu s OpenGL-om. "
-"Prikazuje zvijezde, zviježđa, planete i maglice, a ima i mnoge druge "
-"značajke, uključujući mnoge panoramske pejzaže, maglu, simulaciju "
+"Stellarium prikazuje 3D foto-realistično nebo u stvarnom vremenu putem "
+"OpenGL-a. Stvara prikaz zvijezda, zviježđa, planeta i maglica, a ima i mnoge"
+" druge značajke, uključujući razne panoramske pejzaže, maglu, simulaciju "
 "svjetlosnog onečišćenja i ugrađeni skriptni engine."
 
 #. (itstool) path: description/p
@@ -54,7 +55,7 @@ msgid ""
 "traditions of Polynesian, Inuit, Navajo, Korean, Lakota, Egyptian and "
 "Chinese astronomers, as well as the traditional Western constellations."
 msgstr ""
-"Stellarium ima više kultura neba - pogledajte zviježđa iz tradicija "
+"Stellarium ima više kultura zvijezđa - pogledajte zviježđa iz tradicija "
 "polinezijskih, inuitskih, navajo, korejskih, lakotskih, egipatskih i "
 "kineskih astronoma, kao i tradicionalna zapadna zviježđa."
 
@@ -65,11 +66,11 @@ msgid ""
 "the sky looked like to the Apollo astronauts, or what the rings of Saturn "
 "looks like from Titan."
 msgstr ""
-"Moguće je posjetiti i druge planete Sunčevog sustava - vidjeti kako je nebo "
-"izgledalo astronautima Apollo programa ili kako prstenovi Saturna izgledaju "
-"s Titana."
+"Moguće je posjetiti i druge planete Sunčevog sustava - pogledajte kako je "
+"nebo izgledalo astronautima Apollo programa ili kako prstenovi Saturna "
+"izgledaju s Titana."
 
 #. (itstool) path: component/developer_name
-#: stellarium.appdata.xml:101
+#: stellarium.appdata.xml:104
 msgid "Stellarium team"
 msgstr "Stellarium tim"

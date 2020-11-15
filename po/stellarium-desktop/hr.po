@@ -1,3 +1,4 @@
+# 
 # Translators:
 # cardinot <mcardinot@gmail.com>, 2017
 # Renato Ristić <renato.ristic@gmail.com>, 2018
@@ -7,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Stellarium desktop file translation\n"
 "Report-Msgid-Bugs-To: stellarium@googlegroups.com\n"
-"POT-Creation-Date: 2019-12-20 18:51+0700\n"
+"POT-Creation-Date: 2020-09-27 15:12+0700\n"
 "PO-Revision-Date: 2017-11-29 01:17+0000\n"
 "Last-Translator: Orr Nuts <orrnuts@gmail.com>, 2020\n"
 "Language-Team: Croatian (https://www.transifex.com/stellarium/teams/80998/hr/)\n"
@@ -25,7 +26,7 @@ msgstr "Stellarium"
 #: ../../data/stellarium.desktop
 msgctxt "GenericName"
 msgid "Desktop planetarium"
-msgstr "Desktop Planetarij"
+msgstr "Desktop planetarij"
 
 #: ../../data/stellarium.desktop
 msgctxt "Comment"
@@ -45,4 +46,9 @@ msgstr "Otvori u punom zaslonu"
 #: ../../data/stellarium.desktop
 msgctxt "Name"
 msgid "Open in debug mode"
-msgstr "Otvori za debugiranje"
+msgstr "Otvori u debug modu"
+
+#: ../../data/stellarium.desktop
+msgctxt "Name"
+msgid "Open in scale 200%"
+msgstr "Otvori u omjeru 200%"

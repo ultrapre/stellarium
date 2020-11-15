@@ -24,7 +24,6 @@
 #include "StelCore.hpp"
 #include "StelLocaleMgr.hpp"
 #include "StelModuleMgr.hpp"
-#include "StelUtils.hpp"
 #include "StelFileMgr.hpp"
 #include "LandscapeMgr.hpp"
 #include "CompassMarks.hpp"
@@ -101,7 +100,7 @@ void CompassMarks::init()
 			toolbarButton = new StelButton(Q_NULLPTR,
 						       QPixmap(":/compassMarks/bt_compass_on.png"),
 						       QPixmap(":/compassMarks/bt_compass_off.png"),
-						       QPixmap(":/graphicGui/glow32x32.png"),
+						       QPixmap(":/graphicGui/miscGlow32x32.png"),
 						       "actionShow_Compass_Marks");
 			gui->getButtonBar()->addButton(toolbarButton, "065-pluginsGroup");			
 		}
@@ -191,7 +190,7 @@ void CompassMarks::loadConfiguration()
 {
 	Q_ASSERT(conf);
 	conf->beginGroup("CompassMarks");
-	markColor = StelUtils::strToVec3f(conf->value("mark_color", "1,0,0").toString());
+	markColor = Vec3f(conf->value("mark_color", "1,0,0").toString());
 	font.setPixelSize(conf->value("font_size", 10).toInt());
 	displayedAtStartup = conf->value("enable_at_startup", false).toBool();
 	conf->endGroup();

@@ -53,7 +53,7 @@ void HighlightMgr::init()
 	texPointer = StelApp::getInstance().getTextureManager().createTexture(StelFileMgr::getInstallationDir()+"/textures/pointeur2.png");
 
 	// Highlights
-	setColor(StelUtils::strToVec3f(conf->value("gui/highlight_marker_color", "0.0,1.0,1.0").toString()));
+	setColor(Vec3f(conf->value("gui/highlight_marker_color", "0.0,1.0,1.0").toString()));
 	setMarkersSize(conf->value("gui/highlight_marker_size", 11.f).toFloat());
 
 	GETSTELMODULE(StelObjectMgr)->registerStelObjectMgr(this);
@@ -119,7 +119,7 @@ void HighlightMgr::setColor(const Vec3f& c)
 	hightlightColor = c;
 }
 
-const Vec3f& HighlightMgr::getColor(void) const
+Vec3f HighlightMgr::getColor(void) const
 {
 	return hightlightColor;
 }
@@ -157,7 +157,7 @@ void HighlightMgr::drawHighlights(StelCore* core, StelPainter& painter)
 			if (!painter.getProjector()->project(hlObj, screenpos))
 				continue;
 
-			painter.setColor(hightlightColor[0], hightlightColor[1], hightlightColor[2]);
+			painter.setColor(hightlightColor);
 			texPointer->bind();
 			painter.setBlending(true);
 			painter.drawSprite2dMode(screenpos[0], screenpos[1], markerSize, StelApp::getInstance().getTotalRunTime()*40.f);
