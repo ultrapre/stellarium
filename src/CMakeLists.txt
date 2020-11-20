@@ -285,7 +285,7 @@ ENDIF()
 SET(stellarium_exe_SRCS main.cpp)
 
 ################# compiles resources files ############
-SET(stellarium_RES ${CMAKE_SOURCE_DIR}/data/mainRes.qrc)
+SET(stellarium_RES ${PROJECT_SOURCE_DIR}/data/mainRes.qrc)
 QT5_ADD_RESOURCES(stellarium_RES_CXX ${stellarium_RES})
 
 #############################################################################################
@@ -385,7 +385,7 @@ IF(STELLARIUM_GUI_MODE STREQUAL "Standard")
      QT5_WRAP_UI(stellarium_UIS_H ${stellarium_UIS})
 
      # compiles resources files
-     SET(stellarium_gui_RES ${CMAKE_SOURCE_DIR}/data/gui/guiRes.qrc)
+     SET(stellarium_gui_RES ${PROJECT_SOURCE_DIR}/data/gui/guiRes.qrc)
      QT5_ADD_RESOURCES(stellarium_gui_RES_CXX ${stellarium_gui_RES})
 
      SET(stellarium_lib_SRCS ${stellarium_lib_SRCS} ${stellarium_gui_SRCS} ${stellarium_UIS_H} ${stellarium_gui_RES_CXX})
@@ -476,7 +476,11 @@ IF(GENERATE_STELMAINLIB)
      TARGET_LINK_LIBRARIES(stelMain ${STELMAIN_DEPS})
      INSTALL(TARGETS stelMain DESTINATION lib)
      # WIN32 creates a windows app without console, no effect on non-win platforms
-     ADD_EXECUTABLE(stellarium WIN32 ${stellarium_exe_SRCS})
+     IF( ANDROID )
+         ADD_LIBRARY(stellarium SHARED ${stellarium_exe_SRCS})
+     ELSE()
+         ADD_EXECUTABLE(stellarium WIN32 ${stellarium_exe_SRCS})
+     ENDIF()
      #stelMain should be after the plug-ins, otherwise the build crashes
      TARGET_LINK_LIBRARIES(stellarium stelMain ${winMMLib})
 ELSE()
@@ -488,6 +492,10 @@ ELSE()
      IF(APPLE)
           SET_TARGET_PROPERTIES(stellarium PROPERTIES LINK_FLAGS " -framework Cocoa -framework OpenGL")
      ENDIF()
+ENDIF()
+
+IF(Qt5AndroidExtras_FOUND)
+      TARGET_LINK_LIBRARIES( stellarium Qt5::AndroidExtras )
 ENDIF()
 
 ADD_DEPENDENCIES(stellarium AllStaticPlugins)
@@ -525,7 +533,11 @@ IF(APPLE)
         "
      )
 ELSE()
-     INSTALL(TARGETS stellarium DESTINATION bin)
+    IF( ANDROID )
+        INSTALL(TARGETS stellarium DESTINATION lib)
+    ELSE()
+        INSTALL(TARGETS stellarium DESTINATION bin)
+    ENDIF()
 ENDIF()
 IF(WIN32)
      INSTALL(CODE
