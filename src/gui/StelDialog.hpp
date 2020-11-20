@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Stellarium
  * Copyright (C) 2008 Fabien Chereau
  *
@@ -92,7 +92,7 @@ public slots:
 	//! Closes the window (the window widget is not deleted, just not visible).
 	void close();
 	//! Adds dialog location to config.ini; should be connected in createDialogContent()
-	void handleMovedTo(QPoint newPos);
+//	void handleMovedTo(QPoint newPos);
 signals:
 	void visibleChanged(bool);
 

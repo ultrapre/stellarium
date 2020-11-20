@@ -1,4 +1,4 @@
-/*
+﻿/*
  * SGI FREE SOFTWARE LICENSE B (Version 2.0, Sept. 18, 2008)
  * Copyright (C) 1991-2000 Silicon Graphics, Inc. All Rights Reserved.
  *
@@ -43,7 +43,8 @@
 #ifdef _MSC_BUILD
 #include <windows.h>
 #endif
-# include <GL/gl.h>
+//# include <GL/gl.h>
+#include <qopengl.h>
 #endif
 
 #include "glues_error.h"

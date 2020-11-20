@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Stellarium
  * 
  * Copyright (C) 2015 Alexander Wolf
@@ -30,7 +30,7 @@
 #include "StelDialog.hpp"
 #include "StelCore.hpp"
 #include "Planet.hpp"
-
+#include "SolarSystem.hpp"
 class Ui_astroCalcDialogForm;
 
 class AstroCalcDialog : public StelDialog
@@ -138,7 +138,7 @@ private:
 	//! @note Ported from KStars, should be improved, because this feature calculate
 	//! angular separation ("conjunction" defined as equality of right ascension
 	//! of two body) and current solution is not accurate and slow.
-	QMap<double, double> findClosestApproach(PlanetP& object1, PlanetP& object2, double startJD, double stopJD, float maxSeparation, bool opposition);
+    QMap<double, double> findClosestApproach(PlanetP& object1, PlanetP& object2, double startJD, double stopJD, float maxSeparation, bool opposition);
 	double findDistance(double JD, PlanetP object1, PlanetP object2, bool opposition);
 	bool findPrecise(QPair<double, double>* out, PlanetP object1, PlanetP object2, double JD, double step, int prevSign, bool opposition);
 	void fillPhenomenaTable(const QMap<double, double> list, const PlanetP object1, const PlanetP object2, bool opposition);

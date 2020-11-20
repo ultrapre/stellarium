@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Stellarium
  * Copyright (C) 2006 Fabien Chereau
  * 
@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
-
+/*
 #ifndef _GEODESICGRIDDRAWER_HPP_
 #define _GEODESICGRIDDRAWER_HPP_
 
@@ -48,3 +48,4 @@ private:
 };
 
 #endif // _GEODESICGRIDDRAWER_HPP_
+*/

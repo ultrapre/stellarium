@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Stellarium
  * Copyright (C) 2002 Fabien Chereau
  *
@@ -412,6 +412,8 @@ protected:
 	static void initShader();
 	static void deinitShader();
 };
+
+//typedef Planet PlanetP;
 
 #endif // _PLANET_HPP_
 

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Stellarium
  * Copyright (C) 2008 Fabien Chereau
  *
@@ -279,12 +279,12 @@ void StelDialog::updateNightModeProperty()
 	dialog->setProperty("nightMode", StelApp::getInstance().getVisionModeNight());
 }
 
-void StelDialog::handleMovedTo(QPoint newPos)
-{
-	QSettings *conf=StelApp::getInstance().getSettings();
-	Q_ASSERT(conf);
-	conf->setValue("DialogPositions/" + dialogName, QString("%1,%2").arg(newPos.x()).arg(newPos.y()));
-}
+//void StelDialog::handleMovedTo(QPoint newPos)
+//{
+//	QSettings *conf=StelApp::getInstance().getSettings();
+//	Q_ASSERT(conf);
+//	conf->setValue("DialogPositions/" + dialogName, QString("%1,%2").arg(newPos.x()).arg(newPos.y()));
+//}
 
 
 //// --- Implementation of StelDialog_p.hpp classes follow ---
