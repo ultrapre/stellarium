@@ -47,7 +47,8 @@
 #ifdef _MSC_BUILD
 #include <windows.h>
 #endif
-# include <GL/gl.h>
+//# include <GL/gl.h>
+#include <qopengl.h>
 #endif
 
 #ifdef __cplusplus

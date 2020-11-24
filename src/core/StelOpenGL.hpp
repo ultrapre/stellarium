@@ -196,7 +196,7 @@ int checkGLErrors(const char *file, int line);
 #  define GL_DOUBLE GL_FLOAT
 # endif
 # ifndef GLdouble
-typedef GLfloat GLdouble;
+//typedef GLfloat GLdouble;
 # endif
 #endif
 

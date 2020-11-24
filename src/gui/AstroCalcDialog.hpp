@@ -29,6 +29,8 @@
 #include "StelCore.hpp"
 #include "Planet.hpp"
 
+#include "SolarSystem.hpp"
+
 class Ui_astroCalcDialogForm;
 
 class AstroCalcDialog : public StelDialog
