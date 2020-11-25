@@ -70,8 +70,8 @@ gTime gTime::getCurrentTime()
 	struct tm timeinfo;
 
 	time(&rawtime);
-	#ifdef _MSC_VER
-	gmtime_s(&timeinfo, &rawtime);
+#ifdef WIN32
+    gmtime_s(&timeinfo, &rawtime);
 	#else
 	gmtime_r(&rawtime, &timeinfo);
 	#endif
@@ -136,8 +136,8 @@ gTimeSpan gTime::getTimeToUTC()
 	time_t when   = time(nullptr);
 	struct tm utc;
 	struct tm lcl;
-	#ifdef _MSC_VER
-	gmtime_s(&utc, &when);
+#ifdef WIN32
+    gmtime_s(&utc, &when);
 	localtime_s(&lcl, &when);
 	#else
 	gmtime_r(&when, &utc);
@@ -162,8 +162,8 @@ const gTime& gTime::operator=(time_t t)
 {
 	struct tm ptm;
 
-	#ifdef _MSC_VER
-	gmtime_s(&ptm, &t);
+#ifdef WIN32
+    gmtime_s(&ptm, &t);
 	#else
 	gmtime_r(&t, &ptm);
 	#endif

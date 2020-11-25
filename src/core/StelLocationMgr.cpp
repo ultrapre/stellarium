@@ -452,7 +452,7 @@ StelLocationMgr::StelLocationMgr()
 	if (conf->value("devel/convert_locations_list", false).toBool())
 		generateBinaryLocationFile("data/base_locations.txt", false, "data/base_locations.bin");
 
-	locations = loadCitiesBin("data/base_locations.bin.gz");
+    locations = loadCitiesBin("data/base_locations.bin.gz");
 	locations.unite(loadCities("data/user_locations.txt", true));
 	
 	// Init to Paris France because it's the center of the world.
@@ -524,7 +524,7 @@ LocationMap StelLocationMgr::loadCitiesBin(const QString& fileName)
 		return res;
 	}
 
-	if (fileName.endsWith(".gz"))
+    if (fileName.endsWith(".gz"))
 	{
 		QDataStream in(StelUtils::uncompress(sourcefile.readAll()));
 		in.setVersion(QDataStream::Qt_5_2);

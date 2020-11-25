@@ -381,8 +381,11 @@ bool StelScriptMgr::runPreprocessedScript(const QString &preprocessedScript, con
 	emit runningScriptIdChanged(scriptId);
 
 	// run that script
+	//disable for android, for now, until crash fix is found
+    #if !defined(Q_OS_ANDROID)
 	engine->evaluate(preprocessedScript);
 	scriptEnded();
+    #endif
 	return true;
 }
 
