@@ -87,7 +87,8 @@ StelGui::StelGui()
 	, flagShowQuitButton(true)
 	, buttonQuit(Q_NULLPTR)
 	, flagShowGotoSelectedObjectButton(true)
-	, buttonGotoSelectedObject(Q_NULLPTR)
+    , buttonGotoSelectedObject(Q_NULLPTR)
+    , buttonSensors(Q_NULLPTR) //silas
 	, locationDialog(Q_NULLPTR)
 	, helpDialog(Q_NULLPTR)
 	, dateTimeDialog(Q_NULLPTR)
@@ -268,6 +269,8 @@ void StelGui::init(QGraphicsWidget *atopLevelGraphicsWidget)
 	//// QGraphicsView based GUI
 	///////////////////////////////////////////////////////////////////////////
 
+	setFlagUseKineticScrolling(conf->value("gui/flag_enable_kinetic_scrolling", false).toBool());
+
 	setFlagUseButtonsBackground(conf->value("gui/flag_show_buttons_background", true).toBool());
 	// Add everything
 	QPixmap pxmapDefault;
@@ -282,10 +285,6 @@ void StelGui::init(QGraphicsWidget *atopLevelGraphicsWidget)
 	b = new StelButton(Q_NULLPTR, pxmapOn, pxmapOff, pxmapGlow, "actionShow_DateTime_Window_Global");
 	skyGui->winBar->addButton(b);
 
-	pxmapOn = QPixmap(":/graphicGui/5-on-labels.png");
-	pxmapOff = QPixmap(":/graphicGui/5-off-labels.png");
-	b = new StelButton(Q_NULLPTR, pxmapOn, pxmapOff, pxmapGlow, "actionShow_SkyView_Window_Global");
-	skyGui->winBar->addButton(b);
 
 	pxmapOn = QPixmap(":/graphicGui/6-on-search.png");
 	pxmapOff = QPixmap(":/graphicGui/6-off-search.png");
@@ -367,7 +366,7 @@ void StelGui::init(QGraphicsWidget *atopLevelGraphicsWidget)
 
 	pxmapOn = QPixmap(":/graphicGui/btGotoSelectedObject-on.png");
 	pxmapOff = QPixmap(":/graphicGui/btGotoSelectedObject-off.png");
-	buttonGotoSelectedObject = new StelButton(Q_NULLPTR, pxmapOn, pxmapOff, pxmapGlow32x32, "actionGoto_Selected_Object");
+    buttonGotoSelectedObject = new StelButton(Q_NULLPTR, pxmapOn, pxmapOff, pxmapGlow32x32, "actionGoto_Selected_Object");
 	skyGui->buttonBar->addButton(buttonGotoSelectedObject, "060-othersGroup");
 
 	pxmapOn = QPixmap(":/graphicGui/btNightView-on.png");
@@ -1351,4 +1350,14 @@ void StelGui::copySelectedObjectInfo(void)
 bool StelGui::getAstroCalcVisible() const
 {
 	return astroCalcDialog && astroCalcDialog->visible();
+}
+
+QPixmap StelGui::ScaledPixmap( const QPixmap& pixmap ){
+    #if defined(Q_OS_ANDROID)
+        if( !pixmap.isNull() ){
+            return pixmap.scaled( pixmap.size() * 2 );
+        }
+    #endif
+
+    return pixmap;
 }

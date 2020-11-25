@@ -81,6 +81,10 @@
 	}
 #endif //Q_OS_WIN
 
+#if defined(Q_OS_ANDROID)
+	#include <QtAndroid>
+#endif
+
 //! @class CustomQTranslator
 //! Provides custom i18n support.
 class CustomQTranslator : public QTranslator
@@ -182,7 +186,7 @@ int main(int argc, char **argv)
 	QDir appDir(appInfo.absolutePath());
 	appDir.cdUp();
 	QCoreApplication::addLibraryPath(appDir.absoluteFilePath("plugins"));
-	#elif defined(Q_OS_WIN)
+	#elif defined(Q_OS_WIN) || defined(Q_OS_ANDROID)
 	QFileInfo appInfo(QString::fromUtf8(argv[0]));
 	QCoreApplication::addLibraryPath(appInfo.absolutePath());
 	#endif	
@@ -203,8 +207,20 @@ int main(int argc, char **argv)
 	// otherwise configuration/INI file parsing will be erroneous.
 	setlocale(LC_NUMERIC, "C");
 
+#ifdef Q_OS_ANDROID
+    QFont newFont = QApplication::font();
+    newFont.setPixelSize(14);
+    QApplication::setFont(newFont);
+#endif
+
+
 	// Solution for bug: https://bugs.launchpad.net/stellarium/+bug/1498616
 	qputenv("QT_HARFBUZZ", "old");
+
+	#if defined(Q_OS_ANDROID)
+		QtAndroid::requestPermissionsSync( QStringList("android.permission.WRITE_EXTERNAL_STORAGE") );
+		QtAndroid::requestPermissionsSync( QStringList("android.permission.READ_EXTERNAL_STORAGE") );
+	#endif
 
 	// Init the file manager
 	StelFileMgr::init();

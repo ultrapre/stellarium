@@ -14,6 +14,9 @@ SET(CMAKE_WARN_DEPRECATED 1)
 
 SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
 
+SET( QT_ANDROID_APPLICATION_BINARY stellarium )
+SET( ANDROID_PACKAGE_SOURCE_DIR    ${CMAKE_CURRENT_LIST_DIR}/android )
+
 ########### Project name ###########
 PROJECT(Stellarium)
 # Use integer versions instead of strings for easier handling if required
@@ -219,6 +222,9 @@ IF(APPLE)
 
      # We support only 64 bits MacOSX
      SET(CMAKE_OSX_ARCHITECTURES "x86_64")
+ELSEIF(UNIX)
+     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 ENDIF()
 
 # This activates Link Time Optimization on recent GCC
@@ -258,9 +264,9 @@ ENDIF()
 IF(ENABLE_SPOUT)
      ADD_DEFINITIONS(-DENABLE_SPOUT)
      IF("${CMAKE_SIZEOF_VOID_P}" EQUAL "4") # 32bit build?
-          SET(SPOUT_PATH_HINT ${CMAKE_SOURCE_DIR}/util/spout2/Win32/)
+          SET(SPOUT_PATH_HINT ${PROJECT_SOURCE_DIR}/util/spout2/Win32/)
      ELSEIF("${CMAKE_SIZEOF_VOID_P}" EQUAL "8") # 64bit build?
-          SET(SPOUT_PATH_HINT ${CMAKE_SOURCE_DIR}/util/spout2/x64/)
+          SET(SPOUT_PATH_HINT ${PROJECT_SOURCE_DIR}/util/spout2/x64/)
      ENDIF()
 
      # make sure the .lib file is used, otherwise MinGW will try the .dll directly and fails to link
@@ -274,7 +280,7 @@ IF(ENABLE_SPOUT)
      # try to find the .dll for automatic copy
      GET_FILENAME_COMPONENT(SPOUT_LIBRARY_DIR ${SPOUT_LIBRARY} DIRECTORY)
      SET(SPOUT_LIBRARY_DLL ${SPOUT_LIBRARY_DIR}/SpoutLibrary.dll CACHE FILEPATH "The path to the Spout .dll file")
-     SET(SPOUT_LIBRARY_LICENCE ${CMAKE_SOURCE_DIR}/util/spout2/licence.txt CACHE FILEPATH "The path to the Spout licence file")
+     SET(SPOUT_LIBRARY_LICENCE ${PROJECT_SOURCE_DIR}/util/spout2/licence.txt CACHE FILEPATH "The path to the Spout licence file")
 
      IF(NOT EXISTS ${SPOUT_LIBRARY_DLL})
           UNSET(SPOUT_LIBRARY_DLL)
@@ -308,7 +314,7 @@ SET(GENERATE_PACKAGE_TARGET 1 CACHE BOOL "Set to 1 or true if you want to have m
 # On WIN32 we need to split the main binary into a small binary and a dll
 # This is for allowing to link dynamic plug-ins afterward
 # It does not seem to work with MSVC, so I disable it for the moment.
-IF(WIN32 AND NOT MSVC)
+IF( (WIN32 AND (NOT MSVC)) OR UNIX OR ANDROID )
      SET(GENERATE_STELMAINLIB 1)
 ELSE()
      SET(GENERATE_STELMAINLIB 0)
@@ -321,7 +327,7 @@ IF(ENABLE_TESTING)
 ENDIF(ENABLE_TESTING)
 
 ########### User Guide ###############
-IF(EXISTS "${CMAKE_SOURCE_DIR}/guide/guide.pdf")
+IF(EXISTS "${PROJECT_SOURCE_DIR}/guide/guide.pdf")
      MESSAGE(STATUS "Found Stellarium User Guide")
      INSTALL(FILES guide/guide.pdf DESTINATION share/${PACKAGE}/guide)
      SET(ISS_GUIDE "Name: \"{group}\\{cm:UserGuide}\"; Filename: \"{app}\\guide\\guide.pdf\"")
@@ -425,6 +431,22 @@ IF(WIN32)
      ENDIF()
 ENDIF()
 
+IF(ANDROID)
+     FIND_PACKAGE(Qt5AndroidExtras REQUIRED)
+
+     FIND_FILE(OPENSSL_SSL_LIBRARY_DLL libssl_1_1.so)
+     FIND_FILE(OPENSSL_CRYPTO_LIBRARY_DLL libcrypto_1_1.so)
+
+     IF( (EXISTS ${OPENSSL_SSL_LIBRARY_DLL}) AND (EXISTS ${OPENSSL_CRYPTO_LIBRARY_DLL}) )
+         set(ANDROID_EXTRA_LIBS
+              ${OPENSSL_SSL_LIBRARY_DLL}
+              ${OPENSSL_CRYPTO_LIBRARY_DLL}
+              CACHE INTERNAL "")
+     ELSE()
+         message( "OpenSSL libraries not found" )
+     ENDIF()
+ENDIF()
+
 # when using Qt 5.3, default to using the old QGLWidget, but warn
 IF(${Qt5Core_VERSION} VERSION_LESS "5.4")
      SET(USE_OLD_QGLWIDGET 1)
@@ -454,7 +476,11 @@ ENDIF()
 # On dynamic builds, this property is also "GL"
 IF(${Qt5Gui_OPENGL_IMPLEMENTATION} MATCHES "GLES")
      MESSAGE(STATUS "Building an OpenGL ES build (${Qt5Gui_OPENGL_IMPLEMENTATION})")
-     SET(STEL_GLES_LIBS Qt5::Gui_EGL Qt5::Gui_GLESv2)
+     IF( ANDROID )
+         SET(STEL_GLES_LIBS EGL GLESv2)
+     ELSE()
+         SET(STEL_GLES_LIBS Qt5::Gui_EGL Qt5::Gui_GLESv2)
+     ENDIF()
 ENDIF()
 
 # Tell CMake to run moc when necessary:
@@ -518,7 +544,7 @@ ENDIF()
 
 IF(NOT USE_SYSTEM_ZLIB)
      #use our own zlib
-     MESSAGE(STATUS "Using bundled zlib version at ${CMAKE_SOURCE_DIR}/src/external/zlib")
+     MESSAGE(STATUS "Using bundled zlib version at ${PROJECT_SOURCE_DIR}/src/external/zlib")
      SET(ZLIB_LIBRARIES zlib_stel)
 ELSE()
      MESSAGE(STATUS "Using system-provided zlib at ${ZLIB_LIBRARIES}")
@@ -538,10 +564,10 @@ ELSE()
      ADD_DEFINITIONS(-DINSTALL_DATADIR=".")
      ADD_DEFINITIONS(-DINSTALL_LOCALEDIR="./locale")
 ENDIF()
-# For not installed debug builds with build directory path that not match sources directory path ${PROJECT_BINARY_DIR} != ${CMAKE_SOURCE_DIR}
+# For not installed debug builds with build directory path that not match sources directory path ${PROJECT_BINARY_DIR} != ${PROJECT_SOURCE_DIR}
 IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
-     ADD_DEFINITIONS(-DINSTALL_DATADIR_FOR_DEBUG="${CMAKE_SOURCE_DIR}")
-     ADD_DEFINITIONS(-DINSTALL_LOCALEDIR_FOR_DEBUG="${CMAKE_SOURCE_DIR}")
+     ADD_DEFINITIONS(-DINSTALL_DATADIR_FOR_DEBUG="${PROJECT_SOURCE_DIR}")
+     ADD_DEFINITIONS(-DINSTALL_LOCALEDIR_FOR_DEBUG="${PROJECT_SOURCE_DIR}")
 ENDIF()
 
 ########### Get revision number for non-release builds ###########
@@ -583,7 +609,7 @@ IF(WIN32)
           SET(PACKAGE_VERSION_RC "${PACKAGE_VERSION}")
      ENDIF()
      STRING(REGEX REPLACE "([.]+)" "," PACKAGE_VERSION_RC ${PACKAGE_VERSION_RC})
-     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/cmake/stellarium.rc.cmake ${CMAKE_CURRENT_BINARY_DIR}/stellarium.rc @ONLY)
+     CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/cmake/stellarium.rc.cmake ${CMAKE_CURRENT_BINARY_DIR}/stellarium.rc @ONLY)
 
      #######################################################
      ### [Optional] Embed icon in the Windows executable ###
@@ -648,7 +674,7 @@ IF(CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebI
      ADD_DEFINITIONS(-DNDEBUG)
 ENDIF()
 
-CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/cmake/default_cfg.ini.cmake ${CMAKE_SOURCE_DIR}/data/default_cfg.ini @ONLY)
+CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/cmake/default_cfg.ini.cmake ${PROJECT_SOURCE_DIR}/data/default_cfg.ini @ONLY)
 
 ########### uninstall files ###############
 CONFIGURE_FILE(
@@ -700,7 +726,7 @@ IF(APPLE)
           SET(PACKAGE_OSX_TARGET "10.11")
      ENDIF()
      ADD_DEFINITIONS(-DPACKAGE_OSX_TARGET)
-     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/cmake/Info.plist.cmake ${CMAKE_SOURCE_DIR}/data/Info.plist @ONLY)
+     CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/cmake/Info.plist.cmake ${PROJECT_SOURCE_DIR}/data/Info.plist @ONLY)
 
      # ${Qt5Core_INCLUDE_DIRS} is a list; I'm expecting the first entry to always be QtCore.framework.
      ADD_CUSTOM_TARGET(
@@ -758,12 +784,12 @@ ENDIF()
 # This will be used for all compilations in sub-directories
 INCLUDE_DIRECTORIES(
       ${CMAKE_BINARY_DIR}
-      ${CMAKE_SOURCE_DIR}/src
-      ${CMAKE_SOURCE_DIR}/src/core
-      ${CMAKE_SOURCE_DIR}/src/core/modules
-      ${CMAKE_SOURCE_DIR}/src/core/planetsephems
-      ${CMAKE_SOURCE_DIR}/src/gui
-      ${CMAKE_SOURCE_DIR}/src/scripting
+      ${PROJECT_SOURCE_DIR}/src
+      ${PROJECT_SOURCE_DIR}/src/core
+      ${PROJECT_SOURCE_DIR}/src/core/modules
+      ${PROJECT_SOURCE_DIR}/src/core/planetsephems
+      ${PROJECT_SOURCE_DIR}/src/gui
+      ${PROJECT_SOURCE_DIR}/src/scripting
       ${INTL_INCLUDE_DIR}
       ${CMAKE_BINARY_DIR}/src
 )
