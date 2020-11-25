@@ -85,8 +85,11 @@ void StelFileMgr::init()
 		installDir = ".";
 	}
 	else
-	{
-	#if defined(Q_OS_MAC)
+    {
+    #if defined(Q_OS_ANDROID)
+        QFileInfo installLocation(QFile::decodeName("assets:"));
+        QFileInfo checkFile(QFile::decodeName("assets:" "/" CHECK_FILE));
+    #elif defined(Q_OS_MAC)
 		QString relativePath = "/../Resources";
 		if (QCoreApplication::applicationDirPath().contains("src")) {
 			relativePath = "/../..";
