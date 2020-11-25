@@ -26,7 +26,6 @@ Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
 #define SERVER_HPP
 
 #include <list>
-using namespace std;
 
 class Socket;
 
@@ -69,8 +68,8 @@ private:
 	  // called by Connection:
 	virtual void gotoReceived(unsigned int ra_int, int dec_int) = 0;
 	friend class Connection;
-	
-	class SocketList : public list<Socket*>
+    
+    class SocketList : public std::list<Socket*>
 	{
 		public:
 		~SocketList(void) { clear(); }

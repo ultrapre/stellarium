@@ -64,6 +64,9 @@
  #include "StelMainScriptAPIProxy.hpp"
 #endif
 
+#ifdef Q_OS_ANDROID
+#include "SensorsMgr.hpp"
+#endif
 
 #include <cstdlib>
 #include <iostream>
@@ -584,7 +587,15 @@ void StelApp::init(QSettings* conf)
 	hlMgr->init();
 	getModuleMgr().registerModule(hlMgr);
 
-	//Create the script manager here, maybe some modules/plugins may want to connect to it
+//#ifdef Q_OS_ANDROID
+//    // Init Android Sensors
+//    SplashScreen::showMessage(q_("Initializing Android Sensor..."));
+//    SensorsMgr* sensors = new SensorsMgr();
+//    sensors->init();
+//    getModuleMgr().registerModule(sensors);
+//#endif
+
+    //Create the script manager here, maybe some modules/plugins may want to connect to it
 	//It has to be initialized later after all modules have been loaded by calling initScriptMgr
 #ifndef DISABLE_SCRIPTING
 	SplashScreen::showMessage(q_("Initializing scripting..."));
@@ -1099,11 +1110,3 @@ int StelApp::getGuiFontSize() const
 	return QGuiApplication::font().pixelSize();
 }
 
-void StelApp::setAppFont(QFont font)
-{
-	int oldSize=QGuiApplication::font().pixelSize();
-	font.setPixelSize(oldSize);
-	font.setStyleHint(QFont::AnyStyle, QFont::OpenGLCompatible);
-	QGuiApplication::setFont(font);
-	emit fontChanged(font);
-}
