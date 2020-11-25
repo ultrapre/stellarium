@@ -308,6 +308,7 @@ private:
 
 	bool flagShowGotoSelectedObjectButton;
 	StelButton* buttonGotoSelectedObject;
+    StelButton* buttonSensors;
 
 	LocationDialog* locationDialog;
 	HelpDialog* helpDialog;

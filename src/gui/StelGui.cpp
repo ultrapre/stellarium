@@ -88,7 +88,8 @@ StelGui::StelGui()
 	, flagShowQuitButton(true)
 	, buttonQuit(Q_NULLPTR)
 	, flagShowGotoSelectedObjectButton(true)
-	, buttonGotoSelectedObject(Q_NULLPTR)
+    , buttonGotoSelectedObject(Q_NULLPTR)
+    , buttonSensors(Q_NULLPTR) //silas
 	, locationDialog(Q_NULLPTR)
 	, helpDialog(Q_NULLPTR)
 	, dateTimeDialog(Q_NULLPTR)
@@ -271,6 +272,8 @@ void StelGui::init(QGraphicsWidget *atopLevelGraphicsWidget)
 	//// QGraphicsView based GUI
 	///////////////////////////////////////////////////////////////////////////
 
+	setFlagUseKineticScrolling(conf->value("gui/flag_enable_kinetic_scrolling", false).toBool());
+
 	setFlagUseButtonsBackground(conf->value("gui/flag_show_buttons_background", true).toBool());
 	// Add everything
 	QPixmap pxmapDefault, pxmapOn, pxmapOff;
@@ -285,7 +288,14 @@ void StelGui::init(QGraphicsWidget *atopLevelGraphicsWidget)
 	addButtonOnLeftBar("bbtAstroCalc", "actionShow_AstroCalc_Window_Global");
 	addButtonOnLeftBar("bbtHelp", "actionShow_Help_Window_Global");
 
-	// Add buttons on bottom bar
+    // Add buttons on bottom bar
+
+    //silas
+    pxmapOn = QPixmap(":/graphicGui/btSensors-on.png");
+    pxmapOff = QPixmap(":/graphicGui/btSensors-off.png");
+    buttonSensors = new StelButton(Q_NULLPTR, pxmapOn, pxmapOff, pxmapGlow32x32, "actionSensorsControl");
+    skyGui->buttonBar->addButton(buttonSensors, "000-othersGroup");
+
 	// Buttons for manage constellations
 	QString groupName = "010-constellationsGroup";
 	addButtonOnBottomBar("btConstellationLines", "actionShow_Constellation_Lines", groupName);
@@ -311,7 +321,7 @@ void StelGui::init(QGraphicsWidget *atopLevelGraphicsWidget)
 	// A "special" buttons
 	pxmapOn = QPixmap(":/graphicGui/btGotoSelectedObject-on.png");
 	pxmapOff = QPixmap(":/graphicGui/btGotoSelectedObject-off.png");
-	buttonGotoSelectedObject = new StelButton(Q_NULLPTR, pxmapOn, pxmapOff, pxmapGlow32x32, "actionGoto_Selected_Object");
+    buttonGotoSelectedObject = new StelButton(Q_NULLPTR, pxmapOn, pxmapOff, pxmapGlow32x32, "actionGoto_Selected_Object");
 	skyGui->buttonBar->addButton(buttonGotoSelectedObject, "060-othersGroup");
 
 	pxmapOn = QPixmap(":/graphicGui/btNightView-on.png");

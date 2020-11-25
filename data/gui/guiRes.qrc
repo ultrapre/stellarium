@@ -200,5 +200,7 @@
         <file>uieSpinright-pressed.png</file>
         <file>uieSpinup.png</file>
         <file>uieSpinup-pressed.png</file>
+        <file>btSensors-off.png</file>
+        <file>btSensors-on.png</file>
     </qresource>
 </RCC>
