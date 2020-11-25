@@ -125,6 +125,8 @@ public:
 	virtual void setInfoTextFilters(const StelObject::InfoStringGroup& aflags);
 	virtual const StelObject::InfoStringGroup& getInfoTextFilters() const;
 
+    static QPixmap ScaledPixmap( const QPixmap& pixmap );
+
 public slots:
 	//! Set the state of the flag of usage background for GUI buttons
 	void setFlagUseButtonsBackground(bool b);
@@ -308,6 +310,7 @@ private:
 
 	bool flagShowGotoSelectedObjectButton;
 	StelButton* buttonGotoSelectedObject;
+    StelButton* buttonSensors;
 
 	LocationDialog* locationDialog;
 	HelpDialog* helpDialog;
