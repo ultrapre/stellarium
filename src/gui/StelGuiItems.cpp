@@ -83,10 +83,10 @@ void StelButton::initCtor(const QPixmap& apixOn,
 			  bool noBackground,
                           bool isTristate)
 {
-	pixOn = apixOn;
-	pixOff = apixOff;
-	pixHover = apixHover;
-	pixNoChange = apixNoChange;
+    pixOn = StelGui::ScaledPixmap(apixOn);
+    pixOff = StelGui::ScaledPixmap(apixOff);
+    pixHover = StelGui::ScaledPixmap(apixHover);
+    pixNoChange = StelGui::ScaledPixmap(apixNoChange);
 	noBckground = noBackground;
 	isTristate_ = isTristate;
 	opacity = 1.;

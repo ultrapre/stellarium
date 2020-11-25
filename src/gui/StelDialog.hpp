@@ -177,7 +177,8 @@ protected:
 
 	//! The main dialog
 	QWidget* dialog;
-	class CustomProxy* proxy;
+	class CustomProxy;
+	CustomProxy* proxy;
 	//! The name should be set in derived classes' constructors and can be used to store and retrieve the panel locations.
 	QString dialogName;
 
@@ -200,7 +201,7 @@ private slots:
 	void updateNightModeProperty();
 };
 
-class CustomProxy : public QGraphicsProxyWidget
+class StelDialog::CustomProxy : public QGraphicsProxyWidget
 {	private:
 	Q_OBJECT
 	public:

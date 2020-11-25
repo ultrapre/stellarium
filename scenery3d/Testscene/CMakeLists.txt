@@ -5,7 +5,7 @@ INSTALL(DIRECTORY ./ DESTINATION share/${PACKAGE}/scenery3d/Testscene
 		  PATTERN "*.ini"
 		  PATTERN "*.mtl"
 		  PATTERN "*.obj"
-		  PATTERN "*.obj.gz"
+		  PATTERN "*.obj.gzip"
 		  PATTERN "description.*.utf8"
 		  PATTERN "*.png"
 		  PATTERN "CMakeFiles" EXCLUDE )
