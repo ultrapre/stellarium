@@ -32,8 +32,8 @@
 #endif
 
 #include <QDebug>
-#include <QAccelerometer>
-#include <QMagnetometer>
+#include <QtSensors/QAccelerometer>
+#include <QtSensors/QMagnetometer>
 
 SensorsMgr::SensorsMgr() :
     enabled(false),

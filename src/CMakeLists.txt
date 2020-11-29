@@ -282,6 +282,16 @@ IF(ENABLE_SCRIPTING)
      )
 ENDIF()
 
+IF(ANDROID)
+    SET(stellarium_lib_SRCS ${stellarium_lib_SRCS}
+        core/modules/SensorsMgr.cpp
+        core/modules/SensorsMgr.hpp
+        StelAndroid.cpp
+        StelAndroid.hpp
+    )
+    message("android")
+ENDIF()
+
 SET(stellarium_exe_SRCS main.cpp)
 
 ################# compiles resources files ############
@@ -459,7 +469,9 @@ ENDIF()
 IF(ENABLE_GPS)
      SET(STELLARIUM_QT_LIBRARIES ${STELLARIUM_QT_LIBRARIES} Qt5::Positioning Qt5::SerialPort)
 ENDIF()
-
+IF(ANDROID)
+    SET(STELLARIUM_QT_LIBRARIES ${STELLARIUM_QT_LIBRARIES} Qt5::Sensors Qt::AndroidExtras)
+ENDIF()
 IF(ENABLE_SPOUT AND SPOUT_LIBRARY_DLL)
      # automatically copy the spout .dll to the binary directory, if possible
      CONFIGURE_FILE(${SPOUT_LIBRARY_DLL} ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
@@ -473,6 +485,7 @@ ENDIF()
 # Main executable/library setup
 IF(GENERATE_STELMAINLIB)
      ADD_LIBRARY(stelMain SHARED ${stellarium_lib_SRCS} ${stellarium_RES_CXX})
+
      TARGET_LINK_LIBRARIES(stelMain ${STELMAIN_DEPS})
      INSTALL(TARGETS stelMain DESTINATION lib)
      # WIN32 creates a windows app without console, no effect on non-win platforms

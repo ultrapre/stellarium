@@ -24,8 +24,8 @@
 #include <QStringList>
 #include <QRegExp>
 #include <QDir>
-#include <QAndroidJniObject>
-#include <QAndroidJniEnvironment>
+#include <QtAndroidExtras/QAndroidJniEnvironment>
+#include <QtAndroidExtras/QAndroidJniObject>
 
 QAndroidJniObject* StelAndroid::getStellarium()
 {
