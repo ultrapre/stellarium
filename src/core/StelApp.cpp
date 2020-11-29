@@ -606,10 +606,10 @@ void StelApp::init(QSettings* conf)
 
 #ifdef Q_OS_ANDROID
     // Init Android Sensors
-    SplashScreen::showMessage(q_("Initializing Android Sensor..."));
-    SensorsMgr* sensors = new SensorsMgr();
-    sensors->init();
-    getModuleMgr().registerModule(sensors);
+//    SplashScreen::showMessage(q_("Initializing Android Sensor..."));
+//    SensorsMgr* sensors = new SensorsMgr();
+//    sensors->init();
+//    getModuleMgr().registerModule(sensors);
 #endif
 
     //Create the script manager here, maybe some modules/plugins may want to connect to it
