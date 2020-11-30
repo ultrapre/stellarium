@@ -1,4 +1,4 @@
-name: Build for Android
+name: Fast Build for Android
 
 on:
   push:
