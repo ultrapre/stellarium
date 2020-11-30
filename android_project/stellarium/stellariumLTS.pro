@@ -58,25 +58,25 @@ android {
 
 INCLUDEPATH += \
 $$STEL/src \
-$$STEL/src\core \
-$$STEL/src\core\modules \
-$$STEL/src\core\planetsephems \
-$$STEL/src\external \
-$$STEL/src\external\glues_stel \
-$$STEL/src\external\glues_stel\source \
-$$STEL/src\external\glues_stel\source\libtess \
-$$STEL/src\external\libindi \
-$$STEL/src\external\libindi\libs \
-$$STEL/src\external\libindi\libs\indibase \
-$$STEL/src\external\libindi\libs\indibase\connectionplugins \
-$$STEL/src\external\libindi\libs\lx \
-$$STEL/src\external\qcustomplot \
-$$STEL/src\external\qtcompress \
-$$STEL/src\external\qxlsx \
-$$STEL/src\external\zlib \
-$$STEL/src\gui \
-$$STEL/src\scripting \
-$$STEL/src\tests \
+$$STEL/src/core \
+$$STEL/src/core/modules \
+$$STEL/src/core/planetsephems \
+$$STEL/src/external \
+$$STEL/src/external/glues_stel \
+$$STEL/src/external/glues_stel/source \
+$$STEL/src/external/glues_stel/source/libtess \
+$$STEL/src/external/libindi \
+$$STEL/src/external/libindi/libs \
+$$STEL/src/external/libindi/libs/indibase \
+$$STEL/src/external/libindi/libs/indibase/connectionplugins \
+$$STEL/src/external/libindi/libs/lx \
+$$STEL/src/external/qcustomplot \
+$$STEL/src/external/qtcompress \
+$$STEL/src/external/qxlsx \
+$$STEL/src/external/zlib \
+$$STEL/src/gui \
+$$STEL/src/scripting \
+$$STEL/src/tests \
 
 SOURCES += \
         $$STEL/src/main.cpp
