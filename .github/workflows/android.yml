@@ -79,7 +79,6 @@ jobs:
       run: |
         ls -R
     - uses: actions/upload-artifact@v1
-      if: github.event_name == 'push'
       with:
         name: Debug-APK
         path: android_project/stellarium/android-build//build/outputs/apk/debug/android-build-debug.apk
