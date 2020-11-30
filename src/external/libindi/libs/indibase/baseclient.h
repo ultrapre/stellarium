@@ -26,7 +26,7 @@
 
 #include <thread>
 
-#ifdef _WINDOWS
+#ifdef _WIN32
 #include <WinSock2.h>
 #endif
 
@@ -253,7 +253,7 @@ class INDI::BaseClient : public INDI::BaseMediator
 
     std::thread *listen_thread=nullptr;
 
-#ifdef _WINDOWS
+#ifdef _WIN32
     SOCKET sockfd;
 #else
     int sockfd;
