@@ -47,7 +47,7 @@ android {
         $$STEL/skycultures \
         $$STEL/stars \
         $$STEL/textures \
-        $$STEL/translations
+        $$STEL/build/translations
         INSTALLS += assets
         LIBS += -lstelMain_armeabi-v7a
         ANDROID_EXTRA_LIBS += $$files( $$DESTDIR/*.so , true )
