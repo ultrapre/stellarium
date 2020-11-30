@@ -19,4 +19,4 @@ jobs:
         args: git submodule update --init --recursive
     - name: show filetrees
       run: |
-        ls -R build/android-build
+        ls -R
