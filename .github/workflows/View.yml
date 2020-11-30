@@ -19,7 +19,6 @@ jobs:
     - name: move .so
       run: |
         cd android_project/stellarium
-        cp ../../android-build/libs/armeabi-v7a/libstelMain_armeabi-v7a.so ../libsShare
         ls ../libsShare
     - name: qmake apk
       run: |
