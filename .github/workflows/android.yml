@@ -22,6 +22,7 @@ jobs:
       with:
         target: 'android'
         version: '5.14.2'
+        modules: 'qtcharts qtwebengine qtscript'
     - name: Install Additional Software
       run: |
         sudo apt install doxygen graphviz librsvg2-bin
