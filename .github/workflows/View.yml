@@ -19,6 +19,7 @@ jobs:
     - name: move .so
       run: |
         cd android_project/stellarium
+        ls
     - name: qmake apk
       run: |
         cd android_project/stellarium
