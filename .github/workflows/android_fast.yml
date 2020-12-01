@@ -1,9 +1,6 @@
 name: Fast Build for Android
 
 on:
-  push:
-    tags:
-      - v*
   workflow_dispatch:
 
 jobs:
