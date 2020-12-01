@@ -1,4 +1,4 @@
-name: Fast Build for Android
+name: Fake Build for Android
 
 on:
   workflow_dispatch:
