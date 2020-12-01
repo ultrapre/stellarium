@@ -1,9 +1,6 @@
 name: Files View
 
 on:
-  push:
-    tags:
-      - v*
   workflow_dispatch:
 
 jobs:
