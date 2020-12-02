@@ -1,0 +1,50 @@
+name: Build for Android
+
+on:
+  push:
+    tags:
+      - v*
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Cache Qt
+      id: cache-qt
+      uses: actions/cache@v1
+      with:
+        path: ../Qt
+        key: ${{ runner.os }}-QtCache
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+      with:
+        target: 'desktop'
+        version: '5.15.2'
+        modules: 'qtcharts qtwebengine qtscript'
+        arch = 'win64_mingw81'
+        cached: ${{ steps.cache-qt.outputs.cache-hit }}
+    - name: Configure
+      run: |
+        mkdir -p build
+        cd build
+        cmake .. \
+          -DCMAKE_FIND_ROOT_PATH:STRING=$Qt5_DIR \
+          -DCMAKE_PREFIX_PATH:STRING=$Qt5_DIR \
+          -DQT_QMAKE_EXECUTABLE:STRING=$Qt5_DIR/bin/qmake
+    - name: Compile
+      run: |
+        pwd
+        cd build
+        make
+        make install
+    - name: show filetrees
+      run: |
+        ls -R
+    - uses: actions/upload-artifact@v1
+      with:
+        name: Debug-APP
+        path: "C:\Program Files (x86)\Stellarium"
