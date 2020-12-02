@@ -31,7 +31,9 @@ jobs:
       run: |
         mkdir -p build
         cd build
-        cmake.exe --build .. --target all install
+        cmake.exe ..
+        make
+        make install
     - name: show filetrees
       run: |
         ls -R
