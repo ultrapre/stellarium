@@ -103,6 +103,27 @@ export LD_LIBRARY_PATH=$QTDIR/lib:$LD_LIBRARY_PATH
 $ brew install cmake git gettext
 $ brew link gettext --force
 ```
+
+#### OSX 11 and above
+If 
+```
+$ brew link gettext --force
+```
+
+failed due to :
+```
+Linking /usr/local/Cellar/gettext/0.21...
+Error: Could not symlink include/autosprintf.h
+/usr/local/include is not writable.
+```
+Try the following:
+
+```
+$ sudo mkdir /usr/local/include
+$ sudo chown -R $(whoami) $(brew --prefix)/*
+
+```
+
 - Install latest Qt:
 ```
 $ brew install qt
@@ -128,6 +149,22 @@ After installing all required libraries and tools you should configure the build
 Add `C:\Qt\Qt5.9.9` to your `PATH` variable - you should add string `C:\Qt\Qt5.9.9\msvc2017;C:\Qt\Qt5.9.9\msvc2017\bin` for 32-bit or `C:\Qt\Qt5.9.9\msvc2017_64;C:\Qt\Qt5.9.9\msvc2017_64\bin` for 64-bit to `PATH` variable.
 
 **Note:** After changes to the `PATH` variable you should reboot the computer to apply those changes.
+
+#### Windows (static)
+
+You can build a static version using MSVC-static kit (for example we installed Qt 5.15.1 with MSVC2019):
+
+To prepare a static kit,  prepare src package of Qt 5.15.1, and configure compilation tool (Python, Ruby, Perl and Visual Studio 2019). Enter src folder:
+
+```
+configure.bat -static -prefix "D:\Qt\msvc2019_static" -confirm-license -opensource  -debug-and-release -platform win32-msvc  -nomake examples -nomake tests  -plugin-sql-sqlite -plugin-sql-odbc -qt-zlib -qt-libpng -qt-libjpeg -opengl desktop -mp
+nmake
+nmake install
+```
+
+When finishing compilation, configure kit in Qt Creator. Clone Kit "Desktop Qt5.15.1 MSVC" to "Desktop Qt5.15.1 MSVC(static)". Then configure CMake Generator with NMake Makefiles JOM + Extra generator: CodeBlocks.
+
+Finally, just open CMakeLists.txt in Qt Creator and build it with MSVC-static kit.
 
 ## Getting the source code
 
@@ -301,7 +338,7 @@ $ make package
 After building of TGZ binary package you may create a DEB or RPM package also: 
 ```
 $ cpack -G DEB
-``` 
+```
 or 
 ```
 $ cpack -G RPM
