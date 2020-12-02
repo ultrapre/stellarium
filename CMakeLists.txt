@@ -169,7 +169,6 @@ IF(${CMAKE_BUILD_TYPE} MATCHES "UBSan")
      SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=undefined -g")
 ENDIF()
 
-SET(CMAKE_INSTALL_PREFIX G:/Stellarium/TRACK/build-stellarium-Android_Qt_5_15_1_android_Clang_Multi_Abi-Debug/android-build/assets)
 
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
      SET(APPLE 1)
