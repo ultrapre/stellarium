@@ -75,8 +75,8 @@ IF(${CMAKE_BUILD_TYPE} MATCHES "Debug")
                APPEND_COVERAGE_COMPILER_FLAGS()
                MESSAGE(STATUS "Found lcov ${LCOV_PATH} (enable coverage support)")
                SETUP_TARGET_FOR_COVERAGE_LCOV(
-                    NAME coverage 
-                    EXECUTABLE ctest -j ${PROCESSOR_COUNT} 
+                    NAME coverage
+                    EXECUTABLE ctest -j ${PROCESSOR_COUNT}
                     DEPENDENCIES buildTests
                )
           ENDIF()
@@ -169,6 +169,8 @@ IF(${CMAKE_BUILD_TYPE} MATCHES "UBSan")
      SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=undefined -g")
 ENDIF()
 
+SET(CMAKE_INSTALL_PREFIX G:/Stellarium/TRACK/build-stellarium-Android_Qt_5_15_1_android_Clang_Multi_Abi-Debug/android-build/assets)
+
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
      SET(APPLE 1)
      SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
@@ -176,9 +178,15 @@ IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
      SET(SDATALOC "Resources")
      # home data location:
      SET(HDATALOC "$ENV{HOME}/Library/Application\ Support/${PROJECT_NAME}")
-ELSE()     
+elseif(ANDROID)
+    SET(SDATALOC ".")
+    message("SDATALOC ANDROID")
+    # home data location:
+    SET(HDATALOC "$ENV{HOME}/.${PACKAGE}")
+ELSE()
      # share data location:
      SET(SDATALOC "share/${PACKAGE}")
+     message(${SDATALOC})
      # home data location:
      SET(HDATALOC "$ENV{HOME}/.${PACKAGE}")
 ENDIF()
@@ -276,7 +284,7 @@ IF("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
 ENDIF()
 
 # FreeBSD-specific compiler flags
-# resolve bug for FreeBSD/amd64 and NVIDIA proprietary drivers 
+# resolve bug for FreeBSD/amd64 and NVIDIA proprietary drivers
 IF(${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
      # Use -pthread compilation option to properly link to threading library
      SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
@@ -662,7 +670,7 @@ IF(UNIX AND NOT WIN32)
      IF(APPLE)
           SET(CMAKE_INSTALL_PREFIX "${PROJECT_BINARY_DIR}/Stellarium.app/Contents")
      ELSE()
-          ADD_DEFINITIONS(-DINSTALL_DATADIR="${CMAKE_INSTALL_PREFIX}/${SDATALOC}")          
+          ADD_DEFINITIONS(-DINSTALL_DATADIR="${CMAKE_INSTALL_PREFIX}/${SDATALOC}")
           # Used in generating the documentation (doc/stellarium.pod.cmake):
           SET(INSTALL_DATADIR "${CMAKE_INSTALL_PREFIX}/${SDATALOC}")
      ENDIF()
@@ -849,7 +857,7 @@ IF(WIN32)
      STRING(REPLACE "/" "\\" PROJECT_SOURCE_DIR_WINPATH ${PROJECT_SOURCE_DIR})
      STRING(REPLACE "/" "\\" PROJECT_BINARY_DIR_WINPATH ${PROJECT_BINARY_DIR})
      CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/cmake/copy-translations.bat.cmake ${PROJECT_SOURCE_DIR}/util/copy-translations.bat @ONLY NEWLINE_STYLE WIN32)
-ENDIF() 
+ENDIF()
 
 
 ########### Top level include directories ###########
