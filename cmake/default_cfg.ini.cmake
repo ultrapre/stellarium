@@ -114,8 +114,8 @@ flag_font_selection                 = false
 mouse_cursor_timeout                = 10
 flag_mouse_cursor_timeout           = false
 selected_object_info                = all
-auto_hide_horizontal_toolbar        = true
-auto_hide_vertical_toolbar          = true
+auto_hide_horizontal_toolbar        = false
+auto_hide_vertical_toolbar          = false
 flag_enable_kinetic_scrolling       = true
 # These values are used on non-Windows systems supporting GPSD
 gpsd_hostname                       = localhost
