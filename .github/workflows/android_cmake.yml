@@ -30,9 +30,9 @@ jobs:
         version: '5.15.1'
         modules: 'qtcharts qtwebengine qtscript'
         cached: ${{ steps.cache-qt.outputs.cache-hit }}
-    - name: Install Additional Software
-      run: |
-        sudo apt install doxygen graphviz librsvg2-bin
+    #- name: Install Additional Software
+    #  run: |
+    #    sudo apt install doxygen graphviz librsvg2-bin
     - name: Configure
       run: |
         cmake . \
