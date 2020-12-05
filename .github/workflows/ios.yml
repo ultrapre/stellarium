@@ -37,7 +37,10 @@ jobs:
             -DCMAKE_FIND_ROOT_PATH:STRING=$Qt5_DIR \
             -DCMAKE_PREFIX_PATH:STRING=$Qt5_DIR \
             -DQT_QMAKE_EXECUTABLE:STRING=$Qt5_DIR/bin/qmake \
-            -DUSE_PLUGIN_TELESCOPECONTROL:BOOL=OFF
+            -DUSE_PLUGIN_TELESCOPECONTROL=OFF \
+            -DENABLE_GPS=OFF \
+            -DENABLE_LIBGPS=OFF
+             
           cmake ..
       - name: Compile
         run: |
