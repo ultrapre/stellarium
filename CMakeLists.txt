@@ -330,7 +330,7 @@ SET(ENABLE_MEDIA 1 CACHE BOOL "Define whether media support should be activated.
 # - Other systems: libgps if possible and NMEA emitter as fallback.
 IF(IOS)
 SET(ENABLE_GPS 0 CACHE BOOL "Define whether GPS queries should be supported.")
-ELSE
+ELSE()
 SET(ENABLE_GPS 1 CACHE BOOL "Define whether GPS queries should be supported.")
 ENDIF()
 
