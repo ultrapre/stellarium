@@ -17,6 +17,12 @@ jobs:
         qt_ver: [5.12.10]
         qt_target: [ios]
     steps:
+      - name: Cache Qt
+        id: cache-qt
+        uses: actions/cache@v1
+        with:
+          path: ../Qt
+          key: ${{ runner.os }}-QtCache
       - name: Install Qt
         # if: steps.cacheqt.outputs.cache-hit != 'true'
         uses: jurplel/install-qt-action@v2.10.0
@@ -25,6 +31,8 @@ jobs:
           version: ${{ matrix.qt_ver }}
           # Target platform for build
           target: ${{ matrix.qt_target }}
+          modules: 'qtcharts qtwebengine qtscript'
+          cached: ${{ steps.cache-qt.outputs.cache-hit }}
       - uses: actions/checkout@v1
         with:
           fetch-depth: 1
