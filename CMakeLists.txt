@@ -543,17 +543,20 @@ ENDIF()
 IF(ANDROID)
      FIND_PACKAGE(Qt5AndroidExtras REQUIRED)
      FIND_PACKAGE(Qt5Sensors REQUIRED)
-     FIND_FILE(OPENSSL_SSL_LIBRARY_DLL libssl_1_1.so)
-     FIND_FILE(OPENSSL_CRYPTO_LIBRARY_DLL libcrypto_1_1.so)
-
-     IF( (EXISTS ${OPENSSL_SSL_LIBRARY_DLL}) AND (EXISTS ${OPENSSL_CRYPTO_LIBRARY_DLL}) )
-         set(ANDROID_EXTRA_LIBS
-              ${OPENSSL_SSL_LIBRARY_DLL}
-              ${OPENSSL_CRYPTO_LIBRARY_DLL}
-              CACHE INTERNAL "")
-     ELSE()
-         message( "OpenSSL libraries not found" )
-     ENDIF()
+     # FIND_FILE(OPENSSL_SSL_LIBRARY_DLL libssl_1_1.so)
+     # FIND_FILE(OPENSSL_CRYPTO_LIBRARY_DLL libcrypto_1_1.so)
+     # IF( (EXISTS ${OPENSSL_SSL_LIBRARY_DLL}) AND (EXISTS ${OPENSSL_CRYPTO_LIBRARY_DLL}) )
+     #     set(ANDROID_EXTRA_LIBS
+     #          ${OPENSSL_SSL_LIBRARY_DLL}
+     #          ${OPENSSL_CRYPTO_LIBRARY_DLL}
+     #          CACHE INTERNAL "")
+     # ELSE()
+     #     message( "OpenSSL libraries not found" )
+     # ENDIF()
+     set(ANDROID_EXTRA_LIBS
+     "${CMAKE_CURRENT_SOURCE_DIR}/libssl_1_1.so"
+     "${CMAKE_CURRENT_SOURCE_DIR}/libcrypto_1_1.so"
+     CACHE INTERNAL "")
 ENDIF()
 
 # when using Qt 5.3, default to using the old QGLWidget, but warn
