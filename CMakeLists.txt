@@ -328,7 +328,11 @@ SET(ENABLE_MEDIA 1 CACHE BOOL "Define whether media support should be activated.
 # Activate GPS support. Solution depends on operating system:
 # - Windows: Only directly-attached serial NMEA emitter.
 # - Other systems: libgps if possible and NMEA emitter as fallback.
+IF(IOS)
+SET(ENABLE_GPS 0 CACHE BOOL "Define whether GPS queries should be supported.")
+ELSE()
 SET(ENABLE_GPS 1 CACHE BOOL "Define whether GPS queries should be supported.")
+ENDIF()
 
 # SPOUT allows relaying the Stellarium OpenGL framebuffer as DirectX texture in other programs.
 # It exists on Windows only. Syphon is a similar system for MacOS, this might be added by a Mac developer.
