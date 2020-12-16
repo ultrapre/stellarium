@@ -19,6 +19,7 @@ SET( ANDROID_PACKAGE_SOURCE_DIR    ${CMAKE_CURRENT_LIST_DIR}/android )
 
 ########### Project name ###########
 PROJECT(Stellarium)
+
 # Use integer versions instead of strings for easier handling if required
 SET(STELLARIUM_MAJOR 0)
 SET(STELLARIUM_MINOR 20)
@@ -310,7 +311,8 @@ ENDIF()
 
 ########### Others ###########
 # Activate translation
-SET(ENABLE_NLS 1 CACHE BOOL "Define whether program translation should be supported.")
+SET(ENABLE_NLS 0)
+#SET(ENABLE_NLS 1 CACHE BOOL "Define whether program translation should be supported.")
 IF(ENABLE_NLS)
      ADD_DEFINITIONS(-DENABLE_NLS)
 ENDIF()
@@ -887,3 +889,4 @@ IF(USE_PLUGIN_SCENERY3D)
 ENDIF()
 ADD_SUBDIRECTORY( stars )
 ADD_SUBDIRECTORY( plugins )
+
