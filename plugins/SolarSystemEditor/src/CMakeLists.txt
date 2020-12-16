@@ -26,10 +26,10 @@ SET(SolarSystemEditor_UIS
      gui/manualImportWindow.ui
 )
 
-QT5_WRAP_UI(SolarSystemEditor_UIS_H ${SolarSystemEditor_UIS})
+Qt6_WRAP_UI(SolarSystemEditor_UIS_H ${SolarSystemEditor_UIS})
 
 ADD_LIBRARY(SolarSystemEditor-static STATIC ${SolarSystemEditor_SRCS} ${SolarSystemEditor_RES_CXX} ${SolarSystemEditor_UIS_H})
-TARGET_LINK_LIBRARIES(SolarSystemEditor-static Qt5::Core Qt5::Network Qt5::Widgets)
+TARGET_LINK_LIBRARIES(SolarSystemEditor-static Qt6::Core Qt6::Network Qt6::Widgets)
 SET_TARGET_PROPERTIES(SolarSystemEditor-static PROPERTIES OUTPUT_NAME "SolarSystemEditor")
 SET_TARGET_PROPERTIES(SolarSystemEditor-static PROPERTIES COMPILE_FLAGS "-DQT_STATICPLUGIN")
 ADD_DEPENDENCIES(AllStaticPlugins SolarSystemEditor-static)

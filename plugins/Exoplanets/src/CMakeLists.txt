@@ -19,13 +19,13 @@ SET(Exoplanets_SRCS
 SET(ExoplanetsDialog_UIS
      gui/exoplanetsDialog.ui
 )
-QT5_WRAP_UI(ExoplanetsDialog_UIS_H ${ExoplanetsDialog_UIS})
+Qt6_WRAP_UI(ExoplanetsDialog_UIS_H ${ExoplanetsDialog_UIS})
 
 SET(Exoplanets_RES ../resources/Exoplanets.qrc)
-QT5_ADD_RESOURCES(Exoplanets_RES_CXX ${Exoplanets_RES})
+Qt6_ADD_RESOURCES(Exoplanets_RES_CXX ${Exoplanets_RES})
 
 ADD_LIBRARY(Exoplanets-static STATIC ${Exoplanets_SRCS} ${Exoplanets_RES_CXX} ${ExoplanetsDialog_UIS_H})
-TARGET_LINK_LIBRARIES(Exoplanets-static Qt5::Core Qt5::Network Qt5::Widgets qcustomplot_stel)
+TARGET_LINK_LIBRARIES(Exoplanets-static Qt6::Core Qt6::Network Qt6::Widgets qcustomplot_stel)
 SET_TARGET_PROPERTIES(Exoplanets-static PROPERTIES OUTPUT_NAME "Exoplanets")
 SET_TARGET_PROPERTIES(Exoplanets-static PROPERTIES COMPILE_FLAGS "-DQT_STATICPLUGIN")
 ADD_DEPENDENCIES(AllStaticPlugins Exoplanets-static)

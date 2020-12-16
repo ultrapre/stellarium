@@ -11,9 +11,9 @@ add_library(TelescopeControl_NexStar STATIC
     )
 
 target_link_libraries(TelescopeControl_NexStar
-    Qt5::Core
-    Qt5::Network
-    Qt5::Gui
+    Qt6::Core
+    Qt6::Network
+    Qt6::Gui
     TelescopeControl_common
     )
 

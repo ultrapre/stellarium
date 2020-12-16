@@ -26,17 +26,17 @@ SET(Oculars_SRCS
 )
 
 SET(Oculars_RES ../resources/Oculars.qrc)
-QT5_ADD_RESOURCES(Oculars_RES_CXX ${Oculars_RES})
+Qt6_ADD_RESOURCES(Oculars_RES_CXX ${Oculars_RES})
 
 ################# compiles .ui files ############
 SET(Oculars_UIS
      gui/ocularDialog.ui
 )
-QT5_WRAP_UI(Oculars_UIS_H ${Oculars_UIS})
+Qt6_WRAP_UI(Oculars_UIS_H ${Oculars_UIS})
 
 ADD_LIBRARY(Oculars-static STATIC ${Oculars_SRCS} ${Oculars_RES_CXX} ${Oculars_UIS_H})
 SET_TARGET_PROPERTIES(Oculars-static PROPERTIES OUTPUT_NAME "Oculars")
-TARGET_LINK_LIBRARIES(Oculars-static Qt5::Core Qt5::Widgets)
+TARGET_LINK_LIBRARIES(Oculars-static Qt6::Core Qt6::Widgets)
 SET_TARGET_PROPERTIES(Oculars-static PROPERTIES COMPILE_FLAGS "-DQT_STATICPLUGIN")
 ADD_DEPENDENCIES(AllStaticPlugins Oculars-static)
 

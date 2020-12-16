@@ -7,7 +7,7 @@ SET(SimpleDrawLine_SRCS
      SimpleDrawLine.cpp
 )
 
-SET(SimpleDrawLine_Qt_Libraries Qt5::Core Qt5::Gui)
+SET(SimpleDrawLine_Qt_Libraries Qt6::Core Qt6::Gui)
 
 ############### For building the dynamic library ######################
 IF(BUILD_DYNAMIC_PLUGIN)

@@ -74,7 +74,7 @@ set(PKG_CONFIG_LIBDIR ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
 OPTION (INDI_BUILD_SERVER "Build INDI Server" ON)
 OPTION (INDI_BUILD_DRIVERS "Build INDI Drivers, Tools, and Examples" ON)
 OPTION (INDI_BUILD_CLIENT "Build INDI POSIX Client" ON)
-OPTION (INDI_BUILD_QT5_CLIENT "Build INDI Qt5 Client" OFF)
+OPTION (INDI_BUILD_Qt6_CLIENT "Build INDI Qt6 Client" OFF)
 OPTION (INDI_BUILD_UNITTESTS "Build INDI tests" OFF)
 OPTION (INDI_FAST_BLOB "Build INDI with Fast BLOB support" ON)
 OPTION (INDI_CALCULATE_MINMAX "Calculate and store image minimum and maximum values in FITS header" OFF)
@@ -184,16 +184,16 @@ endif (INDI_BUILD_CLIENT AND NOT ANDROID)
 
 #################################################################################################
 #
-# Component   : INDI Qt5 Client
-# Dependencies: Qt5Network, zlib, cfitsio
+# Component   : INDI Qt6 Client
+# Dependencies: Qt6Network, zlib, cfitsio
 # Supported OS: Linux, BSD, MacOS, Cygwin, Windows, Android
 #
 #################################################################################################
-if (INDI_BUILD_QT5_CLIENT)
+if (INDI_BUILD_Qt6_CLIENT)
 set(QT_ANDROID "" CACHE path "Qt Android path")
 # 1. Dependencies
 if (ANDROID)
-    include(${QT_ANDROID}/lib/cmake/Qt5Network/Qt5NetworkConfig.cmake)
+    include(${QT_ANDROID}/lib/cmake/Qt6Network/Qt6NetworkConfig.cmake)
     if (NOT CFITSIO_DIR)
         message(FATAL_ERROR CFITSIO_DIR must be set)
     else ()
@@ -201,7 +201,7 @@ if (ANDROID)
         set(CFITSIO_LIBRARIES ${CFITSIO_DIR}/libcfitsio.a)
     endif ()
 else ()
-    find_package(Qt5Network)
+    find_package(Qt6Network)
     find_package(ZLIB REQUIRED)
     find_package(CFITSIO REQUIRED)
 endif ()
@@ -212,7 +212,7 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/libs)
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/libs/indibase)
 include_directories( ${CFITSIO_INCLUDE_DIR})
 # 3. Build
-message(STATUS "Building INDI Client with Qt5 support")
+message(STATUS "Building INDI Client with Qt6 support")
 SET(indiclientqt_C_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/libs/lilxml.c
     ${CMAKE_CURRENT_SOURCE_DIR}/base64.c)
@@ -233,14 +233,14 @@ add_library(indiclientqt STATIC ${indiclientqt_C_SRC} ${indiclientqt_CXX_SRC})
 if (NOT CYGWIN AND NOT WIN32)
 set_target_properties(indiclientqt PROPERTIES COMPILE_FLAGS "-fPIC")
 endif(NOT CYGWIN AND NOT WIN32)
-qt5_use_modules(indiclientqt Network)
+Qt6_use_modules(indiclientqt Network)
 if (WIN32 OR ANDROID)
 install(TARGETS indiclientqt ARCHIVE DESTINATION lib)
 else(WIN32 OR ANDROID)
 install(TARGETS indiclientqt ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 endif(WIN32 OR ANDROID)
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/libs/indibase/baseclientqt.h DESTINATION ${INCLUDE_INSTALL_DIR}/libindi COMPONENT Devel)
-endif (INDI_BUILD_QT5_CLIENT)
+endif (INDI_BUILD_Qt6_CLIENT)
 
 #################################################################################################
 #
@@ -1284,7 +1284,7 @@ if (MSVC)
 endif()
 
 # Install common dev files for all except server
-if (INDI_BUILD_DRIVERS OR INDI_BUILD_CLIENT OR INDI_BUILD_QT5_CLIENT)
+if (INDI_BUILD_DRIVERS OR INDI_BUILD_CLIENT OR INDI_BUILD_Qt6_CLIENT)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/indiversion.h DESTINATION ${INCLUDE_INSTALL_DIR}/libindi COMPONENT Devel)
     install( FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/indiapi.h
@@ -1326,7 +1326,7 @@ install( FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/libs/indibase/connectionplugins/connectionserial.h
     ${CMAKE_CURRENT_SOURCE_DIR}/libs/indibase/connectionplugins/connectiontcp.h
     DESTINATION ${INCLUDE_INSTALL_DIR}/libindi/connectionplugins COMPONENT Devel)
-endif (INDI_BUILD_DRIVERS OR INDI_BUILD_CLIENT OR INDI_BUILD_QT5_CLIENT)
+endif (INDI_BUILD_DRIVERS OR INDI_BUILD_CLIENT OR INDI_BUILD_Qt6_CLIENT)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
@@ -1340,6 +1340,6 @@ endif()
 if (INDI_BUILD_CLIENT)
     message(STATUS "## INDI Client")
 endif()
-if (INDI_BUILD_QT5_CLIENT)
-    message(STATUS "## INDI Qt5 Client")
+if (INDI_BUILD_Qt6_CLIENT)
+    message(STATUS "## INDI Qt6 Client")
 endif()

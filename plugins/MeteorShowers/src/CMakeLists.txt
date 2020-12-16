@@ -28,13 +28,13 @@ SET(MeteorShowersDialog_UIS
      gui/MSSearchDialog.ui
 )
 
-QT5_WRAP_UI(MeteorShowersDialog_UIS_H ${MeteorShowersDialog_UIS})
+Qt6_WRAP_UI(MeteorShowersDialog_UIS_H ${MeteorShowersDialog_UIS})
 
 SET(MeteorShowers_RES ../resources/MeteorShower.qrc)
-QT5_ADD_RESOURCES(MeteorShowers_RES_CXX ${MeteorShowers_RES})
+Qt6_ADD_RESOURCES(MeteorShowers_RES_CXX ${MeteorShowers_RES})
 
 ADD_LIBRARY(MeteorShowers-static STATIC ${MeteorShowers_SRCS} ${MeteorShowers_MOC_SRCS} ${MeteorShowers_RES_CXX} ${MeteorShowersDialog_UIS_H})
-TARGET_LINK_LIBRARIES(MeteorShowers-static Qt5::Core Qt5::Network Qt5::Widgets)
+TARGET_LINK_LIBRARIES(MeteorShowers-static Qt6::Core Qt6::Network Qt6::Widgets)
 SET_TARGET_PROPERTIES(MeteorShowers-static PROPERTIES OUTPUT_NAME "MeteorShowers")
 SET_TARGET_PROPERTIES(MeteorShowers-static PROPERTIES COMPILE_FLAGS "-DQT_STATICPLUGIN")
 ADD_DEPENDENCIES(AllStaticPlugins MeteorShowers-static)

@@ -20,13 +20,13 @@ SET(SupernovaeDialog_UIS
      gui/supernovaeDialog.ui
 )
 
-QT5_WRAP_UI(SupernovaeDialog_UIS_H ${SupernovaeDialog_UIS})
+Qt6_WRAP_UI(SupernovaeDialog_UIS_H ${SupernovaeDialog_UIS})
 
 SET(Supernovae_RES ../resources/Supernovae.qrc)
-QT5_ADD_RESOURCES(Supernovae_RES_CXX ${Supernovae_RES})
+Qt6_ADD_RESOURCES(Supernovae_RES_CXX ${Supernovae_RES})
 
 ADD_LIBRARY(Supernovae-static STATIC ${Supernovae_SRCS} ${Supernovae_RES_CXX} ${SupernovaeDialog_UIS_H})
-TARGET_LINK_LIBRARIES(Supernovae-static Qt5::Core Qt5::Network Qt5::Widgets)
+TARGET_LINK_LIBRARIES(Supernovae-static Qt6::Core Qt6::Network Qt6::Widgets)
 
 IF(ENABLE_TESTING)
     ADD_SUBDIRECTORY(test)

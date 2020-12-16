@@ -27,10 +27,10 @@ add_library(TelescopeControl_common STATIC
     )
 
 target_link_libraries(TelescopeControl_common
-    Qt5::Core
-    Qt5::Network
-    Qt5::Gui
-    Qt5::Widgets
+    Qt6::Core
+    Qt6::Network
+    Qt6::Gui
+    Qt6::Widgets
     )
 
 SET_TARGET_PROPERTIES(TelescopeControl_common PROPERTIES FOLDER "plugins/TelescopeControl")

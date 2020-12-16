@@ -8,7 +8,7 @@ SET(TelescopeControl_GUI_UIS
     storedPointsDialog.ui
     )
 
-QT5_WRAP_UI(TelescopeControl_GUI_UIS_H ${TelescopeControl_GUI_UIS})
+Qt6_WRAP_UI(TelescopeControl_GUI_UIS_H ${TelescopeControl_GUI_UIS})
 
 add_library(TelescopeControl_gui STATIC
     SlewDialog.hpp
@@ -23,9 +23,9 @@ add_library(TelescopeControl_gui STATIC
     )
 
 target_link_libraries(TelescopeControl_gui
-    Qt5::Core
-    Qt5::Network
-    Qt5::Gui
+    Qt6::Core
+    Qt6::Network
+    Qt6::Gui
     TelescopeControl_common
     TelescopeControl_INDI    
     )

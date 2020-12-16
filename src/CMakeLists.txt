@@ -257,7 +257,7 @@ SET(stellarium_lib_SRCS
 ### Q_GADGET is required force the Qt MOC to run on some specific files,
 ### because they do not contain QObjects, but require a MOC for Q_FLAGS or similar
 IF("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" LESS 3.0)
-     QT5_WRAP_CPP(stellarium_lib_moc_SRCS
+     Qt6_WRAP_CPP(stellarium_lib_moc_SRCS
          core/StelObject.hpp
          core/StelRegionObject.hpp
          core/modules/Nebula.hpp
@@ -296,7 +296,7 @@ SET(stellarium_exe_SRCS main.cpp)
 
 ################# compiles resources files ############
 SET(stellarium_RES ${PROJECT_SOURCE_DIR}/data/mainRes.qrc)
-QT5_ADD_RESOURCES(stellarium_RES_CXX ${stellarium_RES})
+Qt6_ADD_RESOURCES(stellarium_RES_CXX ${stellarium_RES})
 
 #############################################################################################
 ############################# Standard GUI plugin compilation ###############################
@@ -392,11 +392,11 @@ IF(STELLARIUM_GUI_MODE STREQUAL "Standard")
           ENDIF()
      ENDIF()
 
-     QT5_WRAP_UI(stellarium_UIS_H ${stellarium_UIS})
+     Qt6_WRAP_UI(stellarium_UIS_H ${stellarium_UIS})
 
      # compiles resources files
      SET(stellarium_gui_RES ${PROJECT_SOURCE_DIR}/data/gui/guiRes.qrc)
-     QT5_ADD_RESOURCES(stellarium_gui_RES_CXX ${stellarium_gui_RES})
+     Qt6_ADD_RESOURCES(stellarium_gui_RES_CXX ${stellarium_gui_RES})
 
      SET(stellarium_lib_SRCS ${stellarium_lib_SRCS} ${stellarium_gui_SRCS} ${stellarium_UIS_H} ${stellarium_gui_RES_CXX})
 ENDIF()
@@ -454,23 +454,23 @@ IF(WIN32 AND ENABLE_WINDOWS_EXE_ICON)
      ENDIF()
 ENDIF()
 
-# Setup Qt5 dependencies
-SET(STELLARIUM_QT_LIBRARIES Qt5::Core Qt5::Concurrent Qt5::Gui ${STEL_GLES_LIBS} Qt5::Network Qt5::Widgets)
+# Setup Qt6 dependencies
+SET(STELLARIUM_QT_LIBRARIES Qt6::Core Qt6::Concurrent Qt6::Gui ${STEL_GLES_LIBS} Qt6::Network Qt6::Widgets)
 IF(ENABLE_MEDIA)
-     SET(STELLARIUM_QT_LIBRARIES ${STELLARIUM_QT_LIBRARIES} Qt5::Multimedia Qt5::MultimediaWidgets)
+     SET(STELLARIUM_QT_LIBRARIES ${STELLARIUM_QT_LIBRARIES} Qt6::Multimedia Qt6::MultimediaWidgets)
 ENDIF()
 IF(ENABLE_SCRIPTING)
-     SET(STELLARIUM_QT_LIBRARIES ${STELLARIUM_QT_LIBRARIES} Qt5::Script)
+     SET(STELLARIUM_QT_LIBRARIES ${STELLARIUM_QT_LIBRARIES} Qt6::Script)
 ENDIF()
 IF(USE_OLD_QGLWIDGET)
-     # The Qt5OpenGL library is only required when using the legacy viewport
-     SET(STELLARIUM_QT_LIBRARIES ${STELLARIUM_QT_LIBRARIES} Qt5::OpenGL)
+     # The Qt6OpenGL library is only required when using the legacy viewport
+     SET(STELLARIUM_QT_LIBRARIES ${STELLARIUM_QT_LIBRARIES} Qt6::OpenGL)
 ENDIF()
 IF(ENABLE_GPS)
-     SET(STELLARIUM_QT_LIBRARIES ${STELLARIUM_QT_LIBRARIES} Qt5::Positioning Qt5::SerialPort)
+SET(STELLARIUM_QT_LIBRARIES ${STELLARIUM_QT_LIBRARIES} Qt6::Positioning ) #Qt6::SerialPort)
 ENDIF()
 IF(ANDROID)
-    SET(STELLARIUM_QT_LIBRARIES ${STELLARIUM_QT_LIBRARIES} Qt5::Sensors Qt::AndroidExtras)
+SET(STELLARIUM_QT_LIBRARIES ${STELLARIUM_QT_LIBRARIES} ) #Qt6::Sensors Qt::AndroidExtras)
 ENDIF()
 IF(ENABLE_SPOUT AND SPOUT_LIBRARY_DLL)
      # automatically copy the spout .dll to the binary directory, if possible
@@ -507,8 +507,8 @@ ELSE()
      ENDIF()
 ENDIF()
 
-IF(Qt5AndroidExtras_FOUND)
-      TARGET_LINK_LIBRARIES( stellarium Qt5::AndroidExtras )
+IF(Qt6AndroidExtras_FOUND)
+      TARGET_LINK_LIBRARIES( stellarium Qt6::AndroidExtras )
 ENDIF()
 
 ADD_DEPENDENCIES(stellarium AllStaticPlugins)
@@ -557,7 +557,7 @@ IF(WIN32)
         "
          EXECUTE_PROCESS(
              COMMAND \"${WINDEPLOYQT_COMMAND}\"
-                     --dir \"\${CMAKE_INSTALL_PREFIX}/qt5stuff\"
+                     --dir \"\${CMAKE_INSTALL_PREFIX}/Qt6stuff\"
                      --no-translations
                      --compiler-runtime
                      \"\${CMAKE_INSTALL_PREFIX}/bin/stellarium.exe\"
@@ -573,7 +573,7 @@ IF(WIN32)
              "
               EXECUTE_PROCESS(
                   COMMAND \"${WINDEPLOYQT_COMMAND}\"
-                          --dir \"\${CMAKE_INSTALL_PREFIX}/qt5stuff\"
+                          --dir \"\${CMAKE_INSTALL_PREFIX}/Qt6stuff\"
                           --no-translations
                           --compiler-runtime
                           \"\${CMAKE_INSTALL_PREFIX}/lib/libstelMain.dll\"
@@ -595,7 +595,7 @@ SET_TARGET_PROPERTIES(stellarium PROPERTIES FOLDER "src")
 
 IF(ENABLE_TESTING)
 
-    SET(TESTS_LIBRARIES ${ZLIB_LIBRARIES} Qt5::Core Qt5::Gui Qt5::Test stelMain)
+    SET(TESTS_LIBRARIES ${ZLIB_LIBRARIES} Qt6::Core Qt6::Gui Qt6::Test stelMain)
 
     # Custom target used to build all tests at once
     ADD_CUSTOM_TARGET(buildTests)
