@@ -112,10 +112,6 @@ Q_IMPORT_PLUGIN(AngleMeasureStelPluginInterface)
 Q_IMPORT_PLUGIN(ArchaeoLinesStelPluginInterface)
 #endif
 
-#ifdef USE_STATIC_PLUGIN_COMPASSMARKS
-Q_IMPORT_PLUGIN(CompassMarksStelPluginInterface)
-#endif
-
 #ifdef USE_STATIC_PLUGIN_SATELLITES
 Q_IMPORT_PLUGIN(SatellitesStelPluginInterface)
 #endif
@@ -1069,7 +1065,8 @@ void StelApp::reportFileDownloadFinished(QNetworkReply* reply)
 void StelApp::quit()
 {
 	emit aboutToQuit();
-	QCoreApplication::exit(0);
+	// Let's allow exit from Stellarium via startup script!
+	QMetaObject::invokeMethod(qApp, "quit", Qt::QueuedConnection);
 }
 
 void StelApp::setDevicePixelsPerPixel(qreal dppp)
