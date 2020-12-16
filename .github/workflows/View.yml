@@ -1,0 +1,24 @@
+name: Files View
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: show filetrees
+      run: |
+        ls -R
+    - name: move .so
+      run: |
+        cd android_project/stellarium
+        ls
+    - name: qmake apk
+      run: |
+        cd android_project/stellarium
+        qmake stellariumLTS.pro -spec android-clang "CONFIG+=debug" "CONFIG+=qml_debug" ANDROID_ABIS="armeabi-v7a"
+        make

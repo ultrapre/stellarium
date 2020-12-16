@@ -169,7 +169,6 @@ IF(${CMAKE_BUILD_TYPE} MATCHES "UBSan")
      SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=undefined -g")
 ENDIF()
 
-SET(CMAKE_INSTALL_PREFIX G:/Stellarium/TRACK/build-stellarium-Android_Qt_5_15_1_android_Clang_Multi_Abi-Debug/android-build/assets)
 
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
      SET(APPLE 1)
@@ -329,7 +328,11 @@ SET(ENABLE_MEDIA 1 CACHE BOOL "Define whether media support should be activated.
 # Activate GPS support. Solution depends on operating system:
 # - Windows: Only directly-attached serial NMEA emitter.
 # - Other systems: libgps if possible and NMEA emitter as fallback.
+IF(IOS)
+SET(ENABLE_GPS 0 CACHE BOOL "Define whether GPS queries should be supported.")
+ELSE()
 SET(ENABLE_GPS 1 CACHE BOOL "Define whether GPS queries should be supported.")
+ENDIF()
 
 # SPOUT allows relaying the Stellarium OpenGL framebuffer as DirectX texture in other programs.
 # It exists on Windows only. Syphon is a similar system for MacOS, this might be added by a Mac developer.
@@ -540,17 +543,20 @@ ENDIF()
 IF(ANDROID)
      FIND_PACKAGE(Qt5AndroidExtras REQUIRED)
      FIND_PACKAGE(Qt5Sensors REQUIRED)
-     FIND_FILE(OPENSSL_SSL_LIBRARY_DLL libssl_1_1.so)
-     FIND_FILE(OPENSSL_CRYPTO_LIBRARY_DLL libcrypto_1_1.so)
-
-     IF( (EXISTS ${OPENSSL_SSL_LIBRARY_DLL}) AND (EXISTS ${OPENSSL_CRYPTO_LIBRARY_DLL}) )
-         set(ANDROID_EXTRA_LIBS
-              ${OPENSSL_SSL_LIBRARY_DLL}
-              ${OPENSSL_CRYPTO_LIBRARY_DLL}
-              CACHE INTERNAL "")
-     ELSE()
-         message( "OpenSSL libraries not found" )
-     ENDIF()
+     # FIND_FILE(OPENSSL_SSL_LIBRARY_DLL libssl_1_1.so)
+     # FIND_FILE(OPENSSL_CRYPTO_LIBRARY_DLL libcrypto_1_1.so)
+     # IF( (EXISTS ${OPENSSL_SSL_LIBRARY_DLL}) AND (EXISTS ${OPENSSL_CRYPTO_LIBRARY_DLL}) )
+     #     set(ANDROID_EXTRA_LIBS
+     #          ${OPENSSL_SSL_LIBRARY_DLL}
+     #          ${OPENSSL_CRYPTO_LIBRARY_DLL}
+     #          CACHE INTERNAL "")
+     # ELSE()
+     #     message( "OpenSSL libraries not found" )
+     # ENDIF()
+     set(ANDROID_EXTRA_LIBS
+     "${CMAKE_CURRENT_SOURCE_DIR}/libssl_1_1.so"
+     "${CMAKE_CURRENT_SOURCE_DIR}/libcrypto_1_1.so"
+     CACHE INTERNAL "")
 ENDIF()
 
 # when using Qt 5.3, default to using the old QGLWidget, but warn
