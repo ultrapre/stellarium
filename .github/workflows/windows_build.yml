@@ -24,19 +24,20 @@ jobs:
       with:
         target: 'desktop'
         version: '5.15.2'
-        modules: 'qtcharts qtwebengine qtscript'
-        arch: 'win64_mingw81'
+        modules: 'qtscript'
+        arch: 'win32_msvc2019'
         cached: ${{ steps.cache-qt.outputs.cache-hit }}
     - name: Configure
       run: |
-        mkdir -p build
+        md build
         cd build
-        cmake.exe ..
-        make
-        make install
+        md msvc
+        cd msvc
+        cmake -DCMAKE_INSTALL_PREFIX=c:\stellarium-bin -G "Visual Studio 15 2017 Win64" ../..
+        cmake --build . --  /maxcpucount:4 /nologo --target stellarium-installer
     - name: show filetrees
       run: |
-        ls -R
+        ls -R .
     - uses: actions/upload-artifact@v1
       with:
         name: Debug-APP
