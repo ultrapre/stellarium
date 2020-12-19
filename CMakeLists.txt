@@ -552,10 +552,12 @@ IF(ANDROID)
      # ELSE()
      #     message( "OpenSSL libraries not found" )
      # ENDIF()
+     message(CMAKE_CURRENT_SOURCE_DIR: ${CMAKE_CURRENT_SOURCE_DIR})
      set(ANDROID_EXTRA_LIBS
      "${CMAKE_CURRENT_SOURCE_DIR}/libssl_1_1.so"
      "${CMAKE_CURRENT_SOURCE_DIR}/libcrypto_1_1.so"
      CACHE INTERNAL "")
+     message(ANDROID_EXTRA_LIBS: ${ANDROID_EXTRA_LIBS})
 ENDIF()
 
 # when using Qt 5.3, default to using the old QGLWidget, but warn
