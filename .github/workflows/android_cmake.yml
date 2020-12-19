@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - v*
+    branches:
+      - CICD_0.20.3
   workflow_dispatch:
 
 jobs:
