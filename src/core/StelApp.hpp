@@ -19,7 +19,7 @@
 
 #ifndef STELAPP_HPP
 #define STELAPP_HPP
-
+#include <QFont>
 #include <QString>
 #include <QObject>
 #include "StelModule.hpp"
@@ -288,7 +288,7 @@ public slots:
 	//! Set global application font.
 	//! To retrieve, you can use QGuiApplication::font().
 	//! emits fontChanged(font)
-//	void setAppFont(QFont font); //silas
+    void setAppFont(QFont font); //silas
 
 	//! Returns the default FBO handle, to be used when StelModule instances want to release their own FBOs.
 	//! Note that this is usually not the same as QOpenGLContext::defaultFramebufferObject(),
@@ -324,7 +324,7 @@ signals:
 	void languageChanged();
 	void screenFontSizeChanged(int);
 	void guiFontSizeChanged(int);
-//	void fontChanged(QFont); //silas
+    void fontChanged(QFont); //silas
 	void overwriteInfoColorChanged(const Vec3f & color);
 	void daylightInfoColorChanged(const Vec3f & color);
 
