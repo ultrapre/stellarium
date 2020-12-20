@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335, USA.
  */
-
+#ifdef Q_OS_ANDROID
 #include <QString>
 #include <QFileInfo>
 
@@ -33,3 +33,4 @@ public:
 private:
 	static class QAndroidJniObject* getStellarium();
 };
+#endif

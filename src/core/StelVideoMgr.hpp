@@ -19,7 +19,7 @@
 
 #ifndef STELVIDEOMGR_HPP
 #define STELVIDEOMGR_HPP
-
+#include <QSize>
 #include <QObject>
 #include <QMap>
 #include <QString>

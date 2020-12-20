@@ -268,7 +268,7 @@ QList<StelModuleMgr::PluginDescriptor> StelModuleMgr::getPluginsList()
 	
 	
 #if defined(Q_OS_ANDROID)
-	for( QFileInfo& info : QDir(QCoreApplication::applicationDirPath()).entryInfoList( QStringList() << "libmodule_*.so" , QDir::Files ) )
+    for( QFileInfo& info : QDir(QCoreApplication::applicationDirPath()).entryInfoList( QStringList() << "libmodule_*_armeabi-v7a.so" , QDir::Files ) )
 	{
 		modules += info.absoluteFilePath();
 	}
