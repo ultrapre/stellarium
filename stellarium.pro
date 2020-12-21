@@ -84,7 +84,7 @@ QT += network gui sensors qml quick positioning concurrent \
         multimedia \
         multimediawidgets \
         positioning \
-#        serialport \
+        serialport \
         printsupport \
         network \
         opengl \
