@@ -554,10 +554,13 @@ IF(ANDROID)
      #     message( "OpenSSL libraries not found" )
      # ENDIF()
      message(CMAKE_CURRENT_SOURCE_DIR: ${CMAKE_CURRENT_SOURCE_DIR})
-     set(ANDROID_EXTRA_LIBS
-     ${CMAKE_CURRENT_SOURCE_DIR}/libssl_1_1.so
-     ${CMAKE_CURRENT_SOURCE_DIR}/libcrypto_1_1.so
-     CACHE INTERNAL "")
+     if (ANDROID)
+         include(../android_openssl/CMakeLists.txt)
+     endif()
+#     set(ANDROID_EXTRA_LIBS
+#     ${CMAKE_CURRENT_SOURCE_DIR}/libssl_1_1.so
+#     ${CMAKE_CURRENT_SOURCE_DIR}/libcrypto_1_1.so
+#     CACHE INTERNAL "")
      message(ANDROID_EXTRA_LIBS: ${ANDROID_EXTRA_LIBS})
 ENDIF()
 
