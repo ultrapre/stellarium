@@ -15,6 +15,9 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
     
     steps:
+    - name: Fetch OpenSSL
+      run: |
+        git clone https://github.com/KDAB/android_openssl.git ../android_openssl
     - uses: actions/checkout@v2
     - name: Checkout submodules
       uses: srt32/git-actions@v0.0.3
