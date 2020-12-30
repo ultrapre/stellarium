@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: stellarium@googlegroups.com\n"
-"POT-Creation-Date: 2020-12-15 10:57+0700\n"
+"POT-Creation-Date: 2020-12-28 14:14+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -59,7 +59,7 @@ msgstr ""
 #: src/core/modules/NebulaMgr.cpp:475 src/core/modules/SolarSystem.cpp:283
 #: src/core/modules/MilkyWay.cpp:79 src/core/modules/ZodiacalLight.cpp:87
 #: src/core/modules/ToastMgr.cpp:62 src/core/modules/HipsMgr.cpp:151
-#: src/core/StelApp.cpp:620 src/core/StelCore.cpp:257
+#: src/core/StelApp.cpp:617 src/core/StelCore.cpp:257
 #: src/core/StelObjectMgr.cpp:54 src/core/StelSkyLayerMgr.cpp:85
 #: src/core/StelSkyLayerMgr.cpp:86 src/StelMainView.cpp:821
 msgid "Display Options"
@@ -506,7 +506,7 @@ msgstr ""
 
 #: src/core/modules/LandscapeMgr.cpp:928 src/scripting/StelScriptMgr.cpp:457
 #: plugins/AngleMeasure/src/gui/AngleMeasureDialog.cpp:100
-#: plugins/Oculars/src/gui/OcularDialog.cpp:575
+#: plugins/Oculars/src/gui/OcularDialog.cpp:593
 #: plugins/SolarSystemEditor/src/gui/SolarSystemManagerWindow.cpp:240
 #: plugins/Supernovae/src/gui/SupernovaeDialog.cpp:125
 #: plugins/Novae/src/gui/NovaeDialog.cpp:123
@@ -519,6 +519,7 @@ msgstr ""
 #: plugins/PointerCoordinates/src/gui/PointerCoordinatesWindow.cpp:130
 #: plugins/Scenery3d/src/gui/Scenery3dDialog.cpp:455
 #: plugins/ArchaeoLines/src/gui/ArchaeoLinesDialog.cpp:148
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:156
 msgid "Author"
 msgstr ""
 
@@ -2268,143 +2269,143 @@ msgstr ""
 msgid "Toggle Hierarchical Progressive Surveys"
 msgstr ""
 
-#: src/core/StelApp.cpp:425
+#: src/core/StelApp.cpp:422
 msgid "Initializing textures..."
 msgstr ""
 
-#: src/core/StelApp.cpp:429
+#: src/core/StelApp.cpp:426
 msgid "Initializing network access..."
 msgstr ""
 
-#: src/core/StelApp.cpp:434
+#: src/core/StelApp.cpp:431
 msgid "Initializing network disk cache..."
 msgstr ""
 
-#: src/core/StelApp.cpp:448
+#: src/core/StelApp.cpp:445
 msgid "Initializing network proxy..."
 msgstr ""
 
-#: src/core/StelApp.cpp:464
+#: src/core/StelApp.cpp:461
 msgid "Initializing Object Database..."
 msgstr ""
 
-#: src/core/StelApp.cpp:469
+#: src/core/StelApp.cpp:466
 msgid "Initializing locales..."
 msgstr ""
 
-#: src/core/StelApp.cpp:473
+#: src/core/StelApp.cpp:470
 msgid "Initializing HiPS survey..."
 msgstr ""
 
-#: src/core/StelApp.cpp:479
+#: src/core/StelApp.cpp:476
 msgid "Initializing Solar System objects..."
 msgstr ""
 
-#: src/core/StelApp.cpp:485
+#: src/core/StelApp.cpp:482
 msgid "Initializing planetary nomenclature..."
 msgstr ""
 
-#: src/core/StelApp.cpp:491
+#: src/core/StelApp.cpp:488
 msgid "Initializing stars..."
 msgstr ""
 
-#: src/core/StelApp.cpp:496
+#: src/core/StelApp.cpp:493
 msgid "Initializing core..."
 msgstr ""
 
-#: src/core/StelApp.cpp:500
+#: src/core/StelApp.cpp:497
 msgid "Initializing deep-sky objects..."
 msgstr ""
 
-#: src/core/StelApp.cpp:506
+#: src/core/StelApp.cpp:503
 msgid "Initializing Milky Way..."
 msgstr ""
 
-#: src/core/StelApp.cpp:512
+#: src/core/StelApp.cpp:509
 msgid "Initializing zodiacal light..."
 msgstr ""
 
-#: src/core/StelApp.cpp:518
+#: src/core/StelApp.cpp:515
 msgid "Initializing sky image layer..."
 msgstr ""
 
-#: src/core/StelApp.cpp:524
+#: src/core/StelApp.cpp:521
 msgid "Initializing TOAST surveys..."
 msgstr ""
 
-#: src/core/StelApp.cpp:530
+#: src/core/StelApp.cpp:527
 msgid "Initializing audio..."
 msgstr ""
 
-#: src/core/StelApp.cpp:534
+#: src/core/StelApp.cpp:531
 msgid "Initializing video..."
 msgstr ""
 
-#: src/core/StelApp.cpp:540
+#: src/core/StelApp.cpp:537
 msgid "Initializing constellations..."
 msgstr ""
 
-#: src/core/StelApp.cpp:546
+#: src/core/StelApp.cpp:543
 msgid "Initializing asterisms..."
 msgstr ""
 
-#: src/core/StelApp.cpp:552
+#: src/core/StelApp.cpp:549
 msgid "Initializing landscape..."
 msgstr ""
 
-#: src/core/StelApp.cpp:557
+#: src/core/StelApp.cpp:554
 msgid "Initializing grid lines..."
 msgstr ""
 
-#: src/core/StelApp.cpp:562
+#: src/core/StelApp.cpp:559
 msgid "Initializing special markers..."
 msgstr ""
 
-#: src/core/StelApp.cpp:568
+#: src/core/StelApp.cpp:565
 msgid "Initializing sporadic meteors..."
 msgstr ""
 
-#: src/core/StelApp.cpp:574
+#: src/core/StelApp.cpp:571
 msgid "Initializing user labels..."
 msgstr ""
 
-#: src/core/StelApp.cpp:579
+#: src/core/StelApp.cpp:576
 msgid "Initializing sky cultures..."
 msgstr ""
 
-#: src/core/StelApp.cpp:583
+#: src/core/StelApp.cpp:580
 msgid "Initializing user markers..."
 msgstr ""
 
-#: src/core/StelApp.cpp:589
+#: src/core/StelApp.cpp:586
 msgid "Initializing custom objects..."
 msgstr ""
 
-#: src/core/StelApp.cpp:595
+#: src/core/StelApp.cpp:592
 msgid "Initializing highlights..."
 msgstr ""
 
-#: src/core/StelApp.cpp:603
+#: src/core/StelApp.cpp:600
 msgid "Initializing scripting..."
 msgstr ""
 
-#: src/core/StelApp.cpp:608
+#: src/core/StelApp.cpp:605
 msgid "Initializing color scheme..."
 msgstr ""
 
-#: src/core/StelApp.cpp:620 src/ui_configurationDialog.h:1804
+#: src/core/StelApp.cpp:617 src/ui_configurationDialog.h:1804
 msgid "Night mode"
 msgstr ""
 
-#: src/core/StelApp.cpp:647
+#: src/core/StelApp.cpp:644
 msgid "Initializing SPOUT sender..."
 msgstr ""
 
-#: src/core/StelApp.cpp:657
+#: src/core/StelApp.cpp:654
 msgid "Cannot create Spout sender. See log for details."
 msgstr ""
 
-#: src/core/StelApp.cpp:683
+#: src/core/StelApp.cpp:680
 msgid "Loading plugin"
 msgstr ""
 
@@ -2418,7 +2419,7 @@ msgid "Date and Time"
 msgstr ""
 
 #: src/core/StelCore.cpp:256 src/core/StelObjectMgr.cpp:53
-#: src/core/StelMovementMgr.cpp:191
+#: src/core/StelMovementMgr.cpp:223
 msgid "Movement and Selection"
 msgstr ""
 
@@ -3285,80 +3286,81 @@ msgid "No description"
 msgstr ""
 
 #: src/core/StelSkyCultureMgr.cpp:301
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:194
 msgid "References"
 msgstr ""
 
-#: src/core/StelMovementMgr.cpp:192 src/gui/StelGui.cpp:230
+#: src/core/StelMovementMgr.cpp:224 src/gui/StelGui.cpp:230
 #: src/StelMainView.cpp:819 src/StelMainView.cpp:820
 msgid "Miscellaneous"
 msgstr ""
 
-#: src/core/StelMovementMgr.cpp:192
+#: src/core/StelMovementMgr.cpp:224
 msgid "Switch between equatorial and azimuthal mount"
 msgstr ""
 
-#: src/core/StelMovementMgr.cpp:193
+#: src/core/StelMovementMgr.cpp:225
 msgid "Center on selected object"
 msgstr ""
 
-#: src/core/StelMovementMgr.cpp:194
+#: src/core/StelMovementMgr.cpp:226
 msgid "Deselect the selected object"
 msgstr ""
 
-#: src/core/StelMovementMgr.cpp:195
+#: src/core/StelMovementMgr.cpp:227
 msgid "Zoom in on selected object"
 msgstr ""
 
-#: src/core/StelMovementMgr.cpp:196
+#: src/core/StelMovementMgr.cpp:228
 msgid "Zoom out"
 msgstr ""
 
-#: src/core/StelMovementMgr.cpp:198
+#: src/core/StelMovementMgr.cpp:230
 msgid "Track object"
 msgstr ""
 
-#: src/core/StelMovementMgr.cpp:200
+#: src/core/StelMovementMgr.cpp:232
 msgid "Look towards East"
 msgstr ""
 
-#: src/core/StelMovementMgr.cpp:201
+#: src/core/StelMovementMgr.cpp:233
 msgid "Look towards West"
 msgstr ""
 
-#: src/core/StelMovementMgr.cpp:202
+#: src/core/StelMovementMgr.cpp:234
 msgid "Look towards North"
 msgstr ""
 
-#: src/core/StelMovementMgr.cpp:203
+#: src/core/StelMovementMgr.cpp:235
 msgid "Look towards South"
 msgstr ""
 
-#: src/core/StelMovementMgr.cpp:204
+#: src/core/StelMovementMgr.cpp:236
 msgid "Look towards Zenith"
 msgstr ""
 
-#: src/core/StelMovementMgr.cpp:206
+#: src/core/StelMovementMgr.cpp:238
 msgid "Look towards North Celestial pole"
 msgstr ""
 
-#: src/core/StelMovementMgr.cpp:207
+#: src/core/StelMovementMgr.cpp:239
 msgid "Look towards South Celestial pole"
 msgstr ""
 
-#: src/core/StelMovementMgr.cpp:225
+#: src/core/StelMovementMgr.cpp:253
 msgid "Field of View"
 msgstr ""
 
-#: src/core/StelMovementMgr.cpp:225
-msgid "Set FOV to"
+#: src/core/StelMovementMgr.cpp:253
+msgid "Set predefined FOV"
 msgstr ""
 
-#: src/core/StelMovementMgr.cpp:247
+#: src/core/StelMovementMgr.cpp:276
 msgctxt "mount mode"
 msgid "Equatorial mount"
 msgstr ""
 
-#: src/core/StelMovementMgr.cpp:249
+#: src/core/StelMovementMgr.cpp:278
 msgctxt "mount mode"
 msgid "Alt-azimuth mount"
 msgstr ""
@@ -3426,37 +3428,37 @@ msgctxt "short day name"
 msgid "Sat"
 msgstr ""
 
-#: src/core/StelLocaleMgr.cpp:486
+#: src/core/StelLocaleMgr.cpp:486 plugins/Calendars/src/JulianCalendar.cpp:37
 msgctxt "long day name"
 msgid "Sunday"
 msgstr ""
 
-#: src/core/StelLocaleMgr.cpp:487
+#: src/core/StelLocaleMgr.cpp:487 plugins/Calendars/src/JulianCalendar.cpp:38
 msgctxt "long day name"
 msgid "Monday"
 msgstr ""
 
-#: src/core/StelLocaleMgr.cpp:488
+#: src/core/StelLocaleMgr.cpp:488 plugins/Calendars/src/JulianCalendar.cpp:39
 msgctxt "long day name"
 msgid "Tuesday"
 msgstr ""
 
-#: src/core/StelLocaleMgr.cpp:489
+#: src/core/StelLocaleMgr.cpp:489 plugins/Calendars/src/JulianCalendar.cpp:40
 msgctxt "long day name"
 msgid "Wednesday"
 msgstr ""
 
-#: src/core/StelLocaleMgr.cpp:490
+#: src/core/StelLocaleMgr.cpp:490 plugins/Calendars/src/JulianCalendar.cpp:41
 msgctxt "long day name"
 msgid "Thursday"
 msgstr ""
 
-#: src/core/StelLocaleMgr.cpp:491
+#: src/core/StelLocaleMgr.cpp:491 plugins/Calendars/src/JulianCalendar.cpp:42
 msgctxt "long day name"
 msgid "Friday"
 msgstr ""
 
-#: src/core/StelLocaleMgr.cpp:492
+#: src/core/StelLocaleMgr.cpp:492 plugins/Calendars/src/JulianCalendar.cpp:43
 msgctxt "long day name"
 msgid "Saturday"
 msgstr ""
@@ -3521,62 +3523,62 @@ msgctxt "short month name"
 msgid "Nov"
 msgstr ""
 
-#: src/core/StelLocaleMgr.cpp:511
+#: src/core/StelLocaleMgr.cpp:511 plugins/Calendars/src/JulianCalendar.cpp:56
 msgctxt "long month name"
 msgid "December"
 msgstr ""
 
-#: src/core/StelLocaleMgr.cpp:512
+#: src/core/StelLocaleMgr.cpp:512 plugins/Calendars/src/JulianCalendar.cpp:45
 msgctxt "long month name"
 msgid "January"
 msgstr ""
 
-#: src/core/StelLocaleMgr.cpp:513
+#: src/core/StelLocaleMgr.cpp:513 plugins/Calendars/src/JulianCalendar.cpp:46
 msgctxt "long month name"
 msgid "February"
 msgstr ""
 
-#: src/core/StelLocaleMgr.cpp:514
+#: src/core/StelLocaleMgr.cpp:514 plugins/Calendars/src/JulianCalendar.cpp:47
 msgctxt "long month name"
 msgid "March"
 msgstr ""
 
-#: src/core/StelLocaleMgr.cpp:515
+#: src/core/StelLocaleMgr.cpp:515 plugins/Calendars/src/JulianCalendar.cpp:48
 msgctxt "long month name"
 msgid "April"
 msgstr ""
 
-#: src/core/StelLocaleMgr.cpp:516
+#: src/core/StelLocaleMgr.cpp:516 plugins/Calendars/src/JulianCalendar.cpp:49
 msgctxt "long month name"
 msgid "May"
 msgstr ""
 
-#: src/core/StelLocaleMgr.cpp:517
+#: src/core/StelLocaleMgr.cpp:517 plugins/Calendars/src/JulianCalendar.cpp:50
 msgctxt "long month name"
 msgid "June"
 msgstr ""
 
-#: src/core/StelLocaleMgr.cpp:518
+#: src/core/StelLocaleMgr.cpp:518 plugins/Calendars/src/JulianCalendar.cpp:51
 msgctxt "long month name"
 msgid "July"
 msgstr ""
 
-#: src/core/StelLocaleMgr.cpp:519
+#: src/core/StelLocaleMgr.cpp:519 plugins/Calendars/src/JulianCalendar.cpp:52
 msgctxt "long month name"
 msgid "August"
 msgstr ""
 
-#: src/core/StelLocaleMgr.cpp:520
+#: src/core/StelLocaleMgr.cpp:520 plugins/Calendars/src/JulianCalendar.cpp:53
 msgctxt "long month name"
 msgid "September"
 msgstr ""
 
-#: src/core/StelLocaleMgr.cpp:521
+#: src/core/StelLocaleMgr.cpp:521 plugins/Calendars/src/JulianCalendar.cpp:54
 msgctxt "long month name"
 msgid "October"
 msgstr ""
 
-#: src/core/StelLocaleMgr.cpp:522
+#: src/core/StelLocaleMgr.cpp:522 plugins/Calendars/src/JulianCalendar.cpp:55
 msgctxt "long month name"
 msgid "November"
 msgstr ""
@@ -3675,7 +3677,7 @@ msgstr ""
 
 #: src/gui/ConfigurationDialog.cpp:1211 src/scripting/StelScriptMgr.cpp:467
 #: plugins/AngleMeasure/src/gui/AngleMeasureDialog.cpp:98
-#: plugins/Oculars/src/gui/OcularDialog.cpp:573
+#: plugins/Oculars/src/gui/OcularDialog.cpp:591
 #: plugins/Satellites/src/gui/SatellitesDialog.cpp:675
 #: plugins/TelescopeControl/src/gui/TelescopeDialog.cpp:264
 #: plugins/SolarSystemEditor/src/gui/SolarSystemManagerWindow.cpp:238
@@ -3692,12 +3694,13 @@ msgstr ""
 #: plugins/MeteorShowers/src/gui/MSConfigDialog.cpp:222
 #: plugins/PointerCoordinates/src/gui/PointerCoordinatesWindow.cpp:128
 #: plugins/ArchaeoLines/src/gui/ArchaeoLinesDialog.cpp:146
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:154
 msgid "Version"
 msgstr ""
 
 #: src/gui/ConfigurationDialog.cpp:1212 src/scripting/StelScriptMgr.cpp:462
 #: plugins/AngleMeasure/src/gui/AngleMeasureDialog.cpp:99
-#: plugins/Oculars/src/gui/OcularDialog.cpp:574
+#: plugins/Oculars/src/gui/OcularDialog.cpp:592
 #: plugins/Satellites/src/gui/SatellitesDialog.cpp:676
 #: plugins/TelescopeControl/src/gui/TelescopeDialog.cpp:265
 #: plugins/SolarSystemEditor/src/gui/SolarSystemManagerWindow.cpp:239
@@ -3714,6 +3717,7 @@ msgstr ""
 #: plugins/MeteorShowers/src/gui/MSConfigDialog.cpp:226
 #: plugins/PointerCoordinates/src/gui/PointerCoordinatesWindow.cpp:129
 #: plugins/ArchaeoLines/src/gui/ArchaeoLinesDialog.cpp:147
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:155
 msgid "License"
 msgstr ""
 
@@ -3925,7 +3929,7 @@ msgid "Custom equation of %1T"
 msgstr ""
 
 #: src/gui/ConfigurationDialog.cpp:1789 src/gui/ConfigurationDialog.cpp:1826
-#: src/gui/StelGuiItems.cpp:691 src/gui/LocationDialog.cpp:477
+#: src/gui/StelGuiItems.cpp:691 src/gui/LocationDialog.cpp:492
 msgid "System default"
 msgstr ""
 
@@ -4234,7 +4238,7 @@ msgstr ""
 
 #: src/gui/HelpDialog.cpp:459
 #: plugins/AngleMeasure/src/gui/AngleMeasureDialog.cpp:101
-#: plugins/Oculars/src/gui/OcularDialog.cpp:576
+#: plugins/Oculars/src/gui/OcularDialog.cpp:594
 #: plugins/Satellites/src/gui/SatellitesDialog.cpp:679
 #: plugins/TelescopeControl/src/gui/TelescopeDialog.cpp:271
 #: plugins/SolarSystemEditor/src/gui/SolarSystemManagerWindow.cpp:241
@@ -4349,11 +4353,11 @@ msgstr ""
 msgid "Time zone"
 msgstr ""
 
-#: src/gui/StelGuiItems.cpp:696 src/gui/LocationDialog.cpp:475
+#: src/gui/StelGuiItems.cpp:696 src/gui/LocationDialog.cpp:490
 msgid "Local Mean Solar Time"
 msgstr ""
 
-#: src/gui/StelGuiItems.cpp:699 src/gui/LocationDialog.cpp:476
+#: src/gui/StelGuiItems.cpp:699 src/gui/LocationDialog.cpp:491
 msgid "Local True Solar Time"
 msgstr ""
 
@@ -4610,33 +4614,33 @@ msgstr ""
 msgid "Visual magnitude based on phase angle and albedo."
 msgstr ""
 
-#: src/gui/LocationDialog.cpp:212
+#: src/gui/LocationDialog.cpp:227
 msgid "Reset location list to show all known locations"
 msgstr ""
 
-#: src/gui/LocationDialog.cpp:213
+#: src/gui/LocationDialog.cpp:228
 msgid ""
 "Toggle fetching GPS location. (Does not change time zone!) When satisfied, "
 "toggle off to let other programs access the GPS device."
 msgstr ""
 
-#: src/gui/LocationDialog.cpp:800
+#: src/gui/LocationDialog.cpp:815
 msgid "GPS listening..."
 msgstr ""
 
-#: src/gui/LocationDialog.cpp:807
+#: src/gui/LocationDialog.cpp:822
 msgid "GPS disconnecting..."
 msgstr ""
 
-#: src/gui/LocationDialog.cpp:819
+#: src/gui/LocationDialog.cpp:834
 msgid "GPS location fix"
 msgstr ""
 
-#: src/gui/LocationDialog.cpp:842
+#: src/gui/LocationDialog.cpp:857
 msgid "GPS:FAILED"
 msgstr ""
 
-#: src/gui/LocationDialog.cpp:854 src/ui_locationDialogGui.h:514
+#: src/gui/LocationDialog.cpp:869 src/ui_locationDialogGui.h:514
 msgid "Get location from GPS"
 msgstr ""
 
@@ -5784,8 +5788,8 @@ msgstr ""
 msgid "Active galaxies"
 msgstr ""
 
-#: src/gui/AstroCalcDialog.cpp:5138 plugins/Pulsars/src/Pulsars.cpp:71
-#: plugins/Pulsars/src/Pulsars.cpp:169 plugins/Pulsars/src/Pulsars.cpp:170
+#: src/gui/AstroCalcDialog.cpp:5138 plugins/Pulsars/src/Pulsars.cpp:72
+#: plugins/Pulsars/src/Pulsars.cpp:170 plugins/Pulsars/src/Pulsars.cpp:171
 msgid "Pulsars"
 msgstr ""
 
@@ -5893,6 +5897,7 @@ msgid "Linear distance"
 msgstr ""
 
 #: src/gui/AstroCalcDialog.cpp:6349 src/gui/AstroCalcDialog.cpp:6352
+#: plugins/Calendars/src/ui_calendarsDialog.h:779
 msgid "Day"
 msgstr ""
 
@@ -7019,7 +7024,7 @@ msgid "Boorong"
 msgstr ""
 
 #. TRANSLATORS: Name of the sky culture
-#: src/translations.h:489
+#: src/translations.h:489 plugins/Calendars/src/ui_calendarsDialog.h:788
 msgid "Chinese"
 msgstr ""
 
@@ -7204,7 +7209,7 @@ msgid "Trees"
 msgstr ""
 
 #. TRANSLATORS: Name of landscape
-#: src/translations.h:566 plugins/ArchaeoLines/src/ArchaeoLines.cpp:1306
+#: src/translations.h:566 plugins/ArchaeoLines/src/ArchaeoLines.cpp:1307
 msgid "Moon"
 msgstr ""
 
@@ -7224,17 +7229,17 @@ msgid "Garching"
 msgstr ""
 
 #. TRANSLATORS: Name of landscape
-#: src/translations.h:574 plugins/ArchaeoLines/src/ArchaeoLines.cpp:1318
+#: src/translations.h:574 plugins/ArchaeoLines/src/ArchaeoLines.cpp:1319
 msgid "Mars"
 msgstr ""
 
 #. TRANSLATORS: Name of landscape
-#: src/translations.h:576 plugins/ArchaeoLines/src/ArchaeoLines.cpp:1321
+#: src/translations.h:576 plugins/ArchaeoLines/src/ArchaeoLines.cpp:1322
 msgid "Jupiter"
 msgstr ""
 
 #. TRANSLATORS: Name of landscape
-#: src/translations.h:578 plugins/ArchaeoLines/src/ArchaeoLines.cpp:1324
+#: src/translations.h:578 plugins/ArchaeoLines/src/ArchaeoLines.cpp:1325
 msgid "Saturn"
 msgstr ""
 
@@ -7264,7 +7269,7 @@ msgid "Zero Horizon"
 msgstr ""
 
 #. TRANSLATORS: Name of landscape
-#: src/translations.h:590 plugins/ArchaeoLines/src/ArchaeoLines.cpp:1303
+#: src/translations.h:590 plugins/ArchaeoLines/src/ArchaeoLines.cpp:1304
 msgid "Sun"
 msgstr ""
 
@@ -9994,7 +9999,7 @@ msgid "Hydrogen regions"
 msgstr ""
 
 #. TRANSLATORS: Exoplanet detection method
-#: src/ui_viewDialog.h:3232 plugins/Exoplanets/src/Exoplanets.cpp:1035
+#: src/ui_viewDialog.h:3232 plugins/Exoplanets/src/Exoplanets.cpp:1036
 msgid "Other"
 msgstr ""
 
@@ -10790,6 +10795,7 @@ msgstr ""
 #: plugins/MeteorShowers/src/ui_MSConfigDialog.h:449
 #: plugins/PointerCoordinates/src/ui_pointerCoordinatesWindow.h:321
 #: plugins/ArchaeoLines/src/ui_archaeoLinesDialog.h:616
+#: plugins/Calendars/src/ui_calendarsDialog.h:775
 msgid "Restore defaults"
 msgstr ""
 
@@ -10828,7 +10834,7 @@ msgstr ""
 msgid "Display no information"
 msgstr ""
 
-#: src/ui_configurationDialog.h:1677 plugins/Oculars/src/Oculars.cpp:2470
+#: src/ui_configurationDialog.h:1677 plugins/Oculars/src/Oculars.cpp:2475
 #: plugins/Observability/src/Observability.cpp:179
 msgid "None"
 msgstr ""
@@ -12237,8 +12243,8 @@ msgstr ""
 msgid "Color of markers of clusters associated with nebulosity"
 msgstr ""
 
-#: src/ui_dsoColorsDialog.h:678 plugins/Quasars/src/Quasars.cpp:72
-#: plugins/Quasars/src/Quasars.cpp:171 plugins/Quasars/src/Quasars.cpp:172
+#: src/ui_dsoColorsDialog.h:678 plugins/Quasars/src/Quasars.cpp:73
+#: plugins/Quasars/src/Quasars.cpp:172 plugins/Quasars/src/Quasars.cpp:173
 msgid "Quasars"
 msgstr ""
 
@@ -12466,37 +12472,37 @@ msgstr ""
 msgid "Color of Neptune orbit"
 msgstr ""
 
-#: plugins/AngleMeasure/src/AngleMeasure.cpp:56
-#: plugins/AngleMeasure/src/AngleMeasure.cpp:138
+#: plugins/AngleMeasure/src/AngleMeasure.cpp:57
+#: plugins/AngleMeasure/src/AngleMeasure.cpp:139
 #: plugins/AngleMeasure/src/ui_angleMeasureDialog.h:322
 msgid "Angle Measure"
 msgstr ""
 
-#: plugins/AngleMeasure/src/AngleMeasure.cpp:59
+#: plugins/AngleMeasure/src/AngleMeasure.cpp:60
 msgid "Provides an angle measurement tool"
 msgstr ""
 
-#: plugins/AngleMeasure/src/AngleMeasure.cpp:138
+#: plugins/AngleMeasure/src/AngleMeasure.cpp:139
 msgid "Angle measure"
 msgstr ""
 
 #. TRANSLATORS: instructions for using the AngleMeasure plugin.
-#: plugins/AngleMeasure/src/AngleMeasure.cpp:561
+#: plugins/AngleMeasure/src/AngleMeasure.cpp:562
 msgid "The Angle Measure is enabled:"
 msgstr ""
 
 #. TRANSLATORS: instructions for using the AngleMeasure plugin.
-#: plugins/AngleMeasure/src/AngleMeasure.cpp:563
+#: plugins/AngleMeasure/src/AngleMeasure.cpp:564
 msgid "Drag with the left button to measure, left-click to clear."
 msgstr ""
 
 #. TRANSLATORS: instructions for using the AngleMeasure plugin.
-#: plugins/AngleMeasure/src/AngleMeasure.cpp:565
+#: plugins/AngleMeasure/src/AngleMeasure.cpp:566
 msgid "Right-clicking changes the end point only."
 msgstr ""
 
 #. TRANSLATORS: PA is abbreviation for phrase "Position Angle"
-#: plugins/AngleMeasure/src/AngleMeasure.cpp:567
+#: plugins/AngleMeasure/src/AngleMeasure.cpp:568
 msgid "PA="
 msgstr ""
 
@@ -12528,7 +12534,7 @@ msgid ""
 msgstr ""
 
 #: plugins/AngleMeasure/src/gui/AngleMeasureDialog.cpp:110
-#: plugins/Oculars/src/gui/OcularDialog.cpp:609
+#: plugins/Oculars/src/gui/OcularDialog.cpp:627
 #: plugins/Satellites/src/gui/SatellitesDialog.cpp:733
 #: plugins/TelescopeControl/src/gui/TelescopeDialog.cpp:284
 #: plugins/SolarSystemEditor/src/gui/SolarSystemManagerWindow.cpp:247
@@ -12544,11 +12550,12 @@ msgstr ""
 #: plugins/MeteorShowers/src/gui/MSConfigDialog.cpp:328
 #: plugins/PointerCoordinates/src/gui/PointerCoordinatesWindow.cpp:137
 #: plugins/ArchaeoLines/src/gui/ArchaeoLinesDialog.cpp:181
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:201
 msgid "Links"
 msgstr ""
 
 #: plugins/AngleMeasure/src/gui/AngleMeasureDialog.cpp:111
-#: plugins/Oculars/src/gui/OcularDialog.cpp:610
+#: plugins/Oculars/src/gui/OcularDialog.cpp:628
 #: plugins/Satellites/src/gui/SatellitesDialog.cpp:734
 #: plugins/TelescopeControl/src/gui/TelescopeDialog.cpp:285
 #: plugins/SolarSystemEditor/src/gui/SolarSystemManagerWindow.cpp:248
@@ -12563,6 +12570,7 @@ msgstr ""
 #: plugins/EquationOfTime/src/gui/EquationOfTimeWindow.cpp:98
 #: plugins/PointerCoordinates/src/gui/PointerCoordinatesWindow.cpp:138
 #: plugins/ArchaeoLines/src/gui/ArchaeoLinesDialog.cpp:182
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:202
 #, qt-format
 msgid ""
 "Support is provided via the Github website.  Be sure to put \"%1\" in the "
@@ -12571,7 +12579,7 @@ msgstr ""
 
 #. TRANSLATORS: The text between braces is the text of an HTML link.
 #: plugins/AngleMeasure/src/gui/AngleMeasureDialog.cpp:114
-#: plugins/Oculars/src/gui/OcularDialog.cpp:613
+#: plugins/Oculars/src/gui/OcularDialog.cpp:631
 #: plugins/Satellites/src/gui/SatellitesDialog.cpp:737
 #: plugins/TelescopeControl/src/gui/TelescopeDialog.cpp:288
 #: plugins/SolarSystemEditor/src/gui/SolarSystemManagerWindow.cpp:251
@@ -12587,12 +12595,13 @@ msgstr ""
 #: plugins/MeteorShowers/src/gui/MSConfigDialog.cpp:332
 #: plugins/PointerCoordinates/src/gui/PointerCoordinatesWindow.cpp:141
 #: plugins/ArchaeoLines/src/gui/ArchaeoLinesDialog.cpp:185
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:205
 msgid "If you have a question, you can {get an answer here}."
 msgstr ""
 
 #. TRANSLATORS: The text between braces is the text of an HTML link.
 #: plugins/AngleMeasure/src/gui/AngleMeasureDialog.cpp:116
-#: plugins/Oculars/src/gui/OcularDialog.cpp:615
+#: plugins/Oculars/src/gui/OcularDialog.cpp:633
 #: plugins/Satellites/src/gui/SatellitesDialog.cpp:739
 #: plugins/TelescopeControl/src/gui/TelescopeDialog.cpp:290
 #: plugins/SolarSystemEditor/src/gui/SolarSystemManagerWindow.cpp:253
@@ -12608,12 +12617,13 @@ msgstr ""
 #: plugins/MeteorShowers/src/gui/MSConfigDialog.cpp:334
 #: plugins/PointerCoordinates/src/gui/PointerCoordinatesWindow.cpp:143
 #: plugins/ArchaeoLines/src/gui/ArchaeoLinesDialog.cpp:187
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:207
 msgid "Bug reports and feature requests can be made {here}."
 msgstr ""
 
 #. TRANSLATORS: The text between braces is the text of an HTML link.
 #: plugins/AngleMeasure/src/gui/AngleMeasureDialog.cpp:118
-#: plugins/Oculars/src/gui/OcularDialog.cpp:617
+#: plugins/Oculars/src/gui/OcularDialog.cpp:635
 #: plugins/Satellites/src/gui/SatellitesDialog.cpp:741
 #: plugins/TelescopeControl/src/gui/TelescopeDialog.cpp:292
 #: plugins/SolarSystemEditor/src/gui/SolarSystemManagerWindow.cpp:255
@@ -12707,273 +12717,288 @@ msgstr ""
 #: plugins/MeteorShowers/src/ui_MSConfigDialog.h:480
 #: plugins/PointerCoordinates/src/ui_pointerCoordinatesWindow.h:324
 #: plugins/ArchaeoLines/src/ui_archaeoLinesDialog.h:648
+#: plugins/Calendars/src/ui_calendarsDialog.h:826
 msgctxt "tab in plugin windows"
 msgid "About"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:84 plugins/Oculars/src/Oculars.cpp:1499
+#: plugins/Oculars/src/Oculars.cpp:86 plugins/Oculars/src/Oculars.cpp:1504
 #: plugins/Oculars/src/gui/OcularsGuiPanel.cpp:189
 #: plugins/Oculars/src/ui_ocularDialog.h:1430
 msgid "Oculars"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:87
+#: plugins/Oculars/src/Oculars.cpp:89
 msgid ""
 "Shows the sky as if looking through a telescope eyepiece. (Only "
 "magnification and field of view are simulated.) It can also show a sensor "
 "frame and a Telrad sight."
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:985
+#: plugins/Oculars/src/Oculars.cpp:987
 msgid "Please select an object before switching to ocular view."
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1091
+#: plugins/Oculars/src/Oculars.cpp:1093
 msgid "&Previous ocular"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1092
+#: plugins/Oculars/src/Oculars.cpp:1094
 msgid "&Next ocular"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1093
+#: plugins/Oculars/src/Oculars.cpp:1095
 msgid "Select &ocular"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1135
+#: plugins/Oculars/src/Oculars.cpp:1137
 msgid "Toggle &crosshair"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1145
+#: plugins/Oculars/src/Oculars.cpp:1147
 msgid "Configure &Oculars"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1154
+#: plugins/Oculars/src/Oculars.cpp:1156
 msgid "Toggle &CCD"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1162
+#: plugins/Oculars/src/Oculars.cpp:1164
 msgid "Toggle &Telrad"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1171
+#: plugins/Oculars/src/Oculars.cpp:1173
 msgid "&Previous CCD"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1172
+#: plugins/Oculars/src/Oculars.cpp:1174
 msgid "&Next CCD"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1173
+#: plugins/Oculars/src/Oculars.cpp:1175
 msgid "&Select CCD"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1194
+#: plugins/Oculars/src/Oculars.cpp:1196
 msgid "&Rotate CCD"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1206
+#: plugins/Oculars/src/Oculars.cpp:1208
 msgid "&Reset rotation"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1500
+#: plugins/Oculars/src/Oculars.cpp:1370
+#: plugins/Oculars/src/gui/OcularDialog.cpp:121
+#: plugins/Oculars/src/gui/OcularDialog.cpp:138
+#: plugins/Oculars/src/gui/OcularDialog.cpp:155
+#: plugins/Satellites/src/gui/SatellitesDialog.cpp:824
+#: plugins/Satellites/src/gui/SatellitesDialog.cpp:831
+msgid "Warning!"
+msgstr ""
+
+#: plugins/Oculars/src/Oculars.cpp:1370
+msgid ""
+"Unable to display a sensor boundary: No sensors or telescopes are defined."
+msgstr ""
+
+#: plugins/Oculars/src/Oculars.cpp:1505
 #: plugins/Oculars/src/ui_ocularDialog.h:1465
 msgid "Ocular view"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1501
+#: plugins/Oculars/src/Oculars.cpp:1506
 msgid "Oculars popup menu"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1502
+#: plugins/Oculars/src/Oculars.cpp:1507
 msgid "Show crosshairs"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1503
+#: plugins/Oculars/src/Oculars.cpp:1508
 msgid "Image sensor frame"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1504
+#: plugins/Oculars/src/Oculars.cpp:1509
 msgid "Telrad sight"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1505
+#: plugins/Oculars/src/Oculars.cpp:1510
 msgid "Toggle Oculars configuration window"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1506
+#: plugins/Oculars/src/Oculars.cpp:1511
 msgid "Toggle Oculars button bar"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1508
+#: plugins/Oculars/src/Oculars.cpp:1513
 msgid "Select next telescope"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1510
+#: plugins/Oculars/src/Oculars.cpp:1515
 msgid "Select previous telescope"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1512
+#: plugins/Oculars/src/Oculars.cpp:1517
 msgid "Select next eyepiece"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1514
+#: plugins/Oculars/src/Oculars.cpp:1519
 msgid "Select previous eyepiece"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1515
+#: plugins/Oculars/src/Oculars.cpp:1520
 msgid "Rotate reticle pattern of the eyepiece clockwise"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1516
+#: plugins/Oculars/src/Oculars.cpp:1521
 msgid "Rotate reticle pattern of the eyepiece counterclockwise"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1517
+#: plugins/Oculars/src/Oculars.cpp:1522
 msgid "Toggle sensor crop overlay"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1518
+#: plugins/Oculars/src/Oculars.cpp:1523
 msgid "Toggle sensor pixel grid"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1519
+#: plugins/Oculars/src/Oculars.cpp:1524
 msgid "Toggle focuser overlay"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1741
+#: plugins/Oculars/src/Oculars.cpp:1746
 msgctxt "abbreviated in the plugin"
 msgid "RA/Dec (J2000.0) of cross"
 msgstr ""
 
 #. TRANSLATORS: Unit of measure for scale - arc-seconds per pixel
-#: plugins/Oculars/src/Oculars.cpp:1752
+#: plugins/Oculars/src/Oculars.cpp:1757
 #: plugins/Oculars/src/gui/OcularsGuiPanel.cpp:688
 #: plugins/Oculars/src/gui/OcularsGuiPanel.cpp:860
 msgid "\"/px"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:1771
+#: plugins/Oculars/src/Oculars.cpp:1776
 msgctxt "pixel"
 msgid "px"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:2005
+#: plugins/Oculars/src/Oculars.cpp:2010
 #: plugins/Oculars/src/gui/OcularsGuiPanel.cpp:483
 msgid "Ocular"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:2007
+#: plugins/Oculars/src/Oculars.cpp:2012
 #: plugins/Oculars/src/gui/OcularsGuiPanel.cpp:485
 msgid "Binocular"
 msgstr ""
 
 #. TRANSLATORS: FL = Focal length
-#: plugins/Oculars/src/Oculars.cpp:2027
+#: plugins/Oculars/src/Oculars.cpp:2032
 #: plugins/Oculars/src/gui/OcularsGuiPanel.cpp:528
 #, qt-format
 msgid "Ocular FL: %1 mm"
 msgstr ""
 
 #. TRANSLATORS: aFOV = apparent field of view
-#: plugins/Oculars/src/Oculars.cpp:2034
+#: plugins/Oculars/src/Oculars.cpp:2039
 #: plugins/Oculars/src/gui/OcularsGuiPanel.cpp:537
 #, qt-format
 msgid "Ocular aFOV: %1"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:2045
+#: plugins/Oculars/src/Oculars.cpp:2050
 #: plugins/Oculars/src/gui/OcularsGuiPanel.cpp:567
 #, qt-format
 msgid "Lens #%1"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:2049
+#: plugins/Oculars/src/Oculars.cpp:2054
 #: plugins/Oculars/src/gui/OcularsGuiPanel.cpp:571
 #, qt-format
 msgid "Lens #%1: %2"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:2054
+#: plugins/Oculars/src/Oculars.cpp:2059
 msgid "Lens: none"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:2069 plugins/Oculars/src/Oculars.cpp:2130
+#: plugins/Oculars/src/Oculars.cpp:2074 plugins/Oculars/src/Oculars.cpp:2135
 #: plugins/Oculars/src/gui/OcularsGuiPanel.cpp:808
 #, qt-format
 msgid "Telescope #%1"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:2078
+#: plugins/Oculars/src/Oculars.cpp:2083
 #: plugins/Oculars/src/gui/OcularsGuiPanel.cpp:910
 #, qt-format
 msgid "Magnification: %1"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:2085
+#: plugins/Oculars/src/Oculars.cpp:2090
 #: plugins/Oculars/src/gui/OcularsGuiPanel.cpp:921
 #, qt-format
 msgid "Exit pupil: %1 mm"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:2092
+#: plugins/Oculars/src/Oculars.cpp:2097
 #: plugins/Oculars/src/gui/OcularsGuiPanel.cpp:929
 #, qt-format
 msgid "FOV: %1"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:2113
+#: plugins/Oculars/src/Oculars.cpp:2118
 #: plugins/Oculars/src/gui/OcularsGuiPanel.cpp:676
 #: plugins/Oculars/src/gui/OcularsGuiPanel.cpp:852
 #, qt-format
 msgid "Dimensions: %1"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:2114
+#: plugins/Oculars/src/Oculars.cpp:2119
 #: plugins/Oculars/src/gui/OcularsGuiPanel.cpp:682
 #: plugins/Oculars/src/gui/OcularsGuiPanel.cpp:856
 msgid "Binning"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:2118
+#: plugins/Oculars/src/Oculars.cpp:2123
 #: plugins/Oculars/src/gui/OcularsGuiPanel.cpp:636
 #, qt-format
 msgid "Sensor #%1"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:2122
+#: plugins/Oculars/src/Oculars.cpp:2127
 #: plugins/Oculars/src/gui/OcularsGuiPanel.cpp:640
 #, qt-format
 msgid "Sensor #%1: %2"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:2135
+#: plugins/Oculars/src/Oculars.cpp:2140
 #: plugins/Oculars/src/gui/OcularsGuiPanel.cpp:812
 #, qt-format
 msgid "Telescope #%1: %2"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:2466
+#: plugins/Oculars/src/Oculars.cpp:2471
 msgid "&Lens"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:2467
+#: plugins/Oculars/src/Oculars.cpp:2472
 msgid "&Previous lens"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:2468
+#: plugins/Oculars/src/Oculars.cpp:2473
 msgid "&Next lens"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:2497
+#: plugins/Oculars/src/Oculars.cpp:2502
 msgid "&Telescope"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:2498
+#: plugins/Oculars/src/Oculars.cpp:2503
 msgid "&Previous telescope"
 msgstr ""
 
-#: plugins/Oculars/src/Oculars.cpp:2499
+#: plugins/Oculars/src/Oculars.cpp:2504
 msgid "&Next telescope"
 msgstr ""
 
@@ -13215,58 +13240,70 @@ msgstr ""
 msgid "Visual resolution is based on eye properties and magnification"
 msgstr ""
 
+#: plugins/Oculars/src/gui/OcularDialog.cpp:121
+msgid "Cannot delete the last sensor."
+msgstr ""
+
+#: plugins/Oculars/src/gui/OcularDialog.cpp:138
+msgid "Cannot delete the last ocular."
+msgstr ""
+
+#: plugins/Oculars/src/gui/OcularDialog.cpp:155
+msgid "Cannot delete the last telescope."
+msgstr ""
+
 #. TRANSLATORS: tFOV for binoculars (tFOV = True Field of View)
-#: plugins/Oculars/src/gui/OcularDialog.cpp:551
+#: plugins/Oculars/src/gui/OcularDialog.cpp:569
 msgid "tFOV:"
 msgstr ""
 
 #. TRANSLATORS: Magnification factor for binoculars
-#: plugins/Oculars/src/gui/OcularDialog.cpp:553
+#: plugins/Oculars/src/gui/OcularDialog.cpp:571
 msgid "Magnification factor:"
 msgstr ""
 
-#: plugins/Oculars/src/gui/OcularDialog.cpp:554
+#: plugins/Oculars/src/gui/OcularDialog.cpp:572
 #: plugins/Oculars/src/ui_ocularDialog.h:1582
 msgid "Diameter:"
 msgstr ""
 
-#: plugins/Oculars/src/gui/OcularDialog.cpp:558
+#: plugins/Oculars/src/gui/OcularDialog.cpp:576
 #: plugins/Oculars/src/ui_ocularDialog.h:1547
 msgid "aFOV:"
 msgstr ""
 
-#: plugins/Oculars/src/gui/OcularDialog.cpp:559
+#: plugins/Oculars/src/gui/OcularDialog.cpp:577
 #: plugins/Oculars/src/ui_ocularDialog.h:1548
 #: plugins/Oculars/src/ui_ocularDialog.h:1583
 msgid "Focal length:"
 msgstr ""
 
-#: plugins/Oculars/src/gui/OcularDialog.cpp:560
+#: plugins/Oculars/src/gui/OcularDialog.cpp:578
 #: plugins/Oculars/src/ui_ocularDialog.h:1544
 msgid "Field stop:"
 msgstr ""
 
-#: plugins/Oculars/src/gui/OcularDialog.cpp:572
+#: plugins/Oculars/src/gui/OcularDialog.cpp:590
 msgid "Oculars Plug-in"
 msgstr ""
 
-#: plugins/Oculars/src/gui/OcularDialog.cpp:580
+#: plugins/Oculars/src/gui/OcularDialog.cpp:598
 msgid "Barlow lens feature"
 msgstr ""
 
-#: plugins/Oculars/src/gui/OcularDialog.cpp:581
+#: plugins/Oculars/src/gui/OcularDialog.cpp:599
 msgid "Sensor crop overlay feature"
 msgstr ""
 
-#: plugins/Oculars/src/gui/OcularDialog.cpp:582
+#: plugins/Oculars/src/gui/OcularDialog.cpp:600
 msgid "Pixel grid feature"
 msgstr ""
 
-#: plugins/Oculars/src/gui/OcularDialog.cpp:586
+#: plugins/Oculars/src/gui/OcularDialog.cpp:604
 msgid "Overview"
 msgstr ""
 
-#: plugins/Oculars/src/gui/OcularDialog.cpp:588
+#: plugins/Oculars/src/gui/OcularDialog.cpp:606
 msgid ""
 "This plugin is intended to simulate what you would see through an eyepiece.  "
 "This configuration dialog can be used to add, modify, or delete eyepieces "
@@ -13274,39 +13311,39 @@ msgid ""
 "will populate some samples to get you started."
 msgstr ""
 
-#: plugins/Oculars/src/gui/OcularDialog.cpp:589
+#: plugins/Oculars/src/gui/OcularDialog.cpp:607
 msgid "You can choose to scale the image you see on the screen."
 msgstr ""
 
-#: plugins/Oculars/src/gui/OcularDialog.cpp:590
+#: plugins/Oculars/src/gui/OcularDialog.cpp:608
 msgid ""
 "This is intended to show you a better comparison of what one eyepiece/"
 "telescope combination will be like when compared to another."
 msgstr ""
 
-#: plugins/Oculars/src/gui/OcularDialog.cpp:591
+#: plugins/Oculars/src/gui/OcularDialog.cpp:609
 msgid ""
 "The same eyepiece in two different telescopes of differing focal length will "
 "produce two different exit pupils, changing the view somewhat."
 msgstr ""
 
-#: plugins/Oculars/src/gui/OcularDialog.cpp:592
+#: plugins/Oculars/src/gui/OcularDialog.cpp:610
 msgid ""
 "The trade-off of this is that, with the image scaled, a large part of the "
 "screen can be wasted."
 msgstr ""
 
-#: plugins/Oculars/src/gui/OcularDialog.cpp:593
+#: plugins/Oculars/src/gui/OcularDialog.cpp:611
 msgid ""
 "Therefore we recommend that you leave it off, unless you feel you have a "
 "need for it."
 msgstr ""
 
-#: plugins/Oculars/src/gui/OcularDialog.cpp:594
+#: plugins/Oculars/src/gui/OcularDialog.cpp:612
 msgid "You can toggle a crosshair in the view."
 msgstr ""
 
-#: plugins/Oculars/src/gui/OcularDialog.cpp:595
+#: plugins/Oculars/src/gui/OcularDialog.cpp:613
 #, qt-format
 msgid ""
 "You can toggle a Telrad finder. This feature draws three concentric circles "
@@ -13314,46 +13351,46 @@ msgid ""
 "with the naked eye through the Telrad (or similar) finder."
 msgstr ""
 
-#: plugins/Oculars/src/gui/OcularDialog.cpp:596
+#: plugins/Oculars/src/gui/OcularDialog.cpp:614
 msgid ""
 "You can adjust the diameters or even add a fourth circle if you have a "
 "different finder, or revert to the Telrad standard sizes."
 msgstr ""
 
-#: plugins/Oculars/src/gui/OcularDialog.cpp:597
+#: plugins/Oculars/src/gui/OcularDialog.cpp:615
 msgid "If you find any issues, please let me know. Enjoy!"
 msgstr ""
 
-#: plugins/Oculars/src/gui/OcularDialog.cpp:600
+#: plugins/Oculars/src/gui/OcularDialog.cpp:618
 msgid "Hot Keys"
 msgstr ""
 
-#: plugins/Oculars/src/gui/OcularDialog.cpp:601
+#: plugins/Oculars/src/gui/OcularDialog.cpp:619
 msgid ""
 "The plug-in's key bindings can be edited in the Keyboard shortcuts editor "
 "(F7)."
 msgstr ""
 
-#: plugins/Oculars/src/gui/OcularDialog.cpp:604
+#: plugins/Oculars/src/gui/OcularDialog.cpp:622
 #: plugins/Pulsars/src/Pulsar.cpp:288
 #: plugins/Exoplanets/src/gui/ExoplanetsDialog.cpp:604
 #: plugins/MeteorShowers/src/gui/MSConfigDialog.cpp:318
 msgid "Notes"
 msgstr ""
 
-#: plugins/Oculars/src/gui/OcularDialog.cpp:605
+#: plugins/Oculars/src/gui/OcularDialog.cpp:623
 msgid ""
 "The sensor view has a feature to show a sensor crop overlay with information "
 "about the crop size. The size of this rectangle may be adjusted when binning "
 "is active (e.g. crop size of 100px will be adjusted to 99px by binning 3)."
 msgstr ""
 
-#: plugins/Oculars/src/gui/OcularDialog.cpp:606
+#: plugins/Oculars/src/gui/OcularDialog.cpp:624
 #, qt-format
 msgid "In this case, information about crop size overlay will be marked by %1."
 msgstr ""
 
-#: plugins/Oculars/src/gui/OcularDialog.cpp:607
+#: plugins/Oculars/src/gui/OcularDialog.cpp:625
 msgid ""
 "This mark is also displayed if the crop size is larger than the sensor size."
 msgstr ""
@@ -14449,11 +14486,6 @@ msgid "Updated %1/%2 satellite(s); %3 added; %4 missing"
 msgstr ""
 
 #: plugins/Satellites/src/gui/SatellitesDialog.cpp:824
-#: plugins/Satellites/src/gui/SatellitesDialog.cpp:831
-msgid "Warning!"
-msgstr ""
-
-#: plugins/Satellites/src/gui/SatellitesDialog.cpp:824
 msgid "Empty string - not saving"
 msgstr ""
 
@@ -14901,88 +14933,88 @@ msgstr ""
 msgid "Discard"
 msgstr ""
 
-#: plugins/TelescopeControl/src/TelescopeControl.cpp:79
-#: plugins/TelescopeControl/src/TelescopeControl.cpp:165
-#: plugins/TelescopeControl/src/TelescopeControl.cpp:199
+#: plugins/TelescopeControl/src/TelescopeControl.cpp:80
+#: plugins/TelescopeControl/src/TelescopeControl.cpp:166
+#: plugins/TelescopeControl/src/TelescopeControl.cpp:200
 msgid "Telescope Control"
 msgstr ""
 
-#: plugins/TelescopeControl/src/TelescopeControl.cpp:82
+#: plugins/TelescopeControl/src/TelescopeControl.cpp:83
 msgid ""
 "This plug-in allows Stellarium to send \"slew\" commands to a telescope on a "
 "computerized mount (a \"GoTo telescope\")."
 msgstr ""
 
-#: plugins/TelescopeControl/src/TelescopeControl.cpp:172
-#: plugins/TelescopeControl/src/TelescopeControl.cpp:232
+#: plugins/TelescopeControl/src/TelescopeControl.cpp:173
+#: plugins/TelescopeControl/src/TelescopeControl.cpp:233
 #, qt-format
 msgid "Move telescope #%1 to selected object"
 msgstr ""
 
-#: plugins/TelescopeControl/src/TelescopeControl.cpp:178
-#: plugins/TelescopeControl/src/TelescopeControl.cpp:240
+#: plugins/TelescopeControl/src/TelescopeControl.cpp:179
+#: plugins/TelescopeControl/src/TelescopeControl.cpp:241
 #, qt-format
 msgid "Move telescope #%1 to the point currently in the center of the screen"
 msgstr ""
 
-#: plugins/TelescopeControl/src/TelescopeControl.cpp:184
+#: plugins/TelescopeControl/src/TelescopeControl.cpp:185
 #, qt-format
 msgid "Sync telescope #%1 position to selected object"
 msgstr ""
 
-#: plugins/TelescopeControl/src/TelescopeControl.cpp:190
-#: plugins/TelescopeControl/src/TelescopeControl.cpp:236
-#: plugins/TelescopeControl/src/TelescopeControl.cpp:244
+#: plugins/TelescopeControl/src/TelescopeControl.cpp:191
+#: plugins/TelescopeControl/src/TelescopeControl.cpp:237
+#: plugins/TelescopeControl/src/TelescopeControl.cpp:245
 #, qt-format
 msgid "Abort last slew command of telescope #%1"
 msgstr ""
 
-#: plugins/TelescopeControl/src/TelescopeControl.cpp:199
+#: plugins/TelescopeControl/src/TelescopeControl.cpp:200
 msgid "Move a telescope to a given set of coordinates"
 msgstr ""
 
 #. TRANSLATORS: Description for Meade AutoStar compatible mounts
-#: plugins/TelescopeControl/src/TelescopeControl.cpp:1757
+#: plugins/TelescopeControl/src/TelescopeControl.cpp:1758
 msgid ""
 "Any telescope or telescope mount compatible with Meade's AutoStar controller."
 msgstr ""
 
 #. TRANSLATORS: Description for Meade LX200 (compatible) mounts
-#: plugins/TelescopeControl/src/TelescopeControl.cpp:1759
+#: plugins/TelescopeControl/src/TelescopeControl.cpp:1760
 msgid "Any telescope or telescope mount compatible with Meade LX200."
 msgstr ""
 
 #. TRANSLATORS: Description for Meade ETX70 (#494 Autostar, #506 CCS) mounts
-#: plugins/TelescopeControl/src/TelescopeControl.cpp:1761
+#: plugins/TelescopeControl/src/TelescopeControl.cpp:1762
 msgid ""
 "Meade's ETX70 with the #494 Autostar controller and the #506 Connector Cable "
 "Set."
 msgstr ""
 
 #. TRANSLATORS: Description for Losmandy G-11 mounts
-#: plugins/TelescopeControl/src/TelescopeControl.cpp:1763
+#: plugins/TelescopeControl/src/TelescopeControl.cpp:1764
 msgid "Losmandy's G-11 telescope mount."
 msgstr ""
 
 #. TRANSLATORS: Description for Wildcard Innovations Argo Navis (Meade mode) mounts
-#: plugins/TelescopeControl/src/TelescopeControl.cpp:1765
+#: plugins/TelescopeControl/src/TelescopeControl.cpp:1766
 msgid "Wildcard Innovations' Argo Navis DTC in Meade LX200 emulation mode."
 msgstr ""
 
 #. TRANSLATORS: Description for Celestron NexStar (compatible) mounts
-#: plugins/TelescopeControl/src/TelescopeControl.cpp:1767
+#: plugins/TelescopeControl/src/TelescopeControl.cpp:1768
 msgid "Any telescope or telescope mount compatible with Celestron NexStar."
 msgstr ""
 
 #. TRANSLATORS: Description for Sky-Watcher SynScan (version 3 or later) mounts
-#: plugins/TelescopeControl/src/TelescopeControl.cpp:1769
+#: plugins/TelescopeControl/src/TelescopeControl.cpp:1770
 msgid ""
 "Any Sky-Watcher mount that uses version 3 or later of the SynScan hand "
 "controller."
 msgstr ""
 
 #. TRANSLATORS: Description for Sky-Watcher SynScan AZ GOTO mounts
-#: plugins/TelescopeControl/src/TelescopeControl.cpp:1771
+#: plugins/TelescopeControl/src/TelescopeControl.cpp:1772
 msgid ""
 "The Sky-Watcher SynScan AZ GOTO mount used in a number of telescope models."
 msgstr ""
@@ -16449,22 +16481,22 @@ msgid "Import orbital elements in MPC format..."
 msgstr ""
 
 #. TRANSLATORS: A link showing the text "Minor Planet & Comet Ephemeris Service" is inserted.
-#: plugins/SolarSystemEditor/src/gui/MpcImportWindow.cpp:159
+#: plugins/SolarSystemEditor/src/gui/MpcImportWindow.cpp:160
 #, qt-format
 msgid "Query the MPC's %1:"
 msgstr ""
 
-#: plugins/SolarSystemEditor/src/gui/MpcImportWindow.cpp:162
+#: plugins/SolarSystemEditor/src/gui/MpcImportWindow.cpp:163
 msgid "Only one result will be returned if the query is successful."
 msgstr ""
 
-#: plugins/SolarSystemEditor/src/gui/MpcImportWindow.cpp:163
+#: plugins/SolarSystemEditor/src/gui/MpcImportWindow.cpp:164
 msgid ""
 "Both comets and asteroids can be identified with their number, name (in "
 "English) or provisional designation."
 msgstr ""
 
-#: plugins/SolarSystemEditor/src/gui/MpcImportWindow.cpp:170
+#: plugins/SolarSystemEditor/src/gui/MpcImportWindow.cpp:171
 #, qt-format
 msgid ""
 "Comet <i>names</i> need to be prefixed with %1 or %2. If more than one comet "
@@ -16473,19 +16505,19 @@ msgid ""
 "will return the asteroid %6."
 msgstr ""
 
-#: plugins/SolarSystemEditor/src/gui/MpcImportWindow.cpp:211
+#: plugins/SolarSystemEditor/src/gui/MpcImportWindow.cpp:212
 msgid "Select bookmark..."
 msgstr ""
 
-#: plugins/SolarSystemEditor/src/gui/MpcImportWindow.cpp:348
+#: plugins/SolarSystemEditor/src/gui/MpcImportWindow.cpp:349
 msgid "Plain Text File"
 msgstr ""
 
-#: plugins/SolarSystemEditor/src/gui/MpcImportWindow.cpp:350
+#: plugins/SolarSystemEditor/src/gui/MpcImportWindow.cpp:351
 msgid "All Files"
 msgstr ""
 
-#: plugins/SolarSystemEditor/src/gui/MpcImportWindow.cpp:352
+#: plugins/SolarSystemEditor/src/gui/MpcImportWindow.cpp:353
 msgid "Select a file"
 msgstr ""
 
@@ -16658,16 +16690,16 @@ msgstr ""
 msgid "Add new Minor Solar System objects"
 msgstr ""
 
-#: plugins/Supernovae/src/Supernovae.cpp:71
-#: plugins/Supernovae/src/Supernovae.cpp:150
+#: plugins/Supernovae/src/Supernovae.cpp:72
+#: plugins/Supernovae/src/Supernovae.cpp:151
 msgid "Historical Supernovae"
 msgstr ""
 
-#: plugins/Supernovae/src/Supernovae.cpp:74
+#: plugins/Supernovae/src/Supernovae.cpp:75
 msgid "This plugin allows you to see some bright historical supernovae."
 msgstr ""
 
-#: plugins/Supernovae/src/Supernovae.cpp:150
+#: plugins/Supernovae/src/Supernovae.cpp:151
 msgid "Historical Supernovae configuration window"
 msgstr ""
 
@@ -17099,15 +17131,15 @@ msgstr ""
 msgid "Show extra decimals in info"
 msgstr ""
 
-#: plugins/Novae/src/Novae.cpp:71 plugins/Novae/src/Novae.cpp:144
+#: plugins/Novae/src/Novae.cpp:72 plugins/Novae/src/Novae.cpp:145
 msgid "Bright Novae"
 msgstr ""
 
-#: plugins/Novae/src/Novae.cpp:74 plugins/Novae/src/gui/NovaeDialog.cpp:126
+#: plugins/Novae/src/Novae.cpp:75 plugins/Novae/src/gui/NovaeDialog.cpp:126
 msgid "A plugin that shows some bright novae in the Milky Way galaxy."
 msgstr ""
 
-#: plugins/Novae/src/Novae.cpp:144
+#: plugins/Novae/src/Novae.cpp:145
 msgid "Bright Novae configuration window"
 msgstr ""
 
@@ -17165,18 +17197,18 @@ msgstr ""
 msgid "Bright Novae Plug-in Configuration"
 msgstr ""
 
-#: plugins/Quasars/src/Quasars.cpp:75
+#: plugins/Quasars/src/Quasars.cpp:76
 msgid ""
 "A plugin that shows some quasars brighter than visual magnitude 18. The "
 "catalogue of quasars was compiled from 'Quasars and Active Galactic "
 "Nuclei' (13th Ed.) (Veron+ 2010)"
 msgstr ""
 
-#: plugins/Quasars/src/Quasars.cpp:171
+#: plugins/Quasars/src/Quasars.cpp:172
 msgid "Show quasars"
 msgstr ""
 
-#: plugins/Quasars/src/Quasars.cpp:172
+#: plugins/Quasars/src/Quasars.cpp:173
 msgid "Quasars configuration window"
 msgstr ""
 
@@ -17250,18 +17282,18 @@ msgstr ""
 msgid "Quasars marker color"
 msgstr ""
 
-#: plugins/Pulsars/src/Pulsars.cpp:74
+#: plugins/Pulsars/src/Pulsars.cpp:75
 #: plugins/Pulsars/src/gui/PulsarsDialog.cpp:144
 msgid ""
 "This plugin plots the position of various pulsars, with object information "
 "about each one."
 msgstr ""
 
-#: plugins/Pulsars/src/Pulsars.cpp:169
+#: plugins/Pulsars/src/Pulsars.cpp:170
 msgid "Show pulsars"
 msgstr ""
 
-#: plugins/Pulsars/src/Pulsars.cpp:170
+#: plugins/Pulsars/src/Pulsars.cpp:171
 msgid "Pulsars configuration window"
 msgstr ""
 
@@ -17482,25 +17514,25 @@ msgstr ""
 msgid "Only show pulsars with Time average flux density at 400 MHz above"
 msgstr ""
 
-#: plugins/RemoteControl/src/RemoteControl.cpp:58
-#: plugins/RemoteControl/src/RemoteControl.cpp:152
+#: plugins/RemoteControl/src/RemoteControl.cpp:59
+#: plugins/RemoteControl/src/RemoteControl.cpp:153
 #: plugins/RemoteControl/src/ui_remoteControlDialog.h:285
 msgid "Remote Control"
 msgstr ""
 
-#: plugins/RemoteControl/src/RemoteControl.cpp:61
+#: plugins/RemoteControl/src/RemoteControl.cpp:62
 msgid ""
 "Provides remote control functionality using a webserver interface. See "
 "manual for detailed description."
 msgstr ""
 
-#: plugins/RemoteControl/src/RemoteControl.cpp:62
+#: plugins/RemoteControl/src/RemoteControl.cpp:63
 msgid ""
 "This plugin was created in the 2015 campaign of the ESA Summer of Code in "
 "Space programme."
 msgstr ""
 
-#: plugins/RemoteControl/src/RemoteControl.cpp:152
+#: plugins/RemoteControl/src/RemoteControl.cpp:153
 msgid "Remote control"
 msgstr ""
 
@@ -17533,11 +17565,13 @@ msgstr ""
 
 #: plugins/RemoteControl/src/gui/RemoteControlDialog.cpp:158
 #: plugins/ArchaeoLines/src/gui/ArchaeoLinesDialog.cpp:174
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:187
 msgid "Publications"
 msgstr ""
 
 #: plugins/RemoteControl/src/gui/RemoteControlDialog.cpp:159
 #: plugins/ArchaeoLines/src/gui/ArchaeoLinesDialog.cpp:175
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:188
 msgid "If you use this plugin in your publications, please cite:"
 msgstr ""
 
@@ -17820,118 +17854,118 @@ msgstr ""
 msgid "Client settings"
 msgstr ""
 
-#: plugins/Exoplanets/src/Exoplanets.cpp:75
-#: plugins/Exoplanets/src/Exoplanets.cpp:172
+#: plugins/Exoplanets/src/Exoplanets.cpp:76
 #: plugins/Exoplanets/src/Exoplanets.cpp:173
+#: plugins/Exoplanets/src/Exoplanets.cpp:174
 msgid "Exoplanets"
 msgstr ""
 
-#: plugins/Exoplanets/src/Exoplanets.cpp:78
+#: plugins/Exoplanets/src/Exoplanets.cpp:79
 msgid ""
 "This plugin plots the position of stars with exoplanets. Exoplanets data is "
 "derived from the 'Extrasolar Planets Encyclopaedia' at exoplanet.eu"
 msgstr ""
 
-#: plugins/Exoplanets/src/Exoplanets.cpp:172
+#: plugins/Exoplanets/src/Exoplanets.cpp:173
 msgid "Show exoplanets"
 msgstr ""
 
-#: plugins/Exoplanets/src/Exoplanets.cpp:173
+#: plugins/Exoplanets/src/Exoplanets.cpp:174
 msgid "Exoplanets configuration window"
 msgstr ""
 
 #. TRANSLATORS: Habitable zone
-#: plugins/Exoplanets/src/Exoplanets.cpp:1005
+#: plugins/Exoplanets/src/Exoplanets.cpp:1006
 msgid "Hot"
 msgstr ""
 
 #. TRANSLATORS: Habitable zone
-#: plugins/Exoplanets/src/Exoplanets.cpp:1007
+#: plugins/Exoplanets/src/Exoplanets.cpp:1008
 msgid "Warm"
 msgstr ""
 
 #. TRANSLATORS: Habitable zone
-#: plugins/Exoplanets/src/Exoplanets.cpp:1009
+#: plugins/Exoplanets/src/Exoplanets.cpp:1010
 msgid "Cold"
 msgstr ""
 
 #. TRANSLATORS: Planet size
-#: plugins/Exoplanets/src/Exoplanets.cpp:1012
+#: plugins/Exoplanets/src/Exoplanets.cpp:1013
 msgid "Miniterran"
 msgstr ""
 
 #. TRANSLATORS: Planet size
-#: plugins/Exoplanets/src/Exoplanets.cpp:1014
+#: plugins/Exoplanets/src/Exoplanets.cpp:1015
 msgid "Subterran"
 msgstr ""
 
 #. TRANSLATORS: Planet size
-#: plugins/Exoplanets/src/Exoplanets.cpp:1016
+#: plugins/Exoplanets/src/Exoplanets.cpp:1017
 msgid "Terran"
 msgstr ""
 
 #. TRANSLATORS: Planet size
-#: plugins/Exoplanets/src/Exoplanets.cpp:1018
+#: plugins/Exoplanets/src/Exoplanets.cpp:1019
 msgid "Superterran"
 msgstr ""
 
 #. TRANSLATORS: Planet size
-#: plugins/Exoplanets/src/Exoplanets.cpp:1020
+#: plugins/Exoplanets/src/Exoplanets.cpp:1021
 msgid "Jovian"
 msgstr ""
 
 #. TRANSLATORS: Planet size
-#: plugins/Exoplanets/src/Exoplanets.cpp:1022
+#: plugins/Exoplanets/src/Exoplanets.cpp:1023
 msgid "Neptunian"
 msgstr ""
 
 #. TRANSLATORS: Exoplanet detection method
-#: plugins/Exoplanets/src/Exoplanets.cpp:1025
+#: plugins/Exoplanets/src/Exoplanets.cpp:1026
 msgid "Primary Transit"
 msgstr ""
 
 #. TRANSLATORS: Exoplanet detection method
-#: plugins/Exoplanets/src/Exoplanets.cpp:1027
+#: plugins/Exoplanets/src/Exoplanets.cpp:1028
 msgid "Microlensing"
 msgstr ""
 
 #. TRANSLATORS: Exoplanet detection method
-#: plugins/Exoplanets/src/Exoplanets.cpp:1029
+#: plugins/Exoplanets/src/Exoplanets.cpp:1030
 msgid "Radial Velocity"
 msgstr ""
 
 #. TRANSLATORS: Exoplanet detection method
-#: plugins/Exoplanets/src/Exoplanets.cpp:1031
+#: plugins/Exoplanets/src/Exoplanets.cpp:1032
 msgid "Imaging"
 msgstr ""
 
 #. TRANSLATORS: Exoplanet detection method
-#: plugins/Exoplanets/src/Exoplanets.cpp:1033
+#: plugins/Exoplanets/src/Exoplanets.cpp:1034
 msgid "Pulsar"
 msgstr ""
 
 #. TRANSLATORS: Exoplanet detection method
-#: plugins/Exoplanets/src/Exoplanets.cpp:1037
+#: plugins/Exoplanets/src/Exoplanets.cpp:1038
 msgid "Astrometry"
 msgstr ""
 
 #. TRANSLATORS: Exoplanet detection method. TTV=Transit Timing Variation
-#: plugins/Exoplanets/src/Exoplanets.cpp:1039
+#: plugins/Exoplanets/src/Exoplanets.cpp:1040
 msgid "TTV"
 msgstr ""
 
 #. TRANSLATORS: Exoplanet detection method
-#: plugins/Exoplanets/src/Exoplanets.cpp:1041
+#: plugins/Exoplanets/src/Exoplanets.cpp:1042
 msgid "Timing"
 msgstr ""
 
 #. TRANSLATORS: Exoplanet detection method. TTV=Transit Timing Variation
-#: plugins/Exoplanets/src/Exoplanets.cpp:1043
+#: plugins/Exoplanets/src/Exoplanets.cpp:1044
 msgid "Primary Transit, TTV"
 msgstr ""
 
 #. TRANSLATORS: Exoplanet detection method
-#: plugins/Exoplanets/src/Exoplanets.cpp:1045
+#: plugins/Exoplanets/src/Exoplanets.cpp:1046
 msgid "Default"
 msgstr ""
 
@@ -18026,11 +18060,11 @@ msgid "D. M."
 msgstr ""
 
 #: plugins/Exoplanets/src/gui/ExoplanetsDialog.cpp:218
-msgid "Mass of exoplanet in jovian masses"
+msgid "Mass of exoplanet in Jovian masses"
 msgstr ""
 
 #: plugins/Exoplanets/src/gui/ExoplanetsDialog.cpp:221
-msgid "Radius of exoplanet in jovian radiuses"
+msgid "Radius of exoplanet in Jovian radii"
 msgstr ""
 
 #: plugins/Exoplanets/src/gui/ExoplanetsDialog.cpp:224
@@ -18054,7 +18088,7 @@ msgid "Angular distance from host star in arcseconds"
 msgstr ""
 
 #: plugins/Exoplanets/src/gui/ExoplanetsDialog.cpp:241
-msgid "Radius of star in solar radiuses"
+msgid "Radius of star in solar radii"
 msgstr ""
 
 #: plugins/Exoplanets/src/gui/ExoplanetsDialog.cpp:244
@@ -20551,42 +20585,42 @@ msgstr ""
 msgid "Color of text"
 msgstr ""
 
-#: plugins/MeteorShowers/src/MeteorShowersMgr.cpp:88
+#: plugins/MeteorShowers/src/MeteorShowersMgr.cpp:89
 msgid "The current catalog of Meteor Showers is invalid!"
 msgstr ""
 
-#: plugins/MeteorShowers/src/MeteorShowersMgr.cpp:145
-#: plugins/MeteorShowers/src/MeteorShowersMgr.cpp:639
+#: plugins/MeteorShowers/src/MeteorShowersMgr.cpp:146
+#: plugins/MeteorShowers/src/MeteorShowersMgr.cpp:640
 msgid "Meteor Showers"
 msgstr ""
 
-#: plugins/MeteorShowers/src/MeteorShowersMgr.cpp:146
+#: plugins/MeteorShowers/src/MeteorShowersMgr.cpp:147
 msgid "Toggle meteor showers"
 msgstr ""
 
-#: plugins/MeteorShowers/src/MeteorShowersMgr.cpp:147
+#: plugins/MeteorShowers/src/MeteorShowersMgr.cpp:148
 msgid "Toggle radiant labels"
 msgstr ""
 
-#: plugins/MeteorShowers/src/MeteorShowersMgr.cpp:148
+#: plugins/MeteorShowers/src/MeteorShowersMgr.cpp:149
 msgid "Show meteor showers settings dialog"
 msgstr ""
 
-#: plugins/MeteorShowers/src/MeteorShowersMgr.cpp:149
+#: plugins/MeteorShowers/src/MeteorShowersMgr.cpp:150
 msgid "Show meteor showers search dialog"
 msgstr ""
 
-#: plugins/MeteorShowers/src/MeteorShowersMgr.cpp:267
+#: plugins/MeteorShowers/src/MeteorShowersMgr.cpp:268
 msgid "Using the default Meteor Showers catalog."
 msgstr ""
 
-#: plugins/MeteorShowers/src/MeteorShowersMgr.cpp:642
+#: plugins/MeteorShowers/src/MeteorShowersMgr.cpp:643
 msgid ""
 "This plugin was created in the 2013 campaign of the ESA Summer of Code in "
 "Space programme."
 msgstr ""
 
-#: plugins/MeteorShowers/src/MeteorShowersMgr.cpp:644
+#: plugins/MeteorShowers/src/MeteorShowersMgr.cpp:645
 msgid ""
 "<p>This plugin enables you to simulate periodic meteor showers and to "
 "display a marker for each active and inactive radiant.</p><p>By a single "
@@ -21527,7 +21561,8 @@ msgid "Toggle 3D landscape"
 msgstr ""
 
 #: plugins/Scenery3d/src/Scenery3d.cpp:333
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:255
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:256
+#: plugins/Calendars/src/Calendars.cpp:152
 msgid "Show settings dialog"
 msgstr ""
 
@@ -22019,131 +22054,131 @@ msgstr ""
 msgid "Title:"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:58
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:253
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:59
 #: plugins/ArchaeoLines/src/ArchaeoLines.cpp:254
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:255
 #: plugins/ArchaeoLines/src/ui_archaeoLinesDialog.h:617
 msgid "ArchaeoLines"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:61
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:62
 msgid "A tool for archaeo-/ethnoastronomical alignment studies"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:276
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:277
 msgid "Show Line for Equinox"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:277
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:278
 msgid "Show Line for Solstices"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:278
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:279
 msgid "Show Line for Crossquarter"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:279
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:280
 msgid "Show Line for Major Standstill"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:280
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:281
 msgid "Show Line for Minor Standstill"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:281
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:282
 msgid "Show Line for Zenith Passage"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:282
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:283
 msgid "Show Line for Nadir Passage"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:283
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:284
 msgid "Show Line for Selected Object"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:284
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:285
 msgid "Show Line for Selected Object's Azimuth"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:285
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:286
 msgid "Show Line for Selected Object's Hour Angle"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:286
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:287
 msgid "Show Line for Current Sun"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:287
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:288
 msgid "Show Line for Current Moon"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:288
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:289
 msgid "Show Vertical for Geographic Location 1"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:289
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:290
 msgid "Show Vertical for Geographic Location 2"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:290
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:291
 msgid "Show Vertical for Custom Azimuth 1"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:291
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:292
 msgid "Show Vertical for Custom Azimuth 2"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:292
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:293
 msgid "Show Line for Custom Declination 1"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:293
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:294
 msgid "Show Line for Custom Declination 2"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:1277
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:1278
 msgid "Equinox"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:1280
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:1281
 msgid "Solstice"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:1283
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:1284
 msgid "Crossquarter"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:1286
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:1287
 msgid "Major Lunar Standstill"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:1289
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:1290
 msgid "Minor Lunar Standstill"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:1292
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:1293
 msgid "Zenith Passage"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:1295
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:1296
 msgid "Nadir Passage"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:1300
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:1301
 #: plugins/ArchaeoLines/src/ui_archaeoLinesDialog.h:611
 msgid "Selected Object"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:1309
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:1310
 msgid "error if you can read this"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:1312
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:1313
 msgid "Mercury"
 msgstr ""
 
-#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:1315
+#: plugins/ArchaeoLines/src/ArchaeoLines.cpp:1316
 msgid "Venus"
 msgstr ""
 
@@ -22367,4 +22402,1917 @@ msgstr ""
 
 #: plugins/Vts/src/Vts.cpp:155
 msgid "Allow to use Stellarium as a plugin in CNES VTS."
+msgstr ""
+
+#: plugins/Calendars/src/Calendars.cpp:69
+#: plugins/Calendars/src/Calendars.cpp:150
+#: plugins/Calendars/src/Calendars.cpp:151
+msgid "Calendars"
+msgstr ""
+
+#: plugins/Calendars/src/Calendars.cpp:72
+msgid "Calendars of the world"
+msgstr ""
+
+#: plugins/Calendars/src/Calendars.cpp:254
+#: plugins/Calendars/src/ui_calendarsDialog.h:762
+#: plugins/Calendars/src/ui_calendarsDialog.h:778
+msgctxt "calendar"
+msgid "Julian"
+msgstr ""
+
+#: plugins/Calendars/src/Calendars.cpp:255
+#: plugins/Calendars/src/ui_calendarsDialog.h:765
+#: plugins/Calendars/src/ui_calendarsDialog.h:782
+msgctxt "calendar"
+msgid "Gregorian"
+msgstr ""
+
+#: plugins/Calendars/src/Calendars.cpp:256
+msgctxt "calendar"
+msgid "ISO week"
+msgstr ""
+
+#: plugins/Calendars/src/Calendars.cpp:257
+#: plugins/Calendars/src/ui_calendarsDialog.h:768
+msgctxt "calendar"
+msgid "Icelandic"
+msgstr ""
+
+#: plugins/Calendars/src/Calendars.cpp:258
+#: plugins/Calendars/src/ui_calendarsDialog.h:773
+msgctxt "calendar"
+msgid "Roman"
+msgstr ""
+
+#: plugins/Calendars/src/Calendars.cpp:259
+#: plugins/Calendars/src/ui_calendarsDialog.h:771
+msgctxt "calendar"
+msgid "Olympic"
+msgstr ""
+
+#: plugins/Calendars/src/Calendars.cpp:260
+#: plugins/Calendars/src/ui_calendarsDialog.h:760
+msgctxt "calendar"
+msgid "Egyptian"
+msgstr ""
+
+#: plugins/Calendars/src/Calendars.cpp:261
+#: plugins/Calendars/src/ui_calendarsDialog.h:770
+msgctxt "calendar"
+msgid "Armenian"
+msgstr ""
+
+#: plugins/Calendars/src/Calendars.cpp:262
+#: plugins/Calendars/src/ui_calendarsDialog.h:769
+msgctxt "calendar"
+msgid "Zoroastrian"
+msgstr ""
+
+#: plugins/Calendars/src/Calendars.cpp:263
+#: plugins/Calendars/src/ui_calendarsDialog.h:761
+msgctxt "calendar"
+msgid "Coptic"
+msgstr ""
+
+#: plugins/Calendars/src/Calendars.cpp:264
+#: plugins/Calendars/src/ui_calendarsDialog.h:759
+msgctxt "calendar"
+msgid "Ethiopic"
+msgstr ""
+
+#: plugins/Calendars/src/Calendars.cpp:265
+#: plugins/Calendars/src/ui_calendarsDialog.h:758
+msgctxt "calendar"
+msgid "Maya Long Count"
+msgstr ""
+
+#: plugins/Calendars/src/Calendars.cpp:266
+#: plugins/Calendars/src/ui_calendarsDialog.h:772
+msgctxt "calendar"
+msgid "Maya Haab"
+msgstr ""
+
+#: plugins/Calendars/src/Calendars.cpp:267
+#: plugins/Calendars/src/ui_calendarsDialog.h:764
+msgctxt "calendar"
+msgid "Maya Tzolkin"
+msgstr ""
+
+#: plugins/Calendars/src/Calendars.cpp:268
+#: plugins/Calendars/src/ui_calendarsDialog.h:767
+msgctxt "calendar"
+msgid "Aztec Xihuitl"
+msgstr ""
+
+#: plugins/Calendars/src/Calendars.cpp:269
+#: plugins/Calendars/src/ui_calendarsDialog.h:757
+msgctxt "calendar"
+msgid "Aztec Tonalpohualli"
+msgstr ""
+
+#: plugins/Calendars/src/Calendars.cpp:271
+#: plugins/Calendars/src/ui_calendarsDialog.h:766
+msgctxt "calendar"
+msgid "Balinese Pawukon"
+msgstr ""
+
+#: plugins/Calendars/src/ArmenianCalendar.cpp:40
+msgctxt "Armenian month name"
+msgid "Nawasardi"
+msgstr ""
+
+#: plugins/Calendars/src/ArmenianCalendar.cpp:41
+msgctxt "Armenian month name"
+msgid "Hor̄i"
+msgstr ""
+
+#: plugins/Calendars/src/ArmenianCalendar.cpp:42
+msgctxt "Armenian month name"
+msgid "Sahmi"
+msgstr ""
+
+#: plugins/Calendars/src/ArmenianCalendar.cpp:43
+msgctxt "Armenian month name"
+msgid "Trē"
+msgstr ""
+
+#: plugins/Calendars/src/ArmenianCalendar.cpp:44
+msgctxt "Armenian month name"
+msgid "K'aloch"
+msgstr ""
+
+#: plugins/Calendars/src/ArmenianCalendar.cpp:45
+msgctxt "Armenian month name"
+msgid "Arach"
+msgstr ""
+
+#: plugins/Calendars/src/ArmenianCalendar.cpp:46
+msgctxt "Armenian month name"
+msgid "Mehekani"
+msgstr ""
+
+#: plugins/Calendars/src/ArmenianCalendar.cpp:47
+msgctxt "Armenian month name"
+msgid "Areg"
+msgstr ""
+
+#: plugins/Calendars/src/ArmenianCalendar.cpp:48
+msgctxt "Armenian month name"
+msgid "Ahekani"
+msgstr ""
+
+#: plugins/Calendars/src/ArmenianCalendar.cpp:49
+msgctxt "Armenian month name"
+msgid "Mareri"
+msgstr ""
+
+#: plugins/Calendars/src/ArmenianCalendar.cpp:50
+msgctxt "Armenian month name"
+msgid "Margach"
+msgstr ""
+
+#: plugins/Calendars/src/ArmenianCalendar.cpp:51
+msgctxt "Armenian month name"
+msgid "Hrotich"
+msgstr ""
+
+#: plugins/Calendars/src/ArmenianCalendar.cpp:52
+msgctxt "Armenian month name"
+msgid "(aweleach)"
+msgstr ""
+
+#: plugins/Calendars/src/ArmenianCalendar.cpp:88
+msgid "Armenian Era"
+msgstr ""
+
+#: plugins/Calendars/src/AztecTonalpohualliCalendar.cpp:39
+msgctxt "Aztec Tonalpohualli name"
+msgid "Cipactli (Alligator)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecTonalpohualliCalendar.cpp:40
+msgctxt "Aztec Tonalpohualli name"
+msgid "Ehecatl (Wind)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecTonalpohualliCalendar.cpp:41
+msgctxt "Aztec Tonalpohualli name"
+msgid "Calli (House)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecTonalpohualliCalendar.cpp:42
+msgctxt "Aztec Tonalpohualli name"
+msgid "Cuetzpallin (Iguana)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecTonalpohualliCalendar.cpp:43
+msgctxt "Aztec Tonalpohualli name"
+msgid "Coatl (Serpent)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecTonalpohualliCalendar.cpp:44
+msgctxt "Aztec Tonalpohualli name"
+msgid "Miquiztli (Death)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecTonalpohualliCalendar.cpp:45
+msgctxt "Aztec Tonalpohualli name"
+msgid "Mazatl (Deer)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecTonalpohualliCalendar.cpp:46
+msgctxt "Aztec Tonalpohualli name"
+msgid "Tochtli (Rabbit)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecTonalpohualliCalendar.cpp:47
+msgctxt "Aztec Tonalpohualli name"
+msgid "Atl (Water)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecTonalpohualliCalendar.cpp:48
+msgctxt "Aztec Tonalpohualli name"
+msgid "Itzcuintli (Dog)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecTonalpohualliCalendar.cpp:49
+msgctxt "Aztec Tonalpohualli name"
+msgid "Ozomatli (Monkey)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecTonalpohualliCalendar.cpp:50
+msgctxt "Aztec Tonalpohualli name"
+msgid "Malinalli (Grass)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecTonalpohualliCalendar.cpp:51
+msgctxt "Aztec Tonalpohualli name"
+msgid "Acatl (Cane)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecTonalpohualliCalendar.cpp:52
+msgctxt "Aztec Tonalpohualli name"
+msgid "Ocelotl (Jaguar)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecTonalpohualliCalendar.cpp:53
+msgctxt "Aztec Tonalpohualli name"
+msgid "Quauhtli (Eagle)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecTonalpohualliCalendar.cpp:54
+msgctxt "Aztec Tonalpohualli name"
+msgid "Cozcaquauhtli (Buzzard)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecTonalpohualliCalendar.cpp:55
+msgctxt "Aztec Tonalpohualli name"
+msgid "Ollin (Quake)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecTonalpohualliCalendar.cpp:56
+msgctxt "Aztec Tonalpohualli name"
+msgid "Tecpatl (Flint)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecTonalpohualliCalendar.cpp:57
+msgctxt "Aztec Tonalpohualli name"
+msgid "Quiahuitl (Rain)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecTonalpohualliCalendar.cpp:58
+msgctxt "Aztec Tonalpohualli name"
+msgid "Xochitl (Flower)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecXihuitlCalendar.cpp:43
+msgctxt "Aztec Xihuitl month name"
+msgid "Izcalli (Sprout)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecXihuitlCalendar.cpp:44
+msgctxt "Aztec Xihuitl month name"
+msgid "Atlcahualo (Water left)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecXihuitlCalendar.cpp:45
+msgctxt "Aztec Xihuitl month name"
+msgid "Tlacaxipehualiztli (Man flaying)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecXihuitlCalendar.cpp:46
+msgctxt "Aztec Xihuitl month name"
+msgid "Tozoztontli (1-Vigil)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecXihuitlCalendar.cpp:47
+msgctxt "Aztec Xihuitl month name"
+msgid "Huei Tozoztli (2-Vigil)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecXihuitlCalendar.cpp:48
+msgctxt "Aztec Xihuitl month name"
+msgid "Toxcatl (Drought)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecXihuitlCalendar.cpp:49
+msgctxt "Aztec Xihuitl month name"
+msgid "Etzalcualiztli (Eating bean soup)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecXihuitlCalendar.cpp:50
+msgctxt "Aztec Xihuitl month name"
+msgid "Tecuilhuitontli (1-Lord’s feast)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecXihuitlCalendar.cpp:51
+msgctxt "Aztec Xihuitl month name"
+msgid "Huei Tecuilhuitl (2-Lord’s feast)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecXihuitlCalendar.cpp:52
+msgctxt "Aztec Xihuitl month name"
+msgid "Tlaxochimaco (Give flowers)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecXihuitlCalendar.cpp:53
+msgctxt "Aztec Xihuitl month name"
+msgid "Xocotlhuetzi (Fruit falls)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecXihuitlCalendar.cpp:54
+msgctxt "Aztec Xihuitl month name"
+msgid "Ochpaniztli (Road sweeping)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecXihuitlCalendar.cpp:55
+msgctxt "Aztec Xihuitl month name"
+msgid "Teotleco (God arrives)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecXihuitlCalendar.cpp:56
+msgctxt "Aztec Xihuitl month name"
+msgid "Tepeilhuitl (Mountain feast)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecXihuitlCalendar.cpp:57
+msgctxt "Aztec Xihuitl month name"
+msgid "Quecholli (Macaw)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecXihuitlCalendar.cpp:58
+msgctxt "Aztec Xihuitl month name"
+msgid "Panquetzaliztli (Flag raising)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecXihuitlCalendar.cpp:59
+msgctxt "Aztec Xihuitl month name"
+msgid "Atemoztli (Falling water)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecXihuitlCalendar.cpp:60
+msgctxt "Aztec Xihuitl month name"
+msgid "Tititl (Storm)"
+msgstr ""
+
+#: plugins/Calendars/src/AztecXihuitlCalendar.cpp:61
+msgctxt "Aztec Xihuitl month name"
+msgid "Nemontemi (Full in vain)"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:215
+msgctxt "Balinese Pawukon date name"
+msgid "Luang"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:216
+msgctxt "Balinese Pawukon date name"
+msgid "Menga"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:217
+msgctxt "Balinese Pawukon date name"
+msgid "Pepet"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:218
+msgctxt "Balinese Pawukon date name"
+msgid "Pasah"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:219
+msgctxt "Balinese Pawukon date name"
+msgid "Beteng"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:220
+msgctxt "Balinese Pawukon date name"
+msgid "Kajeng"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:221
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:243
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:264
+msgctxt "Balinese Pawukon date name"
+msgid "Sri"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:222
+msgctxt "Balinese Pawukon date name"
+msgid "Laba"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:223
+msgctxt "Balinese Pawukon date name"
+msgid "Jaya"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:224
+msgctxt "Balinese Pawukon date name"
+msgid "Menala"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:225
+msgctxt "Balinese Pawukon date name"
+msgid "Umanis"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:226
+msgctxt "Balinese Pawukon date name"
+msgid "Paing"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:227
+msgctxt "Balinese Pawukon date name"
+msgid "Pon"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:228
+msgctxt "Balinese Pawukon date name"
+msgid "Wage"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:229
+msgctxt "Balinese Pawukon date name"
+msgid "Keliwon"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:230
+msgctxt "Balinese Pawukon date name"
+msgid "Tungleh"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:231
+msgctxt "Balinese Pawukon date name"
+msgid "Aryang"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:232
+msgctxt "Balinese Pawukon date name"
+msgid "Urukung"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:233
+msgctxt "Balinese Pawukon date name"
+msgid "Paniron"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:234
+msgctxt "Balinese Pawukon date name"
+msgid "Was"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:235
+msgctxt "Balinese Pawukon date name"
+msgid "Maulu"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:236
+msgctxt "Balinese Pawukon date name"
+msgid "Redite"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:237
+msgctxt "Balinese Pawukon date name"
+msgid "Coma"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:238
+msgctxt "Balinese Pawukon date name"
+msgid "Anggara"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:239
+msgctxt "Balinese Pawukon date name"
+msgid "Buda"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:240
+msgctxt "Balinese Pawukon date name"
+msgid "Wraspati"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:241
+msgctxt "Balinese Pawukon date name"
+msgid "Sukra"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:242
+msgctxt "Balinese Pawukon date name"
+msgid "Saniscara"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:244
+msgctxt "Balinese Pawukon date name"
+msgid "Indra"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:245
+msgctxt "Balinese Pawukon date name"
+msgid "Guru"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:246
+msgctxt "Balinese Pawukon date name"
+msgid "Yama"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:247
+msgctxt "Balinese Pawukon date name"
+msgid "Ludra"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:248
+msgctxt "Balinese Pawukon date name"
+msgid "Brahma"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:249
+msgctxt "Balinese Pawukon date name"
+msgid "Kala"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:250
+msgctxt "Balinese Pawukon date name"
+msgid "Uma"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:251
+msgctxt "Balinese Pawukon date name"
+msgid "Dangu"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:252
+msgctxt "Balinese Pawukon date name"
+msgid "Jangur"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:253
+msgctxt "Balinese Pawukon date name"
+msgid "Gigis"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:254
+msgctxt "Balinese Pawukon date name"
+msgid "Nohan"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:255
+msgctxt "Balinese Pawukon date name"
+msgid "Ogan"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:256
+msgctxt "Balinese Pawukon date name"
+msgid "Erangan"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:257
+msgctxt "Balinese Pawukon date name"
+msgid "Urungan"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:258
+msgctxt "Balinese Pawukon date name"
+msgid "Tulus"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:259
+msgctxt "Balinese Pawukon date name"
+msgid "Dadi"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:260
+msgctxt "Balinese Pawukon date name"
+msgid "Pandita"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:261
+msgctxt "Balinese Pawukon date name"
+msgid "Pati"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:262
+msgctxt "Balinese Pawukon date name"
+msgid "Suka"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:263
+msgctxt "Balinese Pawukon date name"
+msgid "Duka"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:265
+msgctxt "Balinese Pawukon date name"
+msgid "Manuh"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:266
+msgctxt "Balinese Pawukon date name"
+msgid "Manusa"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:267
+msgctxt "Balinese Pawukon date name"
+msgid "Raja"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:268
+msgctxt "Balinese Pawukon date name"
+msgid "Dewa"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:269
+msgctxt "Balinese Pawukon date name"
+msgid "Raksasa"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:270
+msgctxt "Balinese Pawukon date name"
+msgid "Sinta"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:271
+msgctxt "Balinese Pawukon date name"
+msgid "Landep"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:272
+msgctxt "Balinese Pawukon date name"
+msgid "Ukir"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:273
+msgctxt "Balinese Pawukon date name"
+msgid "Kulantir"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:274
+msgctxt "Balinese Pawukon date name"
+msgid "Taulu"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:275
+msgctxt "Balinese Pawukon date name"
+msgid "Gumbreg"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:276
+msgctxt "Balinese Pawukon date name"
+msgid "Wariga"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:277
+msgctxt "Balinese Pawukon date name"
+msgid "Warigadian"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:278
+msgctxt "Balinese Pawukon date name"
+msgid "Jukungwangi"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:279
+msgctxt "Balinese Pawukon date name"
+msgid "Sungsang"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:280
+msgctxt "Balinese Pawukon date name"
+msgid "Dunggulan"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:281
+msgctxt "Balinese Pawukon date name"
+msgid "Kuningan"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:282
+msgctxt "Balinese Pawukon date name"
+msgid "Langkir"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:283
+msgctxt "Balinese Pawukon date name"
+msgid "Medangsia"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:284
+msgctxt "Balinese Pawukon date name"
+msgid "Pujut"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:285
+msgctxt "Balinese Pawukon date name"
+msgid "Pahang"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:286
+msgctxt "Balinese Pawukon date name"
+msgid "Krulut"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:287
+msgctxt "Balinese Pawukon date name"
+msgid "Merakih"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:288
+msgctxt "Balinese Pawukon date name"
+msgid "Tambir"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:289
+msgctxt "Balinese Pawukon date name"
+msgid "Medangkungan"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:290
+msgctxt "Balinese Pawukon date name"
+msgid "Matal"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:291
+msgctxt "Balinese Pawukon date name"
+msgid "Uye"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:292
+msgctxt "Balinese Pawukon date name"
+msgid "Menail"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:293
+msgctxt "Balinese Pawukon date name"
+msgid "Parangbakat"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:294
+msgctxt "Balinese Pawukon date name"
+msgid "Bala"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:295
+msgctxt "Balinese Pawukon date name"
+msgid "Ugu"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:296
+msgctxt "Balinese Pawukon date name"
+msgid "Wayang"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:297
+msgctxt "Balinese Pawukon date name"
+msgid "Kelawu"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:298
+msgctxt "Balinese Pawukon date name"
+msgid "Dukut"
+msgstr ""
+
+#: plugins/Calendars/src/BalinesePawukonCalendar.cpp:299
+msgctxt "Balinese Pawukon date name"
+msgid "Watugunung"
+msgstr ""
+
+#: plugins/Calendars/src/CopticCalendar.cpp:42
+msgctxt "Coptic month name"
+msgid "Thoouth"
+msgstr ""
+
+#: plugins/Calendars/src/CopticCalendar.cpp:43
+msgctxt "Coptic month name"
+msgid "Paope"
+msgstr ""
+
+#: plugins/Calendars/src/CopticCalendar.cpp:44
+msgctxt "Coptic month name"
+msgid "Athōr"
+msgstr ""
+
+#: plugins/Calendars/src/CopticCalendar.cpp:45
+msgctxt "Coptic month name"
+msgid "Koiak"
+msgstr ""
+
+#: plugins/Calendars/src/CopticCalendar.cpp:46
+msgctxt "Coptic month name"
+msgid "Tōbe"
+msgstr ""
+
+#: plugins/Calendars/src/CopticCalendar.cpp:47
+msgctxt "Coptic month name"
+msgid "Meshir"
+msgstr ""
+
+#: plugins/Calendars/src/CopticCalendar.cpp:48
+msgctxt "Coptic month name"
+msgid "Paremotep"
+msgstr ""
+
+#: plugins/Calendars/src/CopticCalendar.cpp:49
+msgctxt "Coptic month name"
+msgid "Parmoute"
+msgstr ""
+
+#: plugins/Calendars/src/CopticCalendar.cpp:50
+msgctxt "Coptic month name"
+msgid "Pashons"
+msgstr ""
+
+#: plugins/Calendars/src/CopticCalendar.cpp:51
+msgctxt "Coptic month name"
+msgid "Paōne"
+msgstr ""
+
+#: plugins/Calendars/src/CopticCalendar.cpp:52
+msgctxt "Coptic month name"
+msgid "Epēp"
+msgstr ""
+
+#: plugins/Calendars/src/CopticCalendar.cpp:53
+msgctxt "Coptic month name"
+msgid "Mesorē"
+msgstr ""
+
+#: plugins/Calendars/src/CopticCalendar.cpp:54
+msgctxt "Coptic month name"
+msgid "Epagomenē"
+msgstr ""
+
+#: plugins/Calendars/src/CopticCalendar.cpp:56
+msgctxt "Coptic day name"
+msgid "Tkyriake"
+msgstr ""
+
+#: plugins/Calendars/src/CopticCalendar.cpp:57
+msgctxt "Coptic day name"
+msgid "Pesnau"
+msgstr ""
+
+#: plugins/Calendars/src/CopticCalendar.cpp:58
+msgctxt "Coptic day name"
+msgid "Pshoment"
+msgstr ""
+
+#: plugins/Calendars/src/CopticCalendar.cpp:59
+msgctxt "Coptic day name"
+msgid "Peftoou"
+msgstr ""
+
+#: plugins/Calendars/src/CopticCalendar.cpp:60
+msgctxt "Coptic day name"
+msgid "Ptiou"
+msgstr ""
+
+#: plugins/Calendars/src/CopticCalendar.cpp:61
+msgctxt "Coptic day name"
+msgid "Psoou"
+msgstr ""
+
+#: plugins/Calendars/src/CopticCalendar.cpp:62
+msgctxt "Coptic day name"
+msgid "Psabbaton"
+msgstr ""
+
+#: plugins/Calendars/src/CopticCalendar.cpp:100
+msgid "Era Martyrum"
+msgstr ""
+
+#: plugins/Calendars/src/EgyptianCalendar.cpp:41
+msgctxt "Egyptian month name"
+msgid "Thoth"
+msgstr ""
+
+#: plugins/Calendars/src/EgyptianCalendar.cpp:42
+msgctxt "Egyptian month name"
+msgid "Phaophi"
+msgstr ""
+
+#: plugins/Calendars/src/EgyptianCalendar.cpp:43
+msgctxt "Egyptian month name"
+msgid "Athyr"
+msgstr ""
+
+#: plugins/Calendars/src/EgyptianCalendar.cpp:44
+msgctxt "Egyptian month name"
+msgid "Choiak"
+msgstr ""
+
+#: plugins/Calendars/src/EgyptianCalendar.cpp:45
+msgctxt "Egyptian month name"
+msgid "Tybi"
+msgstr ""
+
+#: plugins/Calendars/src/EgyptianCalendar.cpp:46
+msgctxt "Egyptian month name"
+msgid "Mechir"
+msgstr ""
+
+#: plugins/Calendars/src/EgyptianCalendar.cpp:47
+msgctxt "Egyptian month name"
+msgid "Phamenoth"
+msgstr ""
+
+#: plugins/Calendars/src/EgyptianCalendar.cpp:48
+msgctxt "Egyptian month name"
+msgid "Pharmuthi"
+msgstr ""
+
+#: plugins/Calendars/src/EgyptianCalendar.cpp:49
+msgctxt "Egyptian month name"
+msgid "Pachon"
+msgstr ""
+
+#: plugins/Calendars/src/EgyptianCalendar.cpp:50
+msgctxt "Egyptian month name"
+msgid "Payni"
+msgstr ""
+
+#: plugins/Calendars/src/EgyptianCalendar.cpp:51
+msgctxt "Egyptian month name"
+msgid "Epiphi"
+msgstr ""
+
+#: plugins/Calendars/src/EgyptianCalendar.cpp:52
+msgctxt "Egyptian month name"
+msgid "Mesori"
+msgstr ""
+
+#: plugins/Calendars/src/EgyptianCalendar.cpp:53
+msgctxt "Egyptian month name"
+msgid "(Epagomenae)"
+msgstr ""
+
+#: plugins/Calendars/src/EgyptianCalendar.cpp:89
+msgid "Nabonassar Era"
+msgstr ""
+
+#: plugins/Calendars/src/EthiopicCalendar.cpp:42
+msgctxt "Ethiopic month name"
+msgid "Maskaram"
+msgstr ""
+
+#: plugins/Calendars/src/EthiopicCalendar.cpp:43
+msgctxt "Ethiopic month name"
+msgid "Teqemt"
+msgstr ""
+
+#: plugins/Calendars/src/EthiopicCalendar.cpp:44
+msgctxt "Ethiopic month name"
+msgid "Hedār"
+msgstr ""
+
+#: plugins/Calendars/src/EthiopicCalendar.cpp:45
+msgctxt "Ethiopic month name"
+msgid "Takhśāś"
+msgstr ""
+
+#: plugins/Calendars/src/EthiopicCalendar.cpp:46
+msgctxt "Ethiopic month name"
+msgid "Ṭer"
+msgstr ""
+
+#: plugins/Calendars/src/EthiopicCalendar.cpp:47
+msgctxt "Ethiopic month name"
+msgid "Yakātit"
+msgstr ""
+
+#: plugins/Calendars/src/EthiopicCalendar.cpp:48
+msgctxt "Ethiopic month name"
+msgid "Magābit"
+msgstr ""
+
+#: plugins/Calendars/src/EthiopicCalendar.cpp:49
+msgctxt "Ethiopic month name"
+msgid "Miyāzyā"
+msgstr ""
+
+#: plugins/Calendars/src/EthiopicCalendar.cpp:50
+msgctxt "Ethiopic month name"
+msgid "Genbot"
+msgstr ""
+
+#: plugins/Calendars/src/EthiopicCalendar.cpp:51
+msgctxt "Ethiopic month name"
+msgid "Sanē"
+msgstr ""
+
+#: plugins/Calendars/src/EthiopicCalendar.cpp:52
+msgctxt "Ethiopic month name"
+msgid "Ḥamlē"
+msgstr ""
+
+#: plugins/Calendars/src/EthiopicCalendar.cpp:53
+msgctxt "Ethiopic month name"
+msgid "Naḥasē"
+msgstr ""
+
+#: plugins/Calendars/src/EthiopicCalendar.cpp:54
+msgctxt "Ethiopic month name"
+msgid "Pāguemēn"
+msgstr ""
+
+#: plugins/Calendars/src/EthiopicCalendar.cpp:56
+msgctxt "Ethiopic day name"
+msgid "Iḥud"
+msgstr ""
+
+#: plugins/Calendars/src/EthiopicCalendar.cpp:57
+msgctxt "Ethiopic day name"
+msgid "Sanyo"
+msgstr ""
+
+#: plugins/Calendars/src/EthiopicCalendar.cpp:58
+msgctxt "Ethiopic day name"
+msgid "Maksanyo"
+msgstr ""
+
+#: plugins/Calendars/src/EthiopicCalendar.cpp:59
+msgctxt "Ethiopic day name"
+msgid "Rob/Rabu`e"
+msgstr ""
+
+#: plugins/Calendars/src/EthiopicCalendar.cpp:60
+msgctxt "Ethiopic day name"
+msgid "H̱amus"
+msgstr ""
+
+#: plugins/Calendars/src/EthiopicCalendar.cpp:61
+msgctxt "Ethiopic day name"
+msgid "Arb"
+msgstr ""
+
+#: plugins/Calendars/src/EthiopicCalendar.cpp:62
+msgctxt "Ethiopic day name"
+msgid "Kidāmmē"
+msgstr ""
+
+#: plugins/Calendars/src/EthiopicCalendar.cpp:100
+msgid "Ethiopic Era of Mercy"
+msgstr ""
+
+#: plugins/Calendars/src/ISOCalendar.cpp:79
+msgid "Week"
+msgstr ""
+
+#: plugins/Calendars/src/IcelandicCalendar.cpp:76
+msgctxt "Icelandic calendar"
+msgid "summer"
+msgstr ""
+
+#: plugins/Calendars/src/IcelandicCalendar.cpp:77
+msgctxt "Icelandic calendar"
+msgid "winter"
+msgstr ""
+
+#. TRANSLATORS: Icelandic calendar phrase like "[Weekday] of week [number] of [summer|winter] (Month [number]: [name]) - [year]"
+#: plugins/Calendars/src/IcelandicCalendar.cpp:100
+#, qt-format
+msgid "%1 of week %2 of %3 (Month %4: %5) - %6"
+msgstr ""
+
+#: plugins/Calendars/src/IcelandicCalendar.cpp:172
+msgctxt "Icelandic day name"
+msgid "Sunnudagur"
+msgstr ""
+
+#: plugins/Calendars/src/IcelandicCalendar.cpp:173
+msgctxt "Icelandic day name"
+msgid "Mánudagur"
+msgstr ""
+
+#: plugins/Calendars/src/IcelandicCalendar.cpp:174
+msgctxt "Icelandic day name"
+msgid "Þriðjudagur"
+msgstr ""
+
+#: plugins/Calendars/src/IcelandicCalendar.cpp:175
+msgctxt "Icelandic day name"
+msgid "Miðvikudagur"
+msgstr ""
+
+#: plugins/Calendars/src/IcelandicCalendar.cpp:176
+msgctxt "Icelandic day name"
+msgid "Fimmtudagur"
+msgstr ""
+
+#: plugins/Calendars/src/IcelandicCalendar.cpp:177
+msgctxt "Icelandic day name"
+msgid "Föstudagur"
+msgstr ""
+
+#: plugins/Calendars/src/IcelandicCalendar.cpp:178
+msgctxt "Icelandic day name"
+msgid "Laugardagur"
+msgstr ""
+
+#: plugins/Calendars/src/IcelandicCalendar.cpp:180
+msgctxt "Icelandic month name"
+msgid "unnamed"
+msgstr ""
+
+#: plugins/Calendars/src/IcelandicCalendar.cpp:181
+msgctxt "Icelandic month name"
+msgid "Harpa"
+msgstr ""
+
+#: plugins/Calendars/src/IcelandicCalendar.cpp:182
+msgctxt "Icelandic month name"
+msgid "Skerpla"
+msgstr ""
+
+#: plugins/Calendars/src/IcelandicCalendar.cpp:183
+msgctxt "Icelandic month name"
+msgid "Sólmánuður"
+msgstr ""
+
+#: plugins/Calendars/src/IcelandicCalendar.cpp:184
+msgctxt "Icelandic month name"
+msgid "Heyannir"
+msgstr ""
+
+#: plugins/Calendars/src/IcelandicCalendar.cpp:185
+msgctxt "Icelandic month name"
+msgid "Tvímánuður"
+msgstr ""
+
+#: plugins/Calendars/src/IcelandicCalendar.cpp:186
+msgctxt "Icelandic month name"
+msgid "Haustmánuður"
+msgstr ""
+
+#: plugins/Calendars/src/IcelandicCalendar.cpp:187
+msgctxt "Icelandic month name"
+msgid "Gormánuður"
+msgstr ""
+
+#: plugins/Calendars/src/IcelandicCalendar.cpp:188
+msgctxt "Icelandic month name"
+msgid "Ýlir"
+msgstr ""
+
+#: plugins/Calendars/src/IcelandicCalendar.cpp:189
+msgctxt "Icelandic month name"
+msgid "Mörsugur"
+msgstr ""
+
+#: plugins/Calendars/src/IcelandicCalendar.cpp:190
+msgctxt "Icelandic month name"
+msgid "Þorri"
+msgstr ""
+
+#: plugins/Calendars/src/IcelandicCalendar.cpp:191
+msgctxt "Icelandic month name"
+msgid "Góa"
+msgstr ""
+
+#: plugins/Calendars/src/IcelandicCalendar.cpp:192
+msgctxt "Icelandic month name"
+msgid "Einmánuður"
+msgstr ""
+
+#: plugins/Calendars/src/JulianCalendar.cpp:76
+msgid "A.D."
+msgstr ""
+
+#: plugins/Calendars/src/JulianCalendar.cpp:76
+msgid "B.C."
+msgstr ""
+
+#: plugins/Calendars/src/MayaHaabCalendar.cpp:40
+msgctxt "Maya Haab month name"
+msgid "Pop"
+msgstr ""
+
+#: plugins/Calendars/src/MayaHaabCalendar.cpp:41
+msgctxt "Maya Haab month name"
+msgid "Uo"
+msgstr ""
+
+#: plugins/Calendars/src/MayaHaabCalendar.cpp:42
+msgctxt "Maya Haab month name"
+msgid "Zip"
+msgstr ""
+
+#: plugins/Calendars/src/MayaHaabCalendar.cpp:43
+msgctxt "Maya Haab month name"
+msgid "Zotz"
+msgstr ""
+
+#: plugins/Calendars/src/MayaHaabCalendar.cpp:44
+msgctxt "Maya Haab month name"
+msgid "Tzec"
+msgstr ""
+
+#: plugins/Calendars/src/MayaHaabCalendar.cpp:45
+msgctxt "Maya Haab month name"
+msgid "Xul"
+msgstr ""
+
+#: plugins/Calendars/src/MayaHaabCalendar.cpp:46
+msgctxt "Maya Haab month name"
+msgid "Yaxkin"
+msgstr ""
+
+#: plugins/Calendars/src/MayaHaabCalendar.cpp:47
+msgctxt "Maya Haab month name"
+msgid "Mol"
+msgstr ""
+
+#: plugins/Calendars/src/MayaHaabCalendar.cpp:48
+msgctxt "Maya Haab month name"
+msgid "Chen"
+msgstr ""
+
+#: plugins/Calendars/src/MayaHaabCalendar.cpp:49
+msgctxt "Maya Haab month name"
+msgid "Yax"
+msgstr ""
+
+#: plugins/Calendars/src/MayaHaabCalendar.cpp:50
+msgctxt "Maya Haab month name"
+msgid "Zac"
+msgstr ""
+
+#: plugins/Calendars/src/MayaHaabCalendar.cpp:51
+msgctxt "Maya Haab month name"
+msgid "Ceh"
+msgstr ""
+
+#: plugins/Calendars/src/MayaHaabCalendar.cpp:52
+msgctxt "Maya Haab month name"
+msgid "Mac"
+msgstr ""
+
+#: plugins/Calendars/src/MayaHaabCalendar.cpp:53
+msgctxt "Maya Haab month name"
+msgid "Kankin"
+msgstr ""
+
+#: plugins/Calendars/src/MayaHaabCalendar.cpp:54
+msgctxt "Maya Haab month name"
+msgid "Muan"
+msgstr ""
+
+#: plugins/Calendars/src/MayaHaabCalendar.cpp:55
+msgctxt "Maya Haab month name"
+msgid "Pax"
+msgstr ""
+
+#: plugins/Calendars/src/MayaHaabCalendar.cpp:56
+msgctxt "Maya Haab month name"
+msgid "Kayab"
+msgstr ""
+
+#: plugins/Calendars/src/MayaHaabCalendar.cpp:57
+msgctxt "Maya Haab month name"
+msgid "Cumku"
+msgstr ""
+
+#: plugins/Calendars/src/MayaHaabCalendar.cpp:58
+msgctxt "Maya Haab month name"
+msgid "Uayeb"
+msgstr ""
+
+#: plugins/Calendars/src/MayaTzolkinCalendar.cpp:39
+msgctxt "Maya Tzolkin name"
+msgid "Imix"
+msgstr ""
+
+#: plugins/Calendars/src/MayaTzolkinCalendar.cpp:40
+msgctxt "Maya Tzolkin name"
+msgid "Ik"
+msgstr ""
+
+#: plugins/Calendars/src/MayaTzolkinCalendar.cpp:41
+msgctxt "Maya Tzolkin name"
+msgid "Akbal"
+msgstr ""
+
+#: plugins/Calendars/src/MayaTzolkinCalendar.cpp:42
+msgctxt "Maya Tzolkin name"
+msgid "Kan"
+msgstr ""
+
+#: plugins/Calendars/src/MayaTzolkinCalendar.cpp:43
+msgctxt "Maya Tzolkin name"
+msgid "Chicchan"
+msgstr ""
+
+#: plugins/Calendars/src/MayaTzolkinCalendar.cpp:44
+msgctxt "Maya Tzolkin name"
+msgid "Cimi"
+msgstr ""
+
+#: plugins/Calendars/src/MayaTzolkinCalendar.cpp:45
+msgctxt "Maya Tzolkin name"
+msgid "Manik"
+msgstr ""
+
+#: plugins/Calendars/src/MayaTzolkinCalendar.cpp:46
+msgctxt "Maya Tzolkin name"
+msgid "Lamat"
+msgstr ""
+
+#: plugins/Calendars/src/MayaTzolkinCalendar.cpp:47
+msgctxt "Maya Tzolkin name"
+msgid "Muluc"
+msgstr ""
+
+#: plugins/Calendars/src/MayaTzolkinCalendar.cpp:48
+msgctxt "Maya Tzolkin name"
+msgid "Oc"
+msgstr ""
+
+#: plugins/Calendars/src/MayaTzolkinCalendar.cpp:49
+msgctxt "Maya Tzolkin name"
+msgid "Chuen"
+msgstr ""
+
+#: plugins/Calendars/src/MayaTzolkinCalendar.cpp:50
+msgctxt "Maya Tzolkin name"
+msgid "Eb"
+msgstr ""
+
+#: plugins/Calendars/src/MayaTzolkinCalendar.cpp:51
+msgctxt "Maya Tzolkin name"
+msgid "Ben"
+msgstr ""
+
+#: plugins/Calendars/src/MayaTzolkinCalendar.cpp:52
+msgctxt "Maya Tzolkin name"
+msgid "Ix"
+msgstr ""
+
+#: plugins/Calendars/src/MayaTzolkinCalendar.cpp:53
+msgctxt "Maya Tzolkin name"
+msgid "Men"
+msgstr ""
+
+#: plugins/Calendars/src/MayaTzolkinCalendar.cpp:54
+msgctxt "Maya Tzolkin name"
+msgid "Cib"
+msgstr ""
+
+#: plugins/Calendars/src/MayaTzolkinCalendar.cpp:55
+msgctxt "Maya Tzolkin name"
+msgid "Caban"
+msgstr ""
+
+#: plugins/Calendars/src/MayaTzolkinCalendar.cpp:56
+msgctxt "Maya Tzolkin name"
+msgid "Eznab"
+msgstr ""
+
+#: plugins/Calendars/src/MayaTzolkinCalendar.cpp:57
+msgctxt "Maya Tzolkin name"
+msgid "Cauac"
+msgstr ""
+
+#: plugins/Calendars/src/MayaTzolkinCalendar.cpp:58
+msgctxt "Maya Tzolkin name"
+msgid "Ahau"
+msgstr ""
+
+#: plugins/Calendars/src/OlympicCalendar.cpp:61
+#, qt-format
+msgid "Day %1, month %2 in the year %3 of the %4th Olympiad"
+msgstr ""
+
+#: plugins/Calendars/src/RomanCalendar.cpp:36
+msgctxt "Roman month name (genitive)"
+msgid "Ianuarii"
+msgstr ""
+
+#: plugins/Calendars/src/RomanCalendar.cpp:37
+msgctxt "Roman month name (genitive)"
+msgid "Februarii"
+msgstr ""
+
+#: plugins/Calendars/src/RomanCalendar.cpp:38
+msgctxt "Roman month name (genitive)"
+msgid "Martii"
+msgstr ""
+
+#: plugins/Calendars/src/RomanCalendar.cpp:39
+msgctxt "Roman month name (genitive)"
+msgid "Aprilis"
+msgstr ""
+
+#: plugins/Calendars/src/RomanCalendar.cpp:40
+msgctxt "Roman month name (genitive)"
+msgid "Maii"
+msgstr ""
+
+#: plugins/Calendars/src/RomanCalendar.cpp:41
+msgctxt "Roman month name (genitive)"
+msgid "Iunii"
+msgstr ""
+
+#: plugins/Calendars/src/RomanCalendar.cpp:42
+msgctxt "Roman month name (genitive)"
+msgid "Iulii"
+msgstr ""
+
+#: plugins/Calendars/src/RomanCalendar.cpp:43
+msgctxt "Roman month name (genitive)"
+msgid "Augusti"
+msgstr ""
+
+#: plugins/Calendars/src/RomanCalendar.cpp:44
+msgctxt "Roman month name (genitive)"
+msgid "Septembris"
+msgstr ""
+
+#: plugins/Calendars/src/RomanCalendar.cpp:45
+msgctxt "Roman month name (genitive)"
+msgid "Octobris"
+msgstr ""
+
+#: plugins/Calendars/src/RomanCalendar.cpp:46
+msgctxt "Roman month name (genitive)"
+msgid "Novembris"
+msgstr ""
+
+#: plugins/Calendars/src/RomanCalendar.cpp:47
+msgctxt "Roman month name (genitive)"
+msgid "Decembris"
+msgstr ""
+
+#: plugins/Calendars/src/RomanCalendar.cpp:101
+msgctxt "ab urbe condita"
+msgid "A.U.C."
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:42
+msgctxt "Zoroastrian month name"
+msgid "Ferverdīn"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:43
+msgctxt "Zoroastrian month name"
+msgid "Ardebehesht"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:44
+msgctxt "Zoroastrian month name"
+msgid "Khordād"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:45
+msgctxt "Zoroastrian month name"
+msgid "Tīr"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:46
+msgctxt "Zoroastrian month name"
+msgid "Mordād"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:47
+msgctxt "Zoroastrian month name"
+msgid "Sharīr"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:48
+msgctxt "Zoroastrian month name"
+msgid "Mihr"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:49
+msgctxt "Zoroastrian month name"
+msgid "Abān"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:50
+msgctxt "Zoroastrian month name"
+msgid "Āder"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:51
+msgctxt "Zoroastrian month name"
+msgid "Deï"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:52
+msgctxt "Zoroastrian month name"
+msgid "Bahmen"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:53
+msgctxt "Zoroastrian month name"
+msgid "Asfendārmed"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:54
+msgctxt "Zoroastrian month name"
+msgid "(epagomenae)"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:56
+msgctxt "Zoroastrian day name"
+msgid "Hormuz"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:57
+msgctxt "Zoroastrian day name"
+msgid "Bahman"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:58
+msgctxt "Zoroastrian day name"
+msgid "Ordībehesht"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:59
+msgctxt "Zoroastrian day name"
+msgid "Shahrīvar"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:60
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:89
+msgctxt "Zoroastrian day name"
+msgid "Esfandārmud"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:61
+msgctxt "Zoroastrian day name"
+msgid "Xordād"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:62
+msgctxt "Zoroastrian day name"
+msgid "Mordād"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:63
+msgctxt "Zoroastrian day name"
+msgid "Diy be Āzar"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:64
+msgctxt "Zoroastrian day name"
+msgid "Āzar"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:65
+msgctxt "Zoroastrian day name"
+msgid "Ābān"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:66
+msgctxt "Zoroastrian day name"
+msgid "Xor"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:67
+msgctxt "Zoroastrian day name"
+msgid "Māh"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:68
+msgctxt "Zoroastrian day name"
+msgid "Tīr"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:69
+msgctxt "Zoroastrian day name"
+msgid "Goosh"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:70
+msgctxt "Zoroastrian day name"
+msgid "Diy be Mehr"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:71
+msgctxt "Zoroastrian day name"
+msgid "Mehr"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:72
+msgctxt "Zoroastrian day name"
+msgid "Sorūsh"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:73
+msgctxt "Zoroastrian day name"
+msgid "Rashn"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:74
+msgctxt "Zoroastrian day name"
+msgid "Farvardīn"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:75
+msgctxt "Zoroastrian day name"
+msgid "Bahrām"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:76
+msgctxt "Zoroastrian day name"
+msgid "Rām"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:77
+msgctxt "Zoroastrian day name"
+msgid "Bād"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:78
+msgctxt "Zoroastrian day name"
+msgid "Diy be Dīn"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:79
+msgctxt "Zoroastrian day name"
+msgid "Dīn"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:80
+msgctxt "Zoroastrian day name"
+msgid "Ard"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:81
+msgctxt "Zoroastrian day name"
+msgid "Ashtād"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:82
+msgctxt "Zoroastrian day name"
+msgid "Asmān"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:83
+msgctxt "Zoroastrian day name"
+msgid "Zāmyād"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:84
+msgctxt "Zoroastrian day name"
+msgid "Māresfand"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:85
+msgctxt "Zoroastrian day name"
+msgid "Anīrān"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:87
+msgctxt "Zoroastrian day name"
+msgid "Ahnad"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:88
+msgctxt "Zoroastrian day name"
+msgid "Ashnad"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:90
+msgctxt "Zoroastrian day name"
+msgid "Axshatar"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:91
+msgctxt "Zoroastrian day name"
+msgid "Behesht"
+msgstr ""
+
+#: plugins/Calendars/src/ZoroastrianCalendar.cpp:132
+msgid "Jezdegerd Era"
+msgstr ""
+
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:153
+msgid "Calendars Plug-in"
+msgstr ""
+
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:160
+msgid ""
+"The Calendars plugin provides an interface to various calendars used around "
+"the world."
+msgstr ""
+
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:161
+msgid "Julian Calendar"
+msgstr ""
+
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:162
+msgid "Gregorian Calendar"
+msgstr ""
+
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:163
+msgid "ISO Weeks"
+msgstr ""
+
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:164
+msgid "Icelandic calendar"
+msgstr ""
+
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:165
+msgid "Roman (Julian) calendar"
+msgstr ""
+
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:166
+msgid "Olympiad calendar"
+msgstr ""
+
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:167
+msgid "Egyptian calendar"
+msgstr ""
+
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:168
+msgid "Armenian calendar"
+msgstr ""
+
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:169
+msgid "Zoroastrian calendar"
+msgstr ""
+
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:170
+msgid "Coptic calendar"
+msgstr ""
+
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:171
+msgid "Ethiopic calendar"
+msgstr ""
+
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:180
+msgid "Maya calendars"
+msgstr ""
+
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:181
+msgid "Aztec calendars"
+msgstr ""
+
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:182
+msgid "Balinese Pawukon calendar"
+msgstr ""
+
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:184
+msgid ""
+"The plugin is in an early stage of development. Please cross-check results "
+"and report errors."
+msgstr ""
+
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:185
+msgid ""
+"For some calendars, we welcome proper formatting suggestions by actual users."
+msgstr ""
+
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:195
+msgid "This plugin is based on:"
+msgstr ""
+
+#. TRANSLATORS: The text between braces is the text of an HTML link.
+#: plugins/Calendars/src/gui/CalendarsDialog.cpp:209
+msgid ""
+"If you want to read full information about this plugin and its history, see "
+"the Stellarium User Guide"
+msgstr ""
+
+#: plugins/Calendars/src/ui_calendarsDialog.h:752
+msgid "Calendars Configuration"
+msgstr ""
+
+#: plugins/Calendars/src/ui_calendarsDialog.h:753
+msgid "Calendars Plug-in Configuration"
+msgstr ""
+
+#: plugins/Calendars/src/ui_calendarsDialog.h:755
+#: plugins/Calendars/src/ui_calendarsDialog.h:781
+msgctxt "calendar"
+msgid "ISO Week"
+msgstr ""
+
+#: plugins/Calendars/src/ui_calendarsDialog.h:756
+msgctxt "calendar"
+msgid "Chinese"
+msgstr ""
+
+#: plugins/Calendars/src/ui_calendarsDialog.h:763
+msgctxt "calendar"
+msgid "Hebrew"
+msgstr ""
+
+#: plugins/Calendars/src/ui_calendarsDialog.h:774
+msgctxt "calendar"
+msgid "Islamic"
+msgstr ""
+
+#: plugins/Calendars/src/ui_calendarsDialog.h:776
+msgid "Display"
+msgstr ""
+
+#: plugins/Calendars/src/ui_calendarsDialog.h:777
+msgid "Month"
+msgstr ""
+
+#: plugins/Calendars/src/ui_calendarsDialog.h:780
+msgid "Weekday"
+msgstr ""
+
+#: plugins/Calendars/src/ui_calendarsDialog.h:784
+msgid "Negative years here mark years B.C."
+msgstr ""
+
+#: plugins/Calendars/src/ui_calendarsDialog.h:786
+msgid "Year"
+msgstr ""
+
+#: plugins/Calendars/src/ui_calendarsDialog.h:787
+msgid "Lunisolar"
+msgstr ""
+
+#: plugins/Calendars/src/ui_calendarsDialog.h:789
+msgid "Katun"
+msgstr ""
+
+#: plugins/Calendars/src/ui_calendarsDialog.h:790
+msgid "Xihuitl"
+msgstr ""
+
+#: plugins/Calendars/src/ui_calendarsDialog.h:791
+msgctxt "calendar"
+msgid "Maya"
+msgstr ""
+
+#: plugins/Calendars/src/ui_calendarsDialog.h:792
+msgid "Haab"
+msgstr ""
+
+#: plugins/Calendars/src/ui_calendarsDialog.h:793
+msgid "Tun"
+msgstr ""
+
+#: plugins/Calendars/src/ui_calendarsDialog.h:794
+msgid "Kin"
+msgstr ""
+
+#: plugins/Calendars/src/ui_calendarsDialog.h:795
+msgid "Uinal"
+msgstr ""
+
+#: plugins/Calendars/src/ui_calendarsDialog.h:796
+msgid "Baktun"
+msgstr ""
+
+#: plugins/Calendars/src/ui_calendarsDialog.h:797
+msgid "Long Count"
+msgstr ""
+
+#: plugins/Calendars/src/ui_calendarsDialog.h:799
+#: plugins/Calendars/src/ui_calendarsDialog.h:802
+#: plugins/Calendars/src/ui_calendarsDialog.h:817
+#: plugins/Calendars/src/ui_calendarsDialog.h:823
+msgid "Step forward"
+msgstr ""
+
+#: plugins/Calendars/src/ui_calendarsDialog.h:805
+#: plugins/Calendars/src/ui_calendarsDialog.h:808
+#: plugins/Calendars/src/ui_calendarsDialog.h:814
+#: plugins/Calendars/src/ui_calendarsDialog.h:820
+msgid "Step backward"
+msgstr ""
+
+#: plugins/Calendars/src/ui_calendarsDialog.h:810
+msgctxt "calendar"
+msgid "Aztec"
+msgstr ""
+
+#: plugins/Calendars/src/ui_calendarsDialog.h:811
+msgid "Tzolkin"
+msgstr ""
+
+#: plugins/Calendars/src/ui_calendarsDialog.h:812
+msgid "Tonalpohualli"
+msgstr ""
+
+#: plugins/Calendars/src/ui_calendarsDialog.h:825
+msgid "Mesoamerica"
 msgstr ""

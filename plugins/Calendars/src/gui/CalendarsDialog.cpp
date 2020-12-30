@@ -110,6 +110,7 @@ void CalendarsDialog::createDialogContent()
 	connectBoolProperty(ui->mayaTzolkinCheckBox,        "Calendars.flagShowMayaTzolkin");
 	connectBoolProperty(ui->aztecXihuitlCheckBox,       "Calendars.flagShowAztecXihuitl");
 	connectBoolProperty(ui->aztecTonalpohualliCheckBox, "Calendars.flagShowAztecTonalpohualli");
+	connectBoolProperty(ui->balineseCheckBox,           "Calendars.flagShowBalinese");
 
 	// MAKE SURE to connect all part edit elements respective ...Changed() method here.
 	connect(ui->julianYearSpinBox,      SIGNAL(valueChanged(int)), this, SLOT(julianChanged()));
@@ -178,8 +179,10 @@ void CalendarsDialog::setAboutHtml(void)
 //	html += "<li>" + q_("Indian calendars") + "</li>";
 	html += "<li>" + q_("Maya calendars") + "</li>";
 	html += "<li>" + q_("Aztec calendars") + "</li>";
+	html += "<li>" + q_("Balinese Pawukon calendar") + "</li>";
 	html += "</ul>";
 	html += "<p>" + q_("The plugin is in an early stage of development. Please cross-check results and report errors.") + "</p>";
+	html += "<p>" + q_("For some calendars, we welcome proper formatting suggestions by actual users.") + "</p>";
 
 	html += "<h3>" + q_("Publications") + "</h3>";
 	html += "<p>"  + q_("If you use this plugin in your publications, please cite:") + "</p>";
@@ -189,21 +192,21 @@ void CalendarsDialog::setAboutHtml(void)
 	html += "</ul></p>";
 
 	html += "<h3>" + q_("References") + "</h3>";
-	html += "<p>"  + q_("This plugin is based on:") + "</p>";
-	html += "<p><ul>";
+	html += "<p>"  + q_("This plugin is based on:");
+	html += "<ul>";
 	html += "<li>" + QString("{Edward M. Reingold, Nachum Dershowitz: Calendrical Calculations.} The Ultimate Edition. Cambridge University Press 2018.")
 			.toHtmlEscaped().replace(a_rx, "<a href=\"https://doi.org/10.1017/9781107057623\">\\1</a>") + "</li>";
 	html += "</ul></p>";
 
 	html += "<h3>" + q_("Links") + "</h3>";
-	html += "<p>" + QString(q_("Support is provided via the Github website.  Be sure to put \"%1\" in the subject when posting.")).arg("Calendars plugin") + "</p>";
-	html += "<p><ul>";
+	html += "<p>" + QString(q_("Support is provided via the Github website.  Be sure to put \"%1\" in the subject when posting.")).arg("Calendars plugin");
+	html += "<ul>";
 	// TRANSLATORS: The text between braces is the text of an HTML link.
 	html += "<li>" + q_("If you have a question, you can {get an answer here}.").toHtmlEscaped().replace(a_rx, "<a href=\"https://groups.google.com/forum/#!forum/stellarium\">\\1</a>") + "</li>";
 	// TRANSLATORS: The text between braces is the text of an HTML link.
 	html += "<li>" + q_("Bug reports and feature requests can be made {here}.").toHtmlEscaped().replace(a_rx, "<a href=\"https://github.com/Stellarium/stellarium/issues\">\\1</a>") + "</li>";
 	// TRANSLATORS: The text between braces is the text of an HTML link.
-	html += "<li>" + q_("If you want to read full information about this plugin and its history, see the Stellarium User Guide\">\\1</a>") + "</li>";
+	html += "<li>" + q_("If you want to read full information about this plugin and its history, see the Stellarium User Guide") + "</li>";
 	html += "</ul></p></body></html>";
 
 	StelGui* gui = dynamic_cast<StelGui*>(StelApp::getInstance().getGui());
