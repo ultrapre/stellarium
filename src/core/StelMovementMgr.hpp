@@ -537,27 +537,8 @@ private:
 	// Time mouse control
 	bool dragTimeMode; // Internal flag, true during mouse time motion. This is set true when mouse is moving with ctrl pressed. Set false when releasing ctrl.
 
-#ifdef Q_OS_ANDROID
-    //! @internal
-    //! Store data for auto-zoom.
-    // Components:
-    // startFov: field of view at start
-    // aimFov: intended field of view at end of zoom move
-    // speed: rate of change. UNITS?
-    // coef: set to 0 at begin of zoom, will increase to 1 during autozoom motion.
-    struct AutoZoom
-    {
-        double startFov;
-        double aimFov;
-        float speed;
-        float coef;
-    };
-    // Automove
-    AutoZoom zoomMove; // Current auto movement
-#else
 	// Internal state for smooth zoom animation.
 	Smoother zoomMove;
-#endif
 	bool flagAutoZoom; // Define if autozoom is on or off
 	bool flagAutoZoomOutResetsDirection;
 

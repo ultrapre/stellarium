@@ -1540,36 +1540,11 @@ void StelMovementMgr::dragView(int x1, int y1, int x2, int y2)
 void StelMovementMgr::updateAutoZoom(double deltaTime)
 {
 	if (flagAutoZoom)
-	{
-#ifdef Q_OS_ANDROID
-        // Use a smooth function
-                double c;
-
-                if( zoomMove.startFov > zoomMove.aimFov )
-                {
-                    // slow down as we approach final view
-                    c = 1.0 - static_cast<double>((1.0f-zoomMove.coef)*(1.0f-zoomMove.coef)*(1.0f-zoomMove.coef));
-                }
-                else
-                {
-                    // speed up as we leave zoom target
-                    c = static_cast<double>(zoomMove.coef * zoomMove.coef * zoomMove.coef);
-                }
-
-                double newFov=zoomMove.startFov + (zoomMove.aimFov - zoomMove.startFov) * c;
-
-                zoomMove.coef+=zoomMove.speed*static_cast<float>(deltaTime)*1000;
-                if (zoomMove.coef>=1.f)
-                {
-                    flagAutoZoom = 0;
-                    newFov=zoomMove.aimFov;
-                }
-#else
+    {
 		zoomMove.update(deltaTime);
 		double newFov = zoomMove.getValue();
 		if (zoomMove.finished())
 			flagAutoZoom = 0;
-#endif
 		setFov(newFov); // updates currentFov->don't use newFov later!
 
 		// In case we have offset center, we want object still visible in center.
@@ -1629,15 +1604,8 @@ void StelMovementMgr::updateAutoZoom(double deltaTime)
 // Zoom to the given field of view
 void StelMovementMgr::zoomTo(double aim_fov, float zoomDuration)
 {
-	zoomDuration /= movementsSpeedFactor;
-#ifdef Q_OS_ANDROID
-    zoomMove.aimFov=aim_fov;
-    zoomMove.startFov=currentFov;
-    zoomMove.speed=1.f/(zoomDuration*1000);
-    zoomMove.coef=0.;
-#else
+    zoomDuration /= movementsSpeedFactor;
 	zoomMove.setTarget(currentFov, aim_fov, zoomDuration);
-#endif
     flagAutoZoom = true;
 }
 
@@ -1650,11 +1618,7 @@ void StelMovementMgr::changeFov(double deltaFov)
 
 double StelMovementMgr::getAimFov(void) const
 {
-#ifdef Q_OS_ANDROID
-    return (flagAutoZoom ? zoomMove.aimFov : currentFov);
-#else
 	return (flagAutoZoom ? zoomMove.getAim() : currentFov);
-#endif
 }
 
 void StelMovementMgr::setMaxFov(double max)
