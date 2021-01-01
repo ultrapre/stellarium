@@ -1094,6 +1094,9 @@ bool SolarSystemEditor::updateSolarSystemConfigurationFile(QList<SsoElements> ob
 		qDebug() << "Can't update ssystem.ini: Unable to find" << QDir::toNativeSeparators(customSolarSystemFilePath);
 		return false;
 	}
+    else{ //write permission!
+        QFile::setPermissions(customSolarSystemFilePath, QFile::permissions(customSolarSystemFilePath) | QFileDevice::WriteOwner);
+    }
 
 	QSettings solarSystem(customSolarSystemFilePath, StelIniFormat);
 	if (solarSystem.status() != QSettings::NoError)
@@ -1129,7 +1132,7 @@ bool SolarSystemEditor::updateSolarSystemConfigurationFile(QList<SsoElements> ob
 		"orbit_SemiMajorAxis",
 		"orbit_TimeAtPericenter"};
 
-	qDebug() << "Updating objects...";
+    qDebug() << "Updating objects... it will write into "<<customSolarSystemFilePath;
 	for (auto object : objectList)
 	{
 		QString name = object.value("name").toString();
