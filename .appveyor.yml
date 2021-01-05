@@ -81,7 +81,7 @@ deploy:
 notifications:
 - provider: Email
   to:
-  - alex.v.wolf@gmail.com
+  - magsec2@gmail.com
   on_build_success: false
   on_build_failure: true
   on_build_status_changed: true
